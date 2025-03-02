@@ -1,0 +1,4 @@
+/*
+accept token and validate
+return status
+*/
