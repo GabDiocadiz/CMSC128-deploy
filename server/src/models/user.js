@@ -47,4 +47,4 @@ const User = mongoose.model('User');
 const Alumni = mongoose.model('Alumni');
 const Admin = mongoose.model('Admin');
 
-export { Alumni, Admin, User}
+module.export = { Alumni, Admin, User};

@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import mongoose from 'mongoose';
+const { Schema } = mongoose;
 
 const DonationSchema = new Schema({
     donor: { type: Schema.Types.ObjectId, ref: 'Alumni', required: true },

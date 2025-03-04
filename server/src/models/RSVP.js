@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import mongoose from 'mongoose';
+const { Schema } = mongoose;
 
 const RSVPSchema = new Schema({
     event: { type: Schema.Types.ObjectId, ref: 'Event', required: true },
@@ -8,4 +8,4 @@ const RSVPSchema = new Schema({
 });
 
 const RSVP = mongoose.model('RSVP', RSVPSchema);
-module.exports = RSVP;
+export default RSVP;

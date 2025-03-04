@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import mongoose from 'mongoose';
+const { Schema } = mongoose;
 
 const ReportSchema = new Schema({
     generated_by: { type: Schema.Types.ObjectId, ref: 'Admin', required: true },

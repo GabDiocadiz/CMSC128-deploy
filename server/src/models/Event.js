@@ -1,6 +1,6 @@
 import { Alumni } from './user';
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import mongoose from 'mongoose';
+const { Schema } = mongoose;
 
 const eventSchema = new Schema({
     event_name: String,

@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import mongoose from 'mongoose';
+const { Schema } = mongoose;
 
 const CommunicationSchema = new Schema({
   type: { type: String, enum: ["announcement", "newsletter"], required: true }, // merged into one field
@@ -10,4 +10,4 @@ const CommunicationSchema = new Schema({
 });
 
 const Communication = mongoose.model("Communication", CommunicationSchema);
-module.exports = Communication;
+export default Communication;
