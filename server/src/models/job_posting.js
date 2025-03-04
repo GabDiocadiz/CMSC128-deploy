@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
+const Schema = mongoose.Schema;
 
-const jobPostingSchema = new mongoose.Schema({
+const jobPostingSchema = new Schema({
     job_id: Number,
     posted_by: {type: mongoose.Schema.Types.ObjectId, ref: 'Alumni'},
     job_title: String,
