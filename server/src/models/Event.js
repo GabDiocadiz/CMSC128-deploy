@@ -1,4 +1,4 @@
-import { Alumni } from './user';
+import { Alumni } from './User';
 import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
