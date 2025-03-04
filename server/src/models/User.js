@@ -1,30 +1,29 @@
 import mongoose from 'mongoose';
-const Schema = mongoose.Schema;
-
+const { Schema } = mongoose;
 
 const typeOfUser = {
-    USER : 'user',
-    ADMIN : 'admin'
-}
+    USER: 'user',
+    ADMIN: 'admin'
+};
 
 // User model
 const userSchema = new Schema({
     user_id: String,
-	name: String,
+    name: String,
     email: String,
-	password: String,
+    password: String,
     contact_number: String,
     address: String,
-	user_type: {
+    user_type: {
         type: String,
-        enum : [typeOfUser.USER,typeOfUser.ADMIN ],
-        default : typeOfUser.USER
+        enum: [typeOfUser.USER, typeOfUser.ADMIN],
+        default: typeOfUser.USER
     },
 });
 
 const alumniSchema = new Schema({
     graduation_year: Number,
-    degree : String,
+    degree: String,
     current_job_title: String,
     company: String,
     industry: String,
@@ -36,15 +35,12 @@ const alumniSchema = new Schema({
 });
 
 const adminSchema = new Schema({
-    position : String,
-    permissions : [String]
+    position: String,
+    permissions: [String]
 });
 
-module.exports = mongoose.model('User', userSchema);
-module.exports = User.discriminator('Alumni', alumniSchema);
-module.exports = User.discriminator('Admin', adminSchema); 
-const User = mongoose.model('User');
-const Alumni = mongoose.model('Alumni');
-const Admin = mongoose.model('Admin');
+const User = mongoose.model('User', userSchema);
+const Alumni = User.discriminator('Alumni', alumniSchema);
+const Admin = User.discriminator('Admin', adminSchema);
 
-module.export = { Alumni, Admin, User};
+export { User, Alumni, Admin };

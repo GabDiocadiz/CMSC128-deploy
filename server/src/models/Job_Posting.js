@@ -1,13 +1,13 @@
 import mongoose from 'mongoose';
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 const jobPostingSchema = new Schema({
     job_id: Number,
-    posted_by: {type: mongoose.Schema.Types.ObjectId, ref: 'Alumni'},
+    posted_by: {type: Schema.Types.ObjectId, ref: 'Alumni'},
     job_title: String,
     company: String,
     location: String,
-    job_description: Text,
+    job_description: String,
     requirements: [String],
     application_link: String,
     date_posted: Date,
@@ -15,7 +15,7 @@ const jobPostingSchema = new Schema({
         type: String,
         enum: ['pending', 'approved', 'rejected']
     },
-    approved_by:{type: mongoose.Schema.Types.ObjectId, ref: 'Admin'},
+    approved_by:{type: Schema.Types.ObjectId, ref: 'Admin'},
     approval_date:{
         type: Date,
         default: null
