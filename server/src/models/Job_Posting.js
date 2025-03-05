@@ -2,20 +2,21 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const jobPostingSchema = new Schema({
-    job_id: Number,
-    posted_by: {type: Schema.Types.ObjectId, ref: 'Alumni'},
-    job_title: String,
-    company: String,
-    location: String,
-    job_description: String,
-    requirements: [String],
-    application_link: String,
-    date_posted: Date,
+    job_id: { type: Number, required: true },
+    posted_by: {type: Schema.Types.ObjectId, ref: 'Alumni', required: true},
+    job_title: { type: String, required: true },
+    company: { type: String, required: true },
+    location: { type: String, required: true },
+    job_description: { type: String, required: true },
+    requirements: { type: [String], required: true },
+    application_link: { type: String, required: true },
+    date_posted: { type: Date, required: true },
     status:{
         type: String,
-        enum: ['pending', 'approved', 'rejected']
+        enum: ['pending', 'approved', 'rejected'],
+        required: true
     },
-    approved_by:{type: Schema.Types.ObjectId, ref: 'Admin'},
+    approved_by:{type: Schema.Types.ObjectId, ref: 'Admin', required: true},
     approval_date:{
         type: Date,
         default: null

@@ -8,22 +8,23 @@ const typeOfUser = {
 
 // User model
 const userSchema = new Schema({
-    user_id: String,
-    name: String,
-    email: String,
-    password: String,
+    user_id: { type: String, required: true },
+    name: { type: String, required: true },
+    email: { type: String, match: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})*$/, required: true },
+    password: { type: String, required: true },
     contact_number: String,
     address: String,
     user_type: {
         type: String,
         enum: [typeOfUser.USER, typeOfUser.ADMIN],
-        default: typeOfUser.USER
+        default: typeOfUser.USER,
+        required: true
     },
 });
 
 const alumniSchema = new Schema({
-    graduation_year: Number,
-    degree: String,
+    graduation_year: { type: Number, min: 1940, max: new Date().getFullYear(), required: true },
+    degree: { type: String, required: true },
     current_job_title: String,
     company: String,
     industry: String,
@@ -35,8 +36,8 @@ const alumniSchema = new Schema({
 });
 
 const adminSchema = new Schema({
-    position: String,
-    permissions: [String]
+    position: { type: String, required: true },
+    permissions: { type: [String], required: true }
 });
 
 const User = mongoose.model('User', userSchema);
