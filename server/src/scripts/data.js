@@ -8,6 +8,9 @@ export const alumniData = [
     industry: "Technology",
     skills: ["JavaScript", "Node.js", "MongoDB"],
     profile_visibility: true,
+    password: "password123",
+    email: "johndoe@example.com",
+    user_id: "601c8f85e9b5b0b67c2a7d1f",
   },
   {
     name: "Jane Smith",
