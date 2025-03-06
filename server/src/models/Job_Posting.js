@@ -11,6 +11,8 @@ const jobPostingSchema = new Schema({
     requirements: { type: [String], required: true },
     application_link: { type: String, required: true },
     date_posted: { type: Date, required: true },
+    start_date: { type: Date, required: true },
+    end_date: { type: Date, required: true },
     status: {
         type: String,
         enum: ['pending', 'approved', 'rejected'],
