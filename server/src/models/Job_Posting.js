@@ -16,7 +16,7 @@ const jobPostingSchema = new Schema({
         enum: ['pending', 'approved', 'rejected'],
         required: true
     },
-    approved_by:{type: Schema.Types.ObjectId, ref: 'Admin', required: true},
+    approved_by:{type: Schema.Types.ObjectId, ref: 'Admin'},
     approval_date:{
         type: Date,
         default: null
