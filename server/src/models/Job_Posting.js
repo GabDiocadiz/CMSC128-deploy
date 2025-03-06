@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const jobPostingSchema = new Schema({
     job_id: { type: Number, required: true },
-    posted_by: {type: Schema.Types.ObjectId, ref: 'Alumni', required: true},
+    posted_by: { type: Schema.Types.ObjectId, ref: 'Alumni', required: true },
     job_title: { type: String, required: true },
     company: { type: String, required: true },
     location: { type: String, required: true },
@@ -11,13 +11,13 @@ const jobPostingSchema = new Schema({
     requirements: { type: [String], required: true },
     application_link: { type: String, required: true },
     date_posted: { type: Date, required: true },
-    status:{
+    status: {
         type: String,
         enum: ['pending', 'approved', 'rejected'],
         required: true
     },
-    approved_by:{type: Schema.Types.ObjectId, ref: 'Admin'},
-    approval_date:{
+    approved_by: { type: Schema.Types.ObjectId, ref: 'Admin' },
+    approval_date: {
         type: Date,
         default: null
     }

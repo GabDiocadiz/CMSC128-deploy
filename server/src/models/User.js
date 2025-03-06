@@ -2,8 +2,8 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const typeOfUser = {
-    USER: 'user',
-    ADMIN: 'admin'
+    ALUMNI: 'Alumni',
+    ADMIN: 'Admin'
 };
 
 // User model
@@ -16,8 +16,8 @@ const userSchema = new Schema({
     address: String,
     user_type: {
         type: String,
-        enum: [typeOfUser.USER, typeOfUser.ADMIN],
-        default: typeOfUser.USER,
+        enum: [typeOfUser.ALUMNI, typeOfUser.ADMIN],
+        default: typeOfUser.ALUMNI,
         required: true
     },
 });
@@ -44,4 +44,8 @@ const User = mongoose.model('User', userSchema);
 const Alumni = User.discriminator('Alumni', alumniSchema);
 const Admin = User.discriminator('Admin', adminSchema);
 
-export { User, Alumni, Admin };
+// separate collections for Alumni and Admin
+const AlumniCollection = mongoose.model('AlumniCollection', alumniSchema, 'alumni');
+const AdminCollection = mongoose.model('AdminCollection', adminSchema, 'admin');
+
+export { User, Alumni, Admin, AlumniCollection, AdminCollection };
