@@ -22,6 +22,9 @@ const userSchema = new Schema({
     },
 });
 
+userSchema.index({ email: 1 });
+userSchema.index({ name: 1 });
+
 const alumniSchema = new Schema({
     graduation_year: { type: Number, min: 1940, max: new Date().getFullYear(), required: true },
     degree: { type: String, required: true },
