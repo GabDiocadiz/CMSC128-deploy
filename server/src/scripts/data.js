@@ -43,6 +43,8 @@ export const jobPostingsData = [
     approved_by: "601c8f84e9b5b0a67c2a7d1e",
     date_posted: new Date('2024-04-15'),
     approval_date: new Date('2025-01-01'),
+    start_date: new Date('2024-05-01'), 
+    end_date: new Date('2024-06-30')  
   },
   {
     job_id: 2,
@@ -55,6 +57,8 @@ export const jobPostingsData = [
     application_link: "https://careers.microsoft.com",
     status: "pending",
     date_posted: new Date('2025-01-01'),
+    start_date: new Date('2025-03-01'), 
+    end_date: new Date('2025-09-30')  
   },
 ];
 
