@@ -25,6 +25,16 @@ const jobPostingSchema = new Schema({
     }
 });
 
-const JobPosting = mongoose.model('JobPosting', jobPostingSchema);
+// Add indexes
+jobPostingSchema.index({ job_id: 1 }, { unique: true });
+jobPostingSchema.index({ posted_by: 1 });
+jobPostingSchema.index({ company: 1 });
+jobPostingSchema.index({ location: 1 });
+jobPostingSchema.index({ date_posted: 1 });
+jobPostingSchema.index({ status: 1 });
+jobPostingSchema.index({ company: 1, location: 1 });
+jobPostingSchema.index({ status: 1, date_posted: -1 });
+jobPostingSchema.index({ posted_by: 1, status: 1 });
 
+const JobPosting = mongoose.model('JobPosting', jobPostingSchema);
 export { JobPosting }
