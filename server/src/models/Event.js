@@ -8,7 +8,7 @@ const eventSchema = new Schema({
     event_description: { type: String },
     event_date: { type: Date, min: new Date('1940-01-01'), required: true },
     venue: { type: String, required: true },
-    created_by: {type: Schema.Types.ObjectId, ref: 'Admin', required: true},
+    created_by: { type: Schema.Types.ObjectId, ref: 'Admin', required: true },
     attendees: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Alumni' }],
 });
 eventSchema.index({ event_name: 1 });
