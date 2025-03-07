@@ -18,6 +18,5 @@ eventSchema.index({ venue: 1 });
 eventSchema.index({ created_by: 1 });
 
 const Event = mongoose.model('Event', eventSchema);
-await Event.syncIndexes();
 
 export { Event }
