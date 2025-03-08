@@ -21,8 +21,8 @@ const userSchema = new Schema({
         required: true
     },
 });
-
-userSchema.index({ email: 1 });
+userSchema.index({ user_type: 1 });
+userSchema.index({ email: 1 }, { unique: true });
 userSchema.index({ name: 1 });
 
 const alumniSchema = new Schema({
@@ -38,10 +38,17 @@ const alumniSchema = new Schema({
     events_attended: [{ type: Schema.Types.ObjectId, ref: 'Event' }]
 });
 
+alumniSchema.index({ graduation_year: 1, current_job_title: 1, degree: 1 }); 
+alumniSchema.index({ current_job_title: 1, company: 1, industry: 1 }); 
+alumniSchema.index({ skills: 1 }); 
+
+
 const adminSchema = new Schema({
     position: { type: String, required: true },
     permissions: { type: [String], required: true }
 });
+
+adminSchema.index({ position: 1 });
 
 const User = mongoose.model('User', userSchema);
 const Alumni = User.discriminator('Alumni', alumniSchema);
