@@ -1,4 +1,4 @@
-import { Alumni } from '../models/user.js';
+import { Alumni } from '../models/User.js';
 
 export async function createAlumni(req, res) {
     try {

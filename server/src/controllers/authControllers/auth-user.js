@@ -14,9 +14,9 @@ let secretKey = 'your_secret_key';
 
 router.post('/register', async (req, res) => {
     try {
-        const { username, password } = req.body;
+        const { name, password } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = new User({ username, password: hashedPassword });
+        const user = new User({ name, password: hashedPassword });
         await user.save();
         res.status(200).json({ message: 'User registered successfully' });
     } catch (e) {
@@ -26,8 +26,8 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     try {
-        const { username, password } = req.body;
-        const user = await User.findOne({ username });
+        const { name, password } = req.body;
+        const user = await User.findOne({ name });
         if (!user) {
             return res.status(401).json({ error: 'Authentication failed' });
         }
