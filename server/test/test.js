@@ -28,7 +28,6 @@ describe('GET /alumni/read', function() {
   })
 })
 
-
 describe('POST auth/register', function(){
   before(function() {
     console.log('Starting tests...');
