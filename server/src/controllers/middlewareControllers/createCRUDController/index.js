@@ -1,13 +1,13 @@
-// dynamically creates CURD functions for models
+// dynamically creates CRUD functions for models
 
-import { create } from "./create";
-import { read } from "./read";
-import { update } from "./update";
-import { remove } from "./delete";
+import { create } from "./create.js";
+import { read } from "./read.js";
+import { update } from "./update.js";
+import { remove } from "./delete.js";
 
 export const createCRUDController = (Model) => ({
-    create: (req, res) => create (Model, req, res),
-    read: (req, res) => read (Model, req, res),
-    update: (req, res) => update (Model, req, res),
-    remove: (req, res) => remove (Model, req, res)
+    create: async (req, res) => create (Model, req, res),
+    read: async (req, res) => read (Model, req, res),
+    update: async (req, res) => update (Model, req, res),
+    remove: async (req, res) => remove (Model, req, res)
 })
