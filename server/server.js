@@ -15,7 +15,10 @@ app.use("/api", alumniRoutes);
 
 // connect to MongoDB
 mongoose
-  .connect("mongodb://localhost:27017/artemis_db", { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect("mongodb://admin:cmsc128artemis@127.0.0.1:27017/artemis_db?authSource=admin", { 
+    useNewUrlParser: true, 
+    useUnifiedTopology: true 
+  })
   .then(() => {
     console.log("MongoDB Connected...");
     app.listen(PORT, () => {
