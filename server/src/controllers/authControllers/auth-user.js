@@ -3,7 +3,7 @@ import { User, Admin, Alumni } from '../../models/User.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-let secretKey = 'your_secret_key';
+let secretKey = process.env.SECRET_KEY;
 
 export const register = async (req, res) => {
     try {
