@@ -3,7 +3,6 @@ import { User, Admin, Alumni } from '../../models/User.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-let router = express.Router();
 let secretKey = 'your_secret_key';
 
 export const register = async (req, res) => {
