@@ -1,11 +1,14 @@
 import { Router } from 'express';
 const router = Router();
-import { createAlumni, getAllAlumni } from '../controllers/alumniController.js';
+import { alumniController, getAllAlumni } from '../controllers/modelControllers/alumniController.js';
 
 // create a new alumni profile
-router.post('/alumni', createAlumni);
+// router.post('/alumni', createAlumni);
+
+// read
+router.get('/read', alumniController.read);
 
 // fetch all alumni profiles
-router.get('/alumni', getAllAlumni);
+router.get('/get', getAllAlumni);
 
 export default router;

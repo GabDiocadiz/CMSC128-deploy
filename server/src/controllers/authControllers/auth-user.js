@@ -4,15 +4,16 @@ if they match, create json web token and return token with status 200
 else return error with status 401
 */
 
-import express from 'express';
+//import express from 'express';
 import { User } from '../../models/User.js'; //User is a placeholder for model to be returned; user.js is a placeholder for actual model js file
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-let router = express.Router();
+//let router = express.Router();
 let secretKey = 'your_secret_key';
 
-router.post('/register', async (req, res) => {
+export const register = async (req, res) => {
+//router.post('/register', async (req, res) => {
     try {
         const { name, password } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -22,9 +23,10 @@ router.post('/register', async (req, res) => {
     } catch (e) {
         res.status(500).json({ error: 'Registration failed' });
     }
-});
+};
 
-router.post('/login', async (req, res) => {
+export const login = async (req, res) => {
+//router.post('/login', async (req, res) => {
     try {
         const { name, password } = req.body;
         const user = await User.findOne({ name });
@@ -40,6 +42,6 @@ router.post('/login', async (req, res) => {
     } catch (e) {
         res.status(500).json({ error: 'Login failed' });
     }
-});
+};
 
-export { router };
+//export { router };
