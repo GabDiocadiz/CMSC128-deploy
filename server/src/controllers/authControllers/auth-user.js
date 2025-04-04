@@ -5,7 +5,7 @@ else return error with status 401
 */
 
 import express from 'express';
-import { User } from '../../models/User.js'; //User is a placeholder for model to be returned; user.js is a placeholder for actual model js file
+import { User } from '../models/User.js'; //User is a placeholder for model to be returned; user.js is a placeholder for actual model js file
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -35,7 +35,7 @@ router.post('/login', async (req, res) => {
         if (!passwordMatch) {
             return res.status(401).json({ error: 'Authentication failed' });
         }
-        const token = jwt.sign({ userId: user._id }, secretKey, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user._id, user_type: user.user_type }, secretKey, { expiresIn: '1h' }); //include user_type, paki-adjust na lang nung expiration ig
         res.status(200).json({ token });
     } catch (e) {
         res.status(500).json({ error: 'Login failed' });
