@@ -42,7 +42,6 @@ export const login = async (req, res) => {
         if (!passwordMatch) {
             return res.status(401).json({ error: 'Incorrect password' });
         }
-
         const token = jwt.sign(
             { userId: user._id, user_type: user.user_type },
             secretKey,
