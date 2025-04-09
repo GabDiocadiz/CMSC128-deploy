@@ -1,45 +1,55 @@
-/*
-accept username and encrypted password in req.body
-if they match, create json web token and return token with status 200
-else return error with status 401
-*/
-
 import express from 'express';
-import { User } from '../../models/User.js'; //User is a placeholder for model to be returned; user.js is a placeholder for actual model js file
+import { User, Admin, Alumni } from '../../models/User.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-let router = express.Router();
-let secretKey = 'your_secret_key';
+let secretKey = process.env.SECRET_KEY;
 
-router.post('/register', async (req, res) => {
+export const register = async (req, res) => {
     try {
-        const { name, password } = req.body;
+        const { name, email, password, user_type, ...otherFields } = req.body;
+
+        if (!["Admin", "Alumni"].includes(user_type)) {
+            return res.status(400).json({ error: 'Invalid User Type' });
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = new User({ name, password: hashedPassword });
-        await user.save();
+        let newUser;
+
+        if (user_type === "Admin") {
+            newUser = new Admin({ name, email, password: hashedPassword, ...otherFields });
+        } else {
+            newUser = new Alumni({ name, email, password: hashedPassword, ...otherFields });
+        }
+
+        await newUser.save();
         res.status(200).json({ message: 'User registered successfully' });
     } catch (e) {
         res.status(500).json({ error: 'Registration failed' });
     }
-});
+};
 
-router.post('/login', async (req, res) => {
+export const login = async (req, res) => {
     try {
-        const { name, password } = req.body;
-        const user = await User.findOne({ name });
+        const { email, password } = req.body;
+        const user = await User.findOne({ email });
+
         if (!user) {
-            return res.status(401).json({ error: 'Authentication failed' });
+            return res.status(401).json({ error: 'User not found' });
         }
+
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) {
-            return res.status(401).json({ error: 'Authentication failed' });
+            return res.status(401).json({ error: 'Incorrect password' });
         }
-        const token = jwt.sign({ userId: user._id }, secretKey, { expiresIn: '1h' });
+        const token = jwt.sign(
+            { userId: user._id, user_type: user.user_type },
+            secretKey,
+            { expiresIn: '1h' }
+        );
+
         res.status(200).json({ token });
     } catch (e) {
         res.status(500).json({ error: 'Login failed' });
     }
-});
-
-export { router };
+};
