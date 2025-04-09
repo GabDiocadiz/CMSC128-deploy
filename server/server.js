@@ -5,7 +5,6 @@ import authRoutes from "./src/routes/authRoutes.js";
 import dotenv from 'dotenv';
 dotenv.config(); 
 
-const PORT = process.env.PORT || 5050;
 const app = express();
 
 // middleware
@@ -29,6 +28,11 @@ app.use("/auth", authRoutes);
 //   .catch((err) => {
 //     console.error("Error connecting to MongoDB:", err);
 //   });
+
+// temporary default route -- remove when connecting to frontend
+app.get('/', (req, res) => {
+    res.send('API is running');
+});
 
 //export for testing
 export default app;
