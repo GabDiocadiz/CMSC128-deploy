@@ -1,10 +1,21 @@
 import request from "supertest";
-//import app from "../server.js"
+import app from "../server.js";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+dotenv.config({path:'../server/.env'});
 
-let app;
-before(async () => {
-  app = (await import("../server.js")).default;
+before(async function() {
+  // disable timeout for connection to database
+  this.timeout(0);
+
+  await mongoose.connect(
+    process.env.CONNECTION_STRING, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+
 });
+
 
 describe('GET /alumni/read', function() {
   before(function() {
@@ -16,6 +27,8 @@ describe('GET /alumni/read', function() {
   });
 
   it('should respond with json', function(done) {
+    this.timeout(0);
+    
     request(app)
       .get('/alumni/read')
       .set('Accept', 'application/json')

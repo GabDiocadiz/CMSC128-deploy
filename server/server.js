@@ -2,7 +2,6 @@ import express from "express";
 import cors from "cors";
 import alumniRoutes from "./src/routes/alumniRoutes.js";
 
-const PORT = process.env.PORT || 5050;
 const app = express();
 
 // middleware
@@ -11,6 +10,11 @@ app.use(express.json());
 
 // routes
 app.use("/alumni", alumniRoutes);
+
+// temporary default route -- remove when connecting to frontend
+app.get('/', (req, res) => {
+    res.send('API is running');
+});
 
 //export for testing
 export default app;

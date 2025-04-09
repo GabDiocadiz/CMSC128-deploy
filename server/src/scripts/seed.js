@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { User, Alumni, Admin, AlumniCollection, AdminCollection } from '../models/user.js';
+import { User, Alumni, Admin, AlumniCollection, AdminCollection } from '../models/User.js';
 import { JobPosting } from '../models/Job_Posting.js';
 import { Event } from '../models/Event.js';
 import { alumniData, adminData, jobPostingsData, eventData } from './data.js';

@@ -1,9 +1,15 @@
 import app from "./server.js"
 import mongoose from "mongoose";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const PORT = process.env.PORT || 5050;
 
 // connect to MongoDB
-mongoose
-  .connect("mongodb://localhost:27017/artemis_db", { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(
+    process.env.CONNECTION_STRING, 
+    { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log("MongoDB Connected...");
     app.listen(PORT, () => {
@@ -13,3 +19,10 @@ mongoose
   .catch((err) => {
     console.error("Error connecting to MongoDB:", err);
   });
+
+// kill process when interrupted
+process.on('SIGINT', () => {
+  console.log('Shutting down server...');
+  process.exit();
+});
+
