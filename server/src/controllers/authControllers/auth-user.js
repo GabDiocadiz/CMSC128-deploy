@@ -17,15 +17,7 @@ export const register = async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        let newUser;
-
-        // if (user_type === "Admin") {
-        //     newUser = new Admin({ name, email, password: hashedPassword, ...otherFields });
-        // } else {
-        //     newUser = new Alumni({ name, email, password: hashedPassword, ...otherFields });
-        // }
-
-        // await newUser.save();
+        req.body.password = hashedPassword;
 
         if (user_type === "Admin") {
             await alumniController.create(req, res);
