@@ -48,6 +48,8 @@ describe('POST auth/register', function(){
 
   after(function() {
     console.log('Tests completed.');
+
+    // delete test case - comment code to check in database
   });
 
   it("should register a new user", function (done) {
@@ -64,6 +66,27 @@ describe('POST auth/register', function(){
       })
       .set("Accept", "application/json")
       .expect(201)
+      .end(function (err, res) {
+        if (err) return done(err);
+        console.log("Test response: ", res.body);
+        done();
+      });
+  });
+
+  it("should not allow duplicate emails", function (done) {
+    request(app)
+      .post("/auth/register")
+      .send({
+        user_id: "TEST02",
+        name: "testuser",
+        email: "testuser@example.com",
+        password: "testpassword",
+        user_type: "Alumni",
+        degree: "BS Computer Science",
+        graduation_year: "2022"
+      })
+      .set("Accept", "application/json")
+      .expect(409)
       .end(function (err, res) {
         if (err) return done(err);
         console.log("Test response: ", res.body);
