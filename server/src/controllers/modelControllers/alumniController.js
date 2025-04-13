@@ -3,7 +3,6 @@ import { createCRUDController } from '../middlewareControllers/createCRUDControl
 
 export const alumniController = {
     ...createCRUDController(Alumni),
-    
 }
 
 export async function getAllAlumni(req, res) {

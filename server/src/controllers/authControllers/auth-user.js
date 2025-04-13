@@ -1,13 +1,16 @@
 import express from 'express';
 import { User, Admin, Alumni } from '../../models/User.js';
+import { alumniController } from '../modelControllers/alumniController.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import dotenv from "dotenv";
+dotenv.config({path: "~/server/.env"})
 
 let secretKey = process.env.SECRET_KEY;
 
 export const register = async (req, res) => {
     try {
-        const { name, email, password, user_type, ...otherFields } = req.body;
+        const { user_id, name, email, password, user_type, degree, ...otherFields } = req.body;
 
         if (!["Admin", "Alumni"].includes(user_type)) {
             return res.status(400).json({ error: 'Invalid User Type' });
@@ -16,13 +19,20 @@ export const register = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
         let newUser;
 
+        // if (user_type === "Admin") {
+        //     newUser = new Admin({ name, email, password: hashedPassword, ...otherFields });
+        // } else {
+        //     newUser = new Alumni({ name, email, password: hashedPassword, ...otherFields });
+        // }
+
+        // await newUser.save();
+
         if (user_type === "Admin") {
-            newUser = new Admin({ name, email, password: hashedPassword, ...otherFields });
+            await alumniController.create(req, res);
         } else {
-            newUser = new Alumni({ name, email, password: hashedPassword, ...otherFields });
+            await alumniController.create(req, res);
         }
 
-        await newUser.save();
         res.status(200).json({ message: 'User registered successfully' });
     } catch (e) {
         res.status(500).json({ error: 'Registration failed' });
