@@ -1,5 +1,5 @@
 import express from 'express';
-import { User, Admin, Alumni } from '../../models/User.js';
+import { User, Admin, Alumni } from '../models/User.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
