@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
 
+import './App.css'
 import { Landing_page } from './components/sections/Landing_page'
 import "./index.css"
+
+import Login from './components/sections/Login'
+import Registration from './components/sections/Registration'
 
 function App() {
   const [count, setCount] = useState(0)

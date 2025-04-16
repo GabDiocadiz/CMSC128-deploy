@@ -1,12 +1,14 @@
-import Navbar from "../header";
-
+import Navbar_landing from "../header_landing";
+import Navbar from "../header_landing";
+import notification from "../notification";
 export const Landing_page = () => {
   return (
     <>
-      <div className="fixed top-0 w-full z-50">
-        <Navbar />
+      <div className="w-screen">
+        <Navbar_landing />
+        <notification />
       </div>
-      <div className="bg-[url('src/assets/Building.png')] bg-cover bg-center w-full h-150 flex flex-col justify-between">
+      <div className="bg-[url('src/assets/Building.png')] bg-cover bg-center w-full h-175 flex flex-col justify-between">
         <div className="flex justify-between items-start h-full text-white text-left pl-16 pt-24">
           <div className="flex flex-col">
             <p className="text-7xl font-bold">Welcome to Artemis</p>
@@ -21,10 +23,10 @@ export const Landing_page = () => {
         </div>
         <div className="flex justify-end pb-10 pr-16">
           <div className="flex gap-4">
-            <button className="!bg-transparent !hover:bg-white !text-3xl !text-white !hover:text-[#085740] !h-15 !font-light !px-6 !py-2 !border-2 !border-white !rounded-full">
+            <button className="    !text-3xl  text-white  !h-15 !font-regular !px-8 !py-2 !border-2 !border-white !rounded-full ">
               Log In
             </button>
-            <button className="!bg-transparent !hover:bg-[#FFFFFF] !text-3xl !text-white !hover:text-[#085740] !h-15 !font-light !px-6 !py-2 !border-2 !border-white !rounded-full">
+            <button className=" !text-3xl  text-white  !h-15 !font-regular !px-8 !py-2 !border-2 !border-white !rounded-full">
               View Job Listing
             </button>
           </div>
@@ -33,7 +35,7 @@ export const Landing_page = () => {
 
       {/* 2nd Part of the Page */}
 
-      <div className="w-full bg-gray-200 p-10">
+      <div className="w-full bg-gray-200 p-10 py-15">
         <div className="flex flex-col justify-center text-center">
         <h2 className="text-6xl text-center text-[#891839] font-bold">
           Stay Connected, Stay Involved
@@ -43,9 +45,6 @@ export const Landing_page = () => {
           to reconnecting with old friends, expanding your professional network,
           and giving back to the ICS community.
         </h2>
-        {/* <p className="text-xl text-centerfont-light text-black w-150">
-          
-        </p> */}
         </div>
         <div className="grid grid-cols-3 gap-x-8 gap-y-10 p-16"> 
             {/* Column 1 */ }
@@ -110,7 +109,10 @@ export const Landing_page = () => {
                 </div>
                 
             </div>
-            </div>
+          </div>
+          <div className="text-[#891839]">
+          © 2025 CMSC 128 A26L. University of the Philippines Los Baños.
+          </div>
       </div>
     </>
   );
