@@ -6,6 +6,7 @@ import "./index.css"
 
 import Login from './components/sections/Login'
 import Registration from './components/sections/Registration'
+import MainPage from './components/sections/MainPage'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -15,7 +16,8 @@ function App() {
       {
         
       //<Landing_page></Landing_page>
-      <Registration></Registration>
+      // <Registration></Registration>
+      <MainPage></MainPage>
      }
     </>
   )
