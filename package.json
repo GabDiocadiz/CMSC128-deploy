@@ -5,6 +5,12 @@
     "mongoose": "^8.12.1"
   },
   "scripts": {
-    "seed": "node ./server/src/scripts/seed.js"
+    "seed": "node ./server/src/scripts/seed.js",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm install && npm start",
+    "client": "cd client && npm install && npm run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
   }
 }
