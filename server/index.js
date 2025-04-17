@@ -25,4 +25,3 @@ process.on('SIGINT', () => {
   console.log('Shutting down server...');
   process.exit();
 });
-
