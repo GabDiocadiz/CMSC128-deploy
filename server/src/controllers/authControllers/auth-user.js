@@ -8,6 +8,7 @@ dotenv.config({path: "~/server/.env"})
 
 let secretKey = process.env.SECRET_KEY;
 
+// should accept req: user_id, name, email, password, user_type, degree, graduation year
 export const register = async (req, res) => {
     try {
         // check if existing email
