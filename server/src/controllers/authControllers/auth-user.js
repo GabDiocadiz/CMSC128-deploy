@@ -1,30 +1,37 @@
 import express from 'express';
 import { User, Admin, Alumni } from '../../models/User.js';
+import { alumniController } from '../modelControllers/alumniController.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import dotenv from "dotenv";
+dotenv.config({path: "~/server/.env"})
 
 let secretKey = process.env.SECRET_KEY;
 
 export const register = async (req, res) => {
     try {
-        const { name, email, password, user_type, ...otherFields } = req.body;
+        // check if existing email
+        const existingEmail = await User.findOne({ email: req.body.email });
+        if (existingEmail) {
+            return res.status(409).json({ error: 'Email already in use' });
+        }
 
-        if (!["Admin", "Alumni"].includes(user_type)) {
+        // check user type      *can probably remove when input middleware is made
+        if (!["Admin", "Alumni"].includes(req.body.user_type)) {
             return res.status(400).json({ error: 'Invalid User Type' });
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-        let newUser;
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        req.body.password = hashedPassword;
 
-        if (user_type === "Admin") {
-            newUser = new Admin({ name, email, password: hashedPassword, ...otherFields });
+        if (req.body.user_type === "Admin") {
+            await alumniController.create(req, res);
         } else {
-            newUser = new Alumni({ name, email, password: hashedPassword, ...otherFields });
+            await alumniController.create(req, res);
         }
 
-        await newUser.save();
         res.status(200).json({ message: 'User registered successfully' });
-    } catch (e) {
+    } catch (error) {
         res.status(500).json({ error: 'Registration failed' });
     }
 };
