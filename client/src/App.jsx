@@ -72,6 +72,18 @@ function App() {
       element: (
         <Landing_page />
       )
+    },
+    {
+      path: "/job-details/:id",
+      // element: < />
+    },
+    {
+      path: "/event-details/:id",
+      // element: < />
+    },
+    {
+      path: "/announcement-details/:id",
+      // element: < />
     }
   ]);
 

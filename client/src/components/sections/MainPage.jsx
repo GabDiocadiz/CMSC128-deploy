@@ -1,14 +1,32 @@
 import { Link } from "react-router-dom";
-import { jobList } from "../../utils/models";
+import { useState, useEffect } from "react";
+import { eventList, announcementList, jobList } from "../../utils/models";
 import Navbar from "../header";
 import Footer from "../footer";
-import event1 from "../../assets/event.png";
-import notice1 from "../../assets/notice1.png";
-import notice2 from "../../assets/notice2.png";
 import BookEventButton from "../buttons/BookEvent";
 import SearchAlumniButton from "../buttons/SearchAlumni";
 
 export default function MainPage() {
+    const [currentEventIndex, setCurrentEventIndex] = useState(0);
+    const [oddNoticeIndex, setOddNoticeIndex] = useState(0);
+    const [evenNoticeIndex, setEvenNoticeIndex] = useState(1);
+
+    useEffect(() => {
+        const eventInterval = setInterval(() => {
+            setCurrentEventIndex((prevIndex) => (prevIndex+1)%eventList.length);
+        }, 20000);
+    
+        const noticeInterval = setInterval(() => {
+            setOddNoticeIndex((prev) => (prev+2)%announcementList.length);
+            setEvenNoticeIndex((prev) => (prev+2)%announcementList.length);
+        }, 30000);
+    
+        return () => {
+            clearInterval(eventInterval);
+            clearInterval(noticeInterval);
+        };
+    }, []);
+
     return (
     <>
         <div className="fixed top-0 w-full z-50">
@@ -18,41 +36,44 @@ export default function MainPage() {
         <div className="w-screen pt-12">
         <div className="w-full grid grid-cols-3 gap-0 min-h-[600px]">
             {/* Events */}
-            <div
-                className="col-span-2 bg-cover bg-center text-white flex flex-col justify-center items-start px-16 py-32 w-full"
-                style={{ backgroundImage: `url(${event1})` }}
+            {eventList.length > 0 && (
+                <div
+                    className="col-span-2 bg-cover bg-center text-white flex flex-col justify-center items-start px-16 py-32 w-full transition-all duration-1000"
+                    style={{ backgroundImage: `url(${eventList[currentEventIndex].image})` }}
                 >
-                <h1 className="!text-8xl !font-bold !mb-4 !text-left">Event 1</h1>
-                <p className="!text-md !max-w-xl !text-left">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                    nisi ut aliquip ex ea commodo consequat.
+                <Link
+                    to={`/event-details/${currentEventIndex}`}
+                    state={{ event: eventList[currentEventIndex] }}
+                    className="!text-white !text-7xl !font-bold !mb-4 !text-left hover:!underline"
+                >
+                    {eventList[currentEventIndex].event_name}
+                </Link>
+                <p className="!text-md !max-w-2xl !text-left">
+                    {eventList[currentEventIndex].event_description}
                 </p>
-            </div>
+                </div>
+            )}
 
-            {/* Notices */}
+            {/* Announcements */}
             <div className="grid grid-rows-2 w-full">
-            <div
-                className="bg-cover bg-center text-white flex flex-col justify-center items-end text-right px-10 py-10 w-full"
-                style={{ backgroundImage: `url(${notice1})` }}
-            >
-                <h2 className="text-5xl font-bold mb-4">Notice 2</h2>
-                <p className="text-xs max-w-xs">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                    eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                {[oddNoticeIndex, evenNoticeIndex].map((index, i) => (
+                <div
+                    key={i}
+                    className="bg-cover bg-center !text-white flex flex-col justify-center items-end text-right px-10 py-10 w-full transition-all duration-1000"
+                    style={{ backgroundImage: `url(${announcementList[index].image})` }}
+                >
+                <Link
+                    to={`/announcement-details/${index}`}
+                    state={{ announcement: announcementList[index] }}
+                    className="!text-white !text-4xl !font-bold !mb-4 hover:!underline"
+                >
+                    {announcementList[index].title}
+                </Link>
+                <p className="text-sm max-w-md">
+                    {announcementList[index].context}
                 </p>
-            </div>
-            <div
-                className="bg-cover bg-center text-white flex flex-col justify-center items-end text-right px-10 py-10 w-full"
-                style={{ backgroundImage: `url(${notice2})` }}
-            >
-                <h2 className="text-5xl font-bold mb-4">Notice 3</h2>
-                <p className="text-xs max-w-xs">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                    eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </p>
-            </div>
+                </div>
+            ))}
             </div>
         </div>
 

@@ -1,3 +1,7 @@
+import event1 from "../assets/event.png";
+import notice1 from "../assets/notice1.png";
+import notice2 from "../assets/notice2.png";
+
 export const jobList = [
     {
       job_id: 1,
@@ -148,6 +152,7 @@ export const announcementList = [
       context: 'There will be a system maintenance tonight at 10 PM.',
       date_posted: new Date('2025-04-10T09:00:00Z'),
       posted_by: 123,
+      image: notice1
     },
     {
       announcement_id: 2,
@@ -155,6 +160,7 @@ export const announcementList = [
       context: 'The office will be closed on December 25th for Christmas.',
       date_posted: new Date('2024-12-20T09:00:00Z'),
       posted_by: 124,
+      image: notice2
     },
     {
       announcement_id: 3,
@@ -162,6 +168,7 @@ export const announcementList = [
       context: 'New employees are invited to attend the orientation on June 1st.',
       date_posted: new Date('2025-04-01T09:00:00Z'),
       posted_by: 125,
+      image: event1
     },
     {
       announcement_id: 4,
@@ -169,6 +176,7 @@ export const announcementList = [
       context: 'Join us for a webinar on cloud computing on May 20th.',
       date_posted: new Date('2025-04-05T09:00:00Z'),
       posted_by: 126,
+      image: notice1
     },
     {
       announcement_id: 5,
@@ -176,6 +184,7 @@ export const announcementList = [
       context: 'A new version of the software will be released next week.',
       date_posted: new Date('2025-04-08T09:00:00Z'),
       posted_by: 127,
+      image: notice2
     },
     {
       announcement_id: 6,
@@ -183,6 +192,7 @@ export const announcementList = [
       context: 'We are hosting a job fair next month. Make sure to attend!',
       date_posted: new Date('2025-04-07T09:00:00Z'),
       posted_by: 128,
+      image: event1
     },
     {
       announcement_id: 7,
@@ -190,6 +200,7 @@ export const announcementList = [
       context: 'A training session on the new system will be held on April 10th.',
       date_posted: new Date('2025-04-01T09:00:00Z'),
       posted_by: 129,
+      image: notice1
     },
     {
       announcement_id: 8,
@@ -197,6 +208,7 @@ export const announcementList = [
       context: 'Congratulations to Sarah for being Employee of the Month!',
       date_posted: new Date('2025-04-03T09:00:00Z'),
       posted_by: 130,
+      image: notice2
     },
     {
       announcement_id: 9,
@@ -204,6 +216,7 @@ export const announcementList = [
       context: 'The project deadline has been extended to May 15th.',
       date_posted: new Date('2025-04-03T09:00:00Z'),
       posted_by: 131,
+      image: event1
     },
     {
       announcement_id: 10,
@@ -211,6 +224,7 @@ export const announcementList = [
       context: 'The office will undergo renovations starting next week.',
       date_posted: new Date('2025-04-03T09:00:00Z'),
       posted_by: 132,
+      image: notice1
     },
 ];
 
@@ -223,6 +237,7 @@ export const eventList = [
       venue: 'Room 101, UP Tech Center, Quezon City',
       created_by: 123,
       attendees: [1001, 1002, 1003],
+      image: event1
     },
     {
       event_id: 2,
@@ -232,6 +247,7 @@ export const eventList = [
       venue: 'iAcademy Nexus Campus, Makati City',
       created_by: 124,
       attendees: [1004, 1005, 1006],
+      image: notice1
     },
     {
       event_id: 3,
@@ -241,6 +257,7 @@ export const eventList = [
       venue: 'The Astbury, Makati',
       created_by: 125,
       attendees: [1007, 1008, 1009],
+      image: notice2
     },
     {
       event_id: 4,
@@ -250,6 +267,7 @@ export const eventList = [
       venue: 'SMX Convention Center, Pasay City',
       created_by: 126,
       attendees: [1010, 1011, 1012],
+      image: event1
     },
     {
       event_id: 5,
@@ -259,6 +277,7 @@ export const eventList = [
       venue: 'Function Hall B, Cebu IT Park',
       created_by: 127,
       attendees: [1013, 1014, 1015],
+      image: notice1
     },
     {
       event_id: 6,
@@ -268,6 +287,7 @@ export const eventList = [
       venue: 'Room 202, FEU Tech Building, Manila',
       created_by: 128,
       attendees: [1016, 1017, 1018],
+      image: notice2
     },
     {
       event_id: 7,
@@ -277,6 +297,7 @@ export const eventList = [
       venue: 'Philippine International Convention Center (PICC), Pasay City',
       created_by: 129,
       attendees: [1019, 1020, 1021],
+      image: event1
     },
     {
       event_id: 8,
@@ -286,6 +307,7 @@ export const eventList = [
       venue: 'LaunchGarage, Quezon City',
       created_by: 130,
       attendees: [1022, 1023, 1024],
+      image: notice1
     },
     {
       event_id: 9,
@@ -295,6 +317,7 @@ export const eventList = [
       venue: 'The Common Ground, BGC, Taguig',
       created_by: 131,
       attendees: [1025, 1026, 1027],
+      image: notice2
     },
     {
       event_id: 10,
@@ -304,5 +327,6 @@ export const eventList = [
       venue: 'Cyberzone Conference Hall, SM North EDSA, Quezon City',
       created_by: 132,
       attendees: [1028, 1029, 1030],
+      image: event1
     },
 ];  
