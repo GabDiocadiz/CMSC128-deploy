@@ -14,8 +14,8 @@ function App() {
     <>
       {
         
-      <Landing_page></Landing_page>
-      
+      //<Landing_page></Landing_page>
+      <Registration></Registration>
      }
     </>
   )
