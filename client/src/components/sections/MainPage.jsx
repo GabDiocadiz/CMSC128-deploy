@@ -37,21 +37,49 @@ export default function MainPage() {
         <div className="w-full grid grid-cols-3 gap-0 min-h-[600px]">
             {/* Events */}
             {eventList.length > 0 && (
-                <div
-                    className="col-span-2 bg-cover bg-center text-white flex flex-col justify-center items-start px-16 py-32 w-full transition-all duration-1000"
-                    style={{ backgroundImage: `url(${eventList[currentEventIndex].image})` }}
-                >
-                <Link
-                    to={`/event-details/${currentEventIndex}`}
-                    state={{ event: eventList[currentEventIndex] }}
-                    className="!text-white !text-7xl !font-bold !mb-4 !text-left hover:!underline"
-                >
+            <div
+                className="col-span-2 bg-cover bg-center text-white flex flex-col justify-center items-start px-16 py-32 w-full transition-all duration-1000 relative group"
+                style={{ backgroundImage: `url(${eventList[currentEventIndex].image})` }}
+            >
+            <div className="relative z-10 group/title">
+            <Link
+                to={`/event-details/${currentEventIndex}`}
+                state={{ event: eventList[currentEventIndex] }}
+                className="!text-white !text-7xl !font-bold !mb-4 !text-left cursor-pointer block w-full relative z-10"
+            >
+                {eventList[currentEventIndex].event_name}
+            </Link>
+            <div
+                className="opacity-0 group-hover/title:opacity-100 pointer-events-none transition-opacity duration-300 absolute top-1/2 left-1/2 -translate-x-[20%] -translate-y-1/2 z-50 w-[650px] h-[500px] bg-cover bg-center text-white shadow-2xl backdrop-blur-md flex items-center justify-center"
+                style={{ backgroundImage: `url(${eventList[currentEventIndex].image})` }}
+            >
+            <div className="relative bg-transparent w-[90%] h-[90%] border-2 border-white rounded-2xl px-10 py-6 flex flex-col items-start text-left overflow-y-auto">
+                <h2 className="text-5xl font-bold text-center w-full absolute top-10 left-1/2 -translate-x-1/2 px-4">
                     {eventList[currentEventIndex].event_name}
-                </Link>
+                </h2>
+                <div className="pt-45 w-full space-y-3">
+                    <p className="text-md">
+                        {eventList[currentEventIndex].event_description}
+                    </p>
+                    <p>
+                        <span className="font-semibold">Date:</span>{' '}
+                        {new Date(eventList[currentEventIndex].event_date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        })}
+                    </p>
+                    <p>
+                        <span className="font-semibold">Venue:</span> {eventList[currentEventIndex].venue}
+                    </p>
+                </div>     
+            </div>
+            </div>
+            </div>
                 <p className="!text-md !max-w-2xl !text-left">
                     {eventList[currentEventIndex].event_description}
                 </p>
-                </div>
+            </div>
             )}
 
             {/* Announcements */}
