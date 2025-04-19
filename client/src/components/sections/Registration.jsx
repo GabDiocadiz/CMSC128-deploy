@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 
 import Navbar_landing from "../header_landing";
 const Registration = () => {
@@ -7,15 +8,35 @@ const Registration = () => {
         email: "",
         password: "",
         confirmPassword: "",
+        degree: "",
+        graduation_year: ""
     });
 
     const handleChange = (e) => {
         setFormData ({ ...formData, [e.target.name]: e.target.value});
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Form submitted:", formData);
+
+        // register in backend
+        try {
+            const res = await axios.post("http://localhost:5050/auth/register", {
+                user_id: "TEST01",
+                name: formData.username,
+                email: formData.email,
+                password: formData.password,
+                degree: formData.degree,
+                graduation_year: formData.graduation_year,
+                user_type: 'Alumni'
+            });
+
+            console.log("Form submitted:", formData);
+            alert("Registration successful!");
+        } catch (err) {
+            console.error("Registration error: ", err.message);
+            alert("Registration failed. Please try again.");
+        }
     };
 
     return (
@@ -86,23 +107,23 @@ const Registration = () => {
 
                                 <div>
                                     <input
-                                        type=""
-                                        name=""
-                                        value={formData.confirmPassword}
-                                        onAbort={handleChange}
+                                        type="text"
+                                        name="degree"
+                                        value={formData.degree}
+                                        onChange={handleChange}
                                         className="w-full p-2 border-3 border-[#3E3939] bg-white-700 rounded-md outline-none focus:ring-1"
-                                        placeholder="Contact Number"
+                                        placeholder="Degree Program"
                                         required
                                     />
                                 </div>
                                 <div>
                                     <input
-                                        type=""
-                                        name=""
-                                        value={formData.confirmPassword}
-                                        onAbort={handleChange}
+                                        type="number"
+                                        name="graduation_year"
+                                        value={formData.graduation_year}
+                                        onChange={handleChange}
                                         className="w-full p-2 border-3 border-[#3E3939] bg-white-700 rounded-md outline-none focus:ring-1"
-                                        placeholder="Address"
+                                        placeholder="Year Graduated"
                                         required
                                     />
                                 </div>
