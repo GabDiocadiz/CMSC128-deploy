@@ -1,9 +1,11 @@
 import express from "express";
 import cors from "cors";
-import alumniRoutes from "./src/routes/alumniRoutes.js";
-import authRoutes from "./src/routes/authRoutes.js";
 import dotenv from 'dotenv';
 import axios from "axios";
+import cookieParser from "cookie-parser";
+import alumniRoutes from "./src/routes/alumniRoutes.js";
+import authRoutes from "./src/routes/authRoutes.js";
+
 dotenv.config(); 
 
 const VITE_API_URL = process.env.VITE_API_URL || 5173;
@@ -21,6 +23,7 @@ app.use(cors({
     credentials: true
 }));
 app.use(express.json());
+app.use(cookieParser());
 
 // routes
 app.use("/alumni", alumniRoutes);

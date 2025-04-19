@@ -119,19 +119,19 @@ describe('POST auth/login', function(){
       });
   });
 
-  // it("should fail to login with incorrect password", function (done) {
-  //   request(app)
-  //     .post("/auth/login")
-  //     .send({
-  //       name: "testuser",
-  //       password: "wrongpassword",
-  //     })
-  //     .set("Accept", "application/json")
-  //     .expect(401)
-  //     .end(function (err, res) {
-  //       if (err) return done(err);
-  //       console.log("Test response: ", res.body);
-  //       done();
-  //     });
-  // });
+  it("should fail to login with incorrect password", function (done) {
+    request(app)
+      .post("/auth/login")
+      .send({
+        name: "testuser",
+        password: "wrongpassword",
+      })
+      .set("Accept", "application/json")
+      .expect(401)
+      .end(function (err, res) {
+        if (err) return done(err);
+        console.log("Test response: ", res.body);
+        done();
+      });
+  });
 })
