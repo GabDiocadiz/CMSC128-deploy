@@ -4,7 +4,7 @@ import { alumniController } from '../modelControllers/alumniController.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from "dotenv";
-dotenv.config({path: "~/server/.env"})
+dotenv.config({path: "../server/.env"})
 
 let secretKey = process.env.SECRET_KEY;
 
@@ -38,17 +38,20 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
     try {
-        const { email, password } = req.body;
-        const user = await User.findOne({ email });
+        const user = await User.findOne({email: req.body.email});
 
         if (!user) {
+            console.log("Not found")
             return res.status(401).json({ error: 'User not found' });
         }
 
-        const passwordMatch = await bcrypt.compare(password, user.password);
+        const passwordMatch = await bcrypt.compare(req.body.password, user.password);
         if (!passwordMatch) {
             return res.status(401).json({ error: 'Incorrect password' });
         }
+
+        console.log(secretKey);
+
         const token = jwt.sign(
             { userId: user._id, user_type: user.user_type },
             secretKey,
@@ -57,6 +60,7 @@ export const login = async (req, res) => {
 
         res.status(200).json({ token });
     } catch (e) {
+        console.log(e)
         res.status(500).json({ error: 'Login failed' });
     }
 };
