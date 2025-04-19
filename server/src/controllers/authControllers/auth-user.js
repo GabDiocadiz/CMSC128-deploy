@@ -1,12 +1,14 @@
-import express from 'express';
 import { User, Admin, Alumni } from '../../models/User.js';
 import { alumniController } from '../modelControllers/alumniController.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import cookieParser from 'cookie-parser';
 import dotenv from "dotenv";
 dotenv.config({path: "../server/.env"})
 
-let secretKey = process.env.SECRET_KEY;
+let accessSecretKey = process.env.ACCESS_TOKEN_SECRET__KEY;
+let refreshSecretKey = process.env.REFRESH_TOKEN_SECRET_KEY;
+
 
 export const register = async (req, res) => {
     try {
@@ -36,31 +38,81 @@ export const register = async (req, res) => {
     }
 };
 
+
 export const login = async (req, res) => {
     try {
-        const user = await User.findOne({email: req.body.email});
+        const { email, password } = req.body;
+        const user = await User.findOne({email: email});
 
         if (!user) {
-            console.log("Not found")
             return res.status(401).json({ error: 'User not found' });
         }
 
-        const passwordMatch = await bcrypt.compare(req.body.password, user.password);
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
         if (!passwordMatch) {
             return res.status(401).json({ error: 'Incorrect password' });
         }
 
-        console.log(secretKey);
-
-        const token = jwt.sign(
+        // create access token
+        const accessToken = jwt.sign(
             { userId: user._id, user_type: user.user_type },
-            secretKey,
-            { expiresIn: '1h' }
+            accessSecretKey,
+            { expiresIn: '10m' }
         );
 
-        res.status(200).json({ token });
+        // create refresh token
+        const refreshToken = jwt.sign(
+            { userId: user._id, user_type: user.user_type },
+            refreshSecretKey,
+            { expiresIn: '1d' }
+        )
+
+        res.cookie('jwt', refreshToken, {
+            httpOnly: true,
+            sameSite: 'None', 
+            secure: true,
+            maxAge: 24 * 60 * 60 * 1000
+        })
+
+        res.status(200).json({ accessToken });
     } catch (e) {
-        console.log(e)
+        console.error('Login Error: ', e)
         res.status(500).json({ error: 'Login failed' });
     }
 };
+
+
+export const refresh = async (req, res) => {
+    try {
+        const refreshToken = req.cookies.jwt;
+
+        jwt.verify(
+            refreshToken, 
+            refreshSecretKey,
+            async (err, decoded) => {
+                if (err) {
+                    return res.status(406).json({ message: 'Invalid or expired refresh token' });
+                }
+                
+                const user = await User.findById(decoded.userId)
+
+                if (!user) {
+                    return res.status(401).json({ message: 'User not found' });
+                }
+
+                const accessToken = jwt.sign(
+                    { userId: user._id, user_type: user.user_type },
+                    accessSecretKey,
+                    { expiresIn: '10m' }
+                );
+
+                res.status(200).json({ accessToken });
+            }
+            
+        )
+    } catch (e) {
+        console.error('Refresh Error: ', e)
+        res.status(500).json({ error: 'Failed to access token'});
+    }
+}
