@@ -19,7 +19,8 @@ const testCases = [
     { description: 'Search by multiple fields', endpoint: `${BASE_URL}/search?name=Jane&degree=Math&graduation_year=2019&skills=Python` },
     { description: 'Search by multiple fields', endpoint: `${BASE_URL}/search?name=Jane&graduation_year=2018&skills=Python` }
   ];
-  
+
+async function runTests() {
   for (const testCase of testCases) {
     try {
       const response = await needle('get', testCase.endpoint);
@@ -31,4 +32,6 @@ const testCases = [
       console.error('Error:', error.message);
     }
   }
-  
+}
+
+runTests();
