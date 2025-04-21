@@ -1,5 +1,6 @@
 import { User, Admin, Alumni } from '../../models/User.js';
 import { alumniController } from '../modelControllers/alumniController.js';
+import { adminController } from '../modelControllers/adminController.js';
 import bcrypt from 'bcrypt';
 import dotenv from "dotenv";
 dotenv.config({path: "../server/.env"})
@@ -22,7 +23,7 @@ export const register = async (req, res) => {
         req.body.password = hashedPassword;
 
         if (req.body.user_type === "Admin") {
-            await alumniController.create(req, res);
+            await adminController.create(req, res);
         } else {
             await alumniController.create(req, res);
         }

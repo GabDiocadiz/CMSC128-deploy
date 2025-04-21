@@ -3,6 +3,19 @@ import { createCRUDController } from '../middlewareControllers/createCRUDControl
 
 export const alumniController = {
     ...createCRUDController(Alumni),
+
+    async deleteByEmail(req, res) {
+        try {
+            const { email } = req.params;
+            const deleted = await Alumni.findOneAndDelete({ email });
+        
+            if (!deleted) return res.status(404).json({ message: 'User not found' });
+        
+            res.status(200).json({ message: 'User deleted' });
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+      }
 }
 
 export async function getAllAlumni(req, res) {
