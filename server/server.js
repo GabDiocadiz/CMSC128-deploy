@@ -6,7 +6,8 @@ import cookieParser from "cookie-parser";
 import alumniRoutes from "./src/routes/alumniRoutes.js";
 import authRoutes from "./src/routes/authRoutes.js";
 import fileRoutes from './src/routes/fileRoutes.js';
-import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import path from 'path';
 
 dotenv.config(); 
 

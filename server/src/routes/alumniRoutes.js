@@ -5,6 +5,7 @@ import { validateToken } from '../middleware/validate-token.js';
 import { authorizeRoles } from '../middleware/authorize-roles.js';
 import { alumniSearch } from '../controllers/modelControllers/alumniController.js';
 
+const router = express.Router();
 
 // delete by email
 router.delete('/email/:email', alumniController.deleteByEmail);

@@ -2,7 +2,7 @@
 import express from 'express';
 import path from 'path';
 import fs from 'fs';
-import upload from '../middleware/uploadMiddleware.js';
+import upload from '../middleware/fileMiddleware.js';
 
 const router = express.Router();
 const uploadsDir = path.resolve('uploads');

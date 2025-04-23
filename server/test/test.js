@@ -2,7 +2,8 @@ import request from "supertest";
 import app from "../server.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-dotenv.config({path:'~/server/.env'});
+
+dotenv.config({path:'../server/.env'});
 
 before(async function() {
   // disable timeout for connection to database
