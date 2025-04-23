@@ -5,6 +5,8 @@ import axios from "axios";
 import cookieParser from "cookie-parser";
 import alumniRoutes from "./src/routes/alumniRoutes.js";
 import authRoutes from "./src/routes/authRoutes.js";
+import fileRoutes from './src/routes/fileRoutes.js';
+import dotenv from 'dotenv';
 
 dotenv.config(); 
 
@@ -16,6 +18,8 @@ export const api = axios.create({
 })
 
 const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // middleware
 app.use(cors({
@@ -23,11 +27,13 @@ app.use(cors({
     credentials: true
 }));
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
 
 // routes
 app.use("/alumni", alumniRoutes);
 app.use("/auth", authRoutes);
+app.use("/file", fileRoutes);
 
 // temporary default route -- remove when connecting to frontend
 app.get('/', (req, res) => {
