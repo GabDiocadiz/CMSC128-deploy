@@ -3,7 +3,8 @@ const router = Router();
 import { alumniController } from '../controllers/modelControllers/alumniController.js';
 import { getAllAlumni } from '../controllers/modelControllers/alumniController.js';
 import { authenticateToken, authorizeRoles } from '../middleware/authMiddleware.js';
-import { createRSVP } from '../controllers/RSVPController/rsvpController.js';
+import { createRSVP, editRSVP, viewRSVP } from '../controllers/RSVPController/rsvpController.js';
+
 
 // fetch all alumni profiles
 router.get('/read', alumniController.read);
@@ -15,7 +16,13 @@ router.get('/read', alumniController.read);
 router.get('/alumni', authenticateToken, authorizeRoles(['Admin', 'Alumni']), getAllAlumni);
 
 // Create RSVP (Alumni confirming their attendance)
-router.post('alumni/rsvp', authenticateToken, authorizeRoles(['Alumni']), createRSVP);
+router.post('/alumni/rsvp', authenticateToken, authorizeRoles(['Alumni']), createRSVP);
+
+// Edit RSVP
+router.put('alumni/rsvp/:eventID', authenticateToken, authorizeRoles(['Alumni']), editRSVP);
+
+// View RSVPs
+router.get('alumni/view-all-rsvp', authenticateToken, authorizeRoles(['Alumni']), viewRSVP);
 
 // fetch all attendees for the event (Admin and Alumni)
 // router.get('alumni/event/:eventId/attendees', authenticateToken, authorizeRoles(['Alumin', 'Admin']), getEventAttendees);
