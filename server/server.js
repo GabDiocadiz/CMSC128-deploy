@@ -6,8 +6,10 @@ import cookieParser from "cookie-parser";
 import alumniRoutes from "./src/routes/alumniRoutes.js";
 import authRoutes from "./src/routes/authRoutes.js";
 import fileRoutes from './src/routes/fileRoutes.js';
+import notificationRoutes from './src/routes/notificationRoutes.js';
 import { fileURLToPath } from 'url';
 import path from 'path';
+
 
 dotenv.config(); 
 
@@ -35,6 +37,7 @@ app.use(cookieParser());
 app.use("/alumni", alumniRoutes);
 app.use("/auth", authRoutes);
 app.use("/file", fileRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // temporary default route -- remove when connecting to frontend
 app.get('/', (req, res) => {
