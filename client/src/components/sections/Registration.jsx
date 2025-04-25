@@ -1,7 +1,9 @@
 import { useState } from "react";
 
 import Navbar_landing from "../header_landing";
+import { useNavigate } from 'react-router-dom'
 const Registration = () => {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         username: "",
         email: "",
@@ -15,7 +17,15 @@ const Registration = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("Form submitted:", formData);
+        const register= 2; {/* Temporary change it to the api call */}
+        if (register.success){
+            console.log("Form submitted:", formData);  {/* For debugging, remove on launch */}
+            navigate(-1) 
+        }else{
+            console.log("Unsuccessfully Registered"); {/* Temporary change it to the api call */}
+        }
+       
+
     };
 
     return (
@@ -24,7 +34,7 @@ const Registration = () => {
                 <Navbar_landing></Navbar_landing>
             </div> 
             
-            <div className="bg-[url('src/assets/Building.png')] bg-cover bg-center w-full h-screen flex flex-col justify-between">
+            <div className="bg-[url('src/assets/Building.png')] bg-cover bg-center w-full h-full flex flex-col justify-between pb-20">
                 <div className="grid grid-cols-1 gap-y-5 pt-16">
                     <h1 className=" !text-7xl font-bold text-white ">ARTEMIS</h1>       
                     <div className="flex justify-center">
@@ -111,6 +121,7 @@ const Registration = () => {
                                 <button
                                     type="register"
                                     className="font-semibold w-full bg-[#085740] p-2 rounded-md hover:bg-green-600 transition focus:ring-1 focus:ring-green-600"
+                                    
                                 >
                                     Register
                                 </button>

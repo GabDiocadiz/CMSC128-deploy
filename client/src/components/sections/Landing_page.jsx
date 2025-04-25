@@ -1,10 +1,13 @@
 import Navbar_landing from "../header_landing";
 import Navbar from "../header_landing";
 import notification from "../notification";
+import { useNavigate } from 'react-router-dom'
 export const Landing_page = () => {
+  const navigate = useNavigate()
+  
   return (
     <>
-      <div className="w-screen">
+      <div className="w-scree h-auto">
         <Navbar_landing />
         <notification />
       </div>
@@ -23,10 +26,11 @@ export const Landing_page = () => {
         </div>
         <div className="flex justify-end pb-10 pr-16">
           <div className="flex gap-4">
-            <button className="    !text-3xl  text-white  !h-15 !font-regular !px-8 !py-2 !border-2 !border-white !rounded-full ">
+            <button className="    !text-3xl  text-white  !h-15 !font-extrabold !px-8 !py-2 !border-2 !border-white !rounded-full hover:bg-white hover:text-[#085740] 
+            " onClick={()=> navigate('/login')}>
               Log In
             </button>
-            <button className=" !text-3xl  text-white  !h-15 !font-regular !px-8 !py-2 !border-2 !border-white !rounded-full">
+            <button className=" !text-3xl  text-white  !h-15 !font-extrabold !px-8 !py-2 !border-2 !border-white !rounded-full  hover:bg-white hover:text-[#085740]">
               View Job Listing
             </button>
           </div>
@@ -35,7 +39,7 @@ export const Landing_page = () => {
 
       {/* 2nd Part of the Page */}
 
-      <div className="w-full bg-gray-200 p-10 py-15">
+      <div className="flex flex-col w-screen bg-gray-200 p-10 py-15 h-auto">
         <div className="flex flex-col justify-center text-center">
         <h2 className="text-6xl text-center text-[#891839] font-bold">
           Stay Connected, Stay Involved

@@ -11,7 +11,7 @@ export default function Navbar() {
         </a>
 
         {/* Right - Notification & Profile Icons */}
-        <div className="absolute top-2 right-4 flex items-center space-x-4">
+        <div className="absolute top-1 right-4 flex items-center space-x-4">
           {/* Notification Icon */}
           <a href="/">
             <img src="src/assets/notifications.png" className="w-10 h-10" alt="Notifications" />
