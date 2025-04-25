@@ -2,7 +2,7 @@ import { Alumni } from '../../models/User.js';
 import { createCRUDController } from '../middlewareControllers/createCRUDController/index.js';
 
 export const alumniController = {
-    ...createCRUDController(Alumni)
+    ...createCRUDController(Alumni),
 }
 
 export async function getAllAlumni(req, res) {
