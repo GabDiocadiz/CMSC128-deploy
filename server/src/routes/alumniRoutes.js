@@ -15,13 +15,13 @@ router.delete('/email/:email', alumniController.deleteByEmail);
 router.get('/alumni', validateToken, authorizeRoles(['Admin', 'Alumni']), getAllAlumni);
 
 // Create RSVP (Alumni confirming their attendance)
-router.post('/alumni/rsvp', authenticateToken, authorizeRoles(['Alumni']), createRSVP);
+router.post('/alumni/rsvp', validateToken, authorizeRoles(['Alumni']), createRSVP);
 
 // Edit RSVP
-router.put('alumni/rsvp/:eventID', authenticateToken, authorizeRoles(['Alumni']), editRSVP);
+router.put('alumni/rsvp/:eventID', validateToken, authorizeRoles(['Alumni']), editRSVP);
 
 // View RSVPs
-router.get('alumni/view-all-rsvp', authenticateToken, authorizeRoles(['Alumni']), viewRSVP);
+router.get('alumni/view-all-rsvp', validateToken, authorizeRoles(['Alumni']), viewRSVP);
 
 router.get('/search', alumniSearch);
 

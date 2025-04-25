@@ -1,4 +1,4 @@
-import { RSVP } from "../../models/RSVP.js"
+import RSVP from "../../models/RSVP.js"
 
 export const createRSVP = async (req, res) => {
     try {
