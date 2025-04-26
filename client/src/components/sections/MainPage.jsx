@@ -5,8 +5,10 @@ import Navbar from "../header";
 import Footer from "../footer";
 import BookEventButton from "../buttons/BookEvent";
 import SearchAlumniButton from "../buttons/SearchAlumni";
+import { ScrollToTop } from "../../utils/helper";
 
 export default function MainPage() {
+    const [jobs, setJobs] = useState(jobList);
     const [currentEventIndex, setCurrentEventIndex] = useState(0);
     const [oddNoticeIndex, setOddNoticeIndex] = useState(0);
     const [evenNoticeIndex, setEvenNoticeIndex] = useState(1);
@@ -20,6 +22,10 @@ export default function MainPage() {
             setOddNoticeIndex((prev) => (prev + 2) % announcementList.length);
             setEvenNoticeIndex((prev) => (prev + 2) % announcementList.length);
         }, 30000);
+
+        const approvedJobs = jobList.filter((job) => job.status === "approved");
+        setJobs(approvedJobs);
+        ScrollToTop();
 
         return () => {
             clearInterval(eventInterval);
@@ -122,12 +128,11 @@ export default function MainPage() {
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:w-2/3">
-                            {jobList.length > 0 ? (
-                                jobList.filter((job) => job.status === "approved").slice(0, 2).map((job, index) => (
+                            {jobs.length > 0 ? (
+                                jobs.slice(0, 2).map((job, index) => (
                                     <Link
                                         key={index}
-                                        to={`/job-details/${index}`}
-                                        state={{ job }}
+                                        to={`/job-details/${job.job_id}`}
                                         className="transform transition-transform duration-300 hover:scale-105"
                                     >
                                         <div className="bg-[#891839] p-3 rounded-3xl flex justify-center h-70 w-full shadow-lg hover:shadow-xl">

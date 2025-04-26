@@ -16,6 +16,7 @@ export const jobList = [
       status: 'pending',
       approved_by: null,
       approval_date: null,
+      image: notice2
     },
     {
       job_id: 2,
@@ -30,6 +31,7 @@ export const jobList = [
       status: 'approved',
       approved_by: 101,
       approval_date: new Date('2025-02-16T09:00:00Z'),
+      image: notice1
     },
     {
       job_id: 3,
@@ -44,6 +46,7 @@ export const jobList = [
       status: 'rejected',
       approved_by: null,
       approval_date: null,
+      image: event1
     },
     {
       job_id: 4,
@@ -58,6 +61,7 @@ export const jobList = [
       status: 'pending',
       approved_by: null,
       approval_date: null,
+      image: notice2
     },
     {
       job_id: 5,
@@ -65,13 +69,14 @@ export const jobList = [
       job_title: 'UI/UX Designer',
       company: 'Pixel Perfect',
       location: 'Taguig',
-      job_description: 'Design intuitive user interfaces and experiences.',
+      job_description: 'Design intuitive user interfaces and craft exceptional user experiences.',
       requirements: ['Figma', 'Sketch', 'Adobe XD'],
       application_link: 'https://pixelperfect.com.ph/careers',
       date_posted: new Date('2025-02-01T09:00:00Z'),
       status: 'approved',
       approved_by: 102,
       approval_date: new Date('2025-02-02T09:00:00Z'),
+      image: notice1
     },
     {
       job_id: 6,
@@ -86,6 +91,7 @@ export const jobList = [
       status: 'pending',
       approved_by: null,
       approval_date: null,
+      image: event1
     },
     {
       job_id: 7,
@@ -100,6 +106,7 @@ export const jobList = [
       status: 'approved',
       approved_by: 103,
       approval_date: new Date('2025-03-06T09:00:00Z'),
+      image: notice1
     },
     {
       job_id: 8,
@@ -114,6 +121,7 @@ export const jobList = [
       status: 'rejected',
       approved_by: null,
       approval_date: null,
+      image: notice2
     },
     {
       job_id: 9,
@@ -128,6 +136,7 @@ export const jobList = [
       status: 'pending',
       approved_by: null,
       approval_date: null,
+      image: event1
     },
     {
       job_id: 10,
@@ -135,13 +144,14 @@ export const jobList = [
       job_title: 'Software Engineer',
       company: 'TechBridge',
       location: 'Batangas City',
-      job_description: 'Build scalable software applications.',
+      job_description: 'Join our dynamic tech team to build and maintain modern web applications.',
       requirements: ['Java', 'Spring Boot', 'REST APIs'],
       application_link: 'https://techbridge.com.ph/jobs',
       date_posted: new Date('2025-03-10T09:00:00Z'),
       status: 'approved',
       approved_by: 104,
       approval_date: new Date('2025-03-11T09:00:00Z'),
+      image: notice1
     },
 ];  
   
