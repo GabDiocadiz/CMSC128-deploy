@@ -7,7 +7,7 @@ import { jobList } from "../../utils/models";
 import Navbar from "../header";
 import Footer from "../footer";
 
-export function ViewJobDetails() {
+export default function ViewJobDetails() {
     const { id } = useParams();
     const [job, setJob] = useState(null);
     const navigate = useNavigate();
