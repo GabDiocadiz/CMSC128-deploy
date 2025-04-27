@@ -1,0 +1,74 @@
+import { useNavigate, useParams, Link } from "react-router-dom";
+import { IoIosArrowBack } from "react-icons/io";
+import { FaLocationDot } from "react-icons/fa6";
+import { useEffect, useState } from "react";
+import { ScrollToTop } from "../../utils/helper";
+import { eventList } from "../../utils/models";
+import Navbar from "../header";
+import Footer from "../footer";
+
+export default function ViewEventDetails() {
+    const { id } = useParams();
+    const [event, setEvent] = useState(null);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchedEvent = eventList.find((event) => event.event_id === parseInt(id));
+        if (fetchedEvent) {
+            setEvent(fetchedEvent);
+        }
+        ScrollToTop();
+    }, [id]);
+
+    if (!event) return <div>Event not found</div>;
+
+    return (
+        <>
+        <div className="fixed top-0 w-full z-50">
+            <Navbar />
+        </div>
+
+        <div className="w-screen pt-12">
+            <div
+                className="min-h-[85vh] bg-cover bg-center text-white flex flex-col justify-center items-start px-8 sm:px-16 pb-10 w-full"
+                style={{ backgroundImage: `url(${event.image})` }}
+            >
+            <div
+                className="flex items-center gap-2 cursor-pointer text-white hover:text-gray-300 mb-10"
+                onClick={() => navigate(-1)}
+            >
+                <IoIosArrowBack className="text-sm" />
+                <span className="text-sm font-light">Back</span>
+            </div>
+            <h1 className="text-2xl sm:text-8xl text-left font-extrabold mb-2">{event.event_name}</h1>
+            <p className="text-xl sm:text-3xl text-left font-bold flex items-center gap-3">
+                <FaLocationDot className="text-3xl sm:text-4xl" />
+                {event.venue}
+            </p>
+            <p className="text-sm sm:text-lg text-white mt-6 ml-2 mb-1">
+                Date: {new Date(event.event_date).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                })}
+            </p>
+            <p className="text-white text-md sm:text-lg text-left mx-2 mt-10">
+                {event.event_description}
+            </p>
+
+            <div className="mt-8 ml-2">
+                <Link to="/donate">
+                    <button className="w-50 bg-[#145C44] hover:bg-[#891839] text-white text font-bold py-2 px-6 rounded-md">
+                        Donate
+                    </button>
+                </Link>
+            </div>
+            </div>
+        </div>
+
+        <div className="w-full z-50">
+            <Footer />
+        </div>
+        </>
+    );
+}
