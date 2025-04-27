@@ -13,8 +13,7 @@ import { BrowserRouter,Routes, Route } from 'react-router-dom'
 import { Admin_main } from './components/sections/Admin_main'
 import { Results_page_accounts} from './components/sections/Results_accounts'
 import { Results_page_jobs } from './components/sections/Results_job'
-
-import MainPage from './components/sections/MainPage'
+import { Results_page_events } from './components/sections/Results_event'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -32,6 +31,7 @@ function App() {
           <Route path="/admin_main" element={<Admin_main/>} />
           <Route path="/home" element={<MainPage/>} />
           <Route path="/jobs" element={<Results_page_jobs/>} />
+          <Route path="/events" element={<Results_page_events/>} />
           <Route path="/job-details/:id" element={<ViewJobDetails/>} />
           <Route path="/event-details/:id" element={<ViewEventDetails/>} />
           

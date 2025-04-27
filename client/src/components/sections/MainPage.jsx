@@ -157,7 +157,7 @@ export default function MainPage() {
 
                 {/* <div className="w-full h-110 grid grid-cols-2 gap-0"> */}
                 <div className="w-full min-h-[440px] grid grid-cols-1 sm:grid-cols-2">
-                    <Link to="/book-event">
+                    <Link to="/events">
                         <BookEventButton />
                     </Link>
                     <Link to="/search-alumni">
