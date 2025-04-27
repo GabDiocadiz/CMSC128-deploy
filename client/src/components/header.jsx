@@ -1,19 +1,12 @@
 import { useState } from "react";
-
+import { Link } from "react-router-dom";
 import Notification from "./notification";
-<<<<<<< HEAD
-import uplbLogo from "../assets/uplblogo.png";
-import notifications from "../assets/notifications.png";
-import humanIcon from "../assets/Human Icon.png";
-=======
 
 import uplbLogo from "../assets/uplblogo.png";
 import notifications from "../assets/notifications.png";
 import humanIcon from "../assets/Human Icon.png";
 
-
->>>>>>> 499d886849f31507397d008e95d7e79d1028fb01
-export default function Navbar() {
+export default function Navbar({user_id}) {
   const  [notification_modal, setnotification_modal] = useState(false)
   return (
    <div>
@@ -26,9 +19,9 @@ export default function Navbar() {
         {/* Flexbox for proper alignment */}
         <div className="container flex justify-between items-center py-1 px-4">
           {/* Left - Logo */}
-          <a href="/">
+          <Link to={`/home/${user_id}`}>
             <img src={uplbLogo} className="bg-none w-40 h-auto" alt="UPLB Logo" />
-          </a>
+          </Link>
 
           {/* Right - Notification & Profile Icons */}
           <div className="absolute top-1 right-4 flex items-center space-x-4">

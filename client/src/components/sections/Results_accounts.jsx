@@ -40,7 +40,7 @@ export const Results_page_accounts = () => {
         <>
             <Navbar />
             
-            <div className="w-screen min-h-screen bg-gray-200 pt-20">
+            <div className="w-screen min-h-screen bg-gray-200 pt-13">
                 {/* Header Row */}
                 <div className="w-full h-16 bg-red-900 text-white grid grid-cols-4 justify-center items-center px-6">                        
                         <p>Email</p>

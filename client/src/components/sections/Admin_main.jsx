@@ -2,7 +2,7 @@ import Navbar_admin from "../header_admin";
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom'
 import Request_Confirmation from "../request_confirmation";
-
+import Speed_Dial_Admin from "../Speed_Dial_Admin";
 export const Admin_main = () => {
     const navigate = useNavigate()
     const sample_req = [
@@ -140,11 +140,11 @@ export const Admin_main = () => {
                 
             </Navbar_admin>
         </div>
-       
-        <div className="fixed bottom-1 right-1 ">
+        <Speed_Dial_Admin></Speed_Dial_Admin>
+        {/* <div className="fixed bottom-1 right-1 ">
             <img className="h-15 w-15"src= "src/assets/Preview Button.png"></img>
-        </div>
-
+        </div> */}
+        
         <div className="bg-[#DDDDDD] bg-cover bg-center bg-no-repeat h-auto pt-17 pb-30 ">
             <div className="grid grid-cols-10">
                 <div className=" col-span-6 px-5 flex justify-start flex-col">
