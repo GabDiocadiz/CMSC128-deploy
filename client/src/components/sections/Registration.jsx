@@ -1,42 +1,31 @@
 import { useState } from "react";
-import axios from "axios";
 
 import Navbar_landing from "../header_landing";
+import { useNavigate } from 'react-router-dom'
 const Registration = () => {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         username: "",
         email: "",
         password: "",
         confirmPassword: "",
-        degree: "",
-        graduation_year: ""
     });
 
     const handleChange = (e) => {
         setFormData ({ ...formData, [e.target.name]: e.target.value});
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-
-        // register in backend
-        try {
-            const res = await axios.post("http://localhost:5050/auth/register", {
-                user_id: "TEST01",
-                name: formData.username,
-                email: formData.email,
-                password: formData.password,
-                degree: formData.degree,
-                graduation_year: formData.graduation_year,
-                user_type: 'Alumni'
-            });
-
-            console.log("Form submitted:", formData);
-            alert("Registration successful!");
-        } catch (err) {
-            console.error("Registration error: ", err.message);
-            alert("Registration failed. Please try again.");
+        const register= 2; {/* Temporary change it to the api call */}
+        if (register.success){
+            console.log("Form submitted:", formData);  {/* For debugging, remove on launch */}
+            navigate(-1) 
+        }else{
+            console.log("Unsuccessfully Registered"); {/* Temporary change it to the api call */}
         }
+       
+
     };
 
     return (
@@ -45,7 +34,7 @@ const Registration = () => {
                 <Navbar_landing></Navbar_landing>
             </div> 
             
-            <div className="bg-[url('src/assets/Building.png')] bg-cover bg-center w-full h-screen flex flex-col justify-between">
+            <div className="bg-[url('src/assets/Building.png')] bg-cover bg-center w-full h-full flex flex-col justify-between pb-20">
                 <div className="grid grid-cols-1 gap-y-5 pt-16">
                     <h1 className=" !text-7xl font-bold text-white ">ARTEMIS</h1>       
                     <div className="flex justify-center">
@@ -107,23 +96,23 @@ const Registration = () => {
 
                                 <div>
                                     <input
-                                        type="text"
-                                        name="degree"
-                                        value={formData.degree}
-                                        onChange={handleChange}
+                                        type=""
+                                        name=""
+                                        value={formData.confirmPassword}
+                                        onAbort={handleChange}
                                         className="w-full p-2 border-3 border-[#3E3939] bg-white-700 rounded-md outline-none focus:ring-1"
-                                        placeholder="Degree Program"
+                                        placeholder="Contact Number"
                                         required
                                     />
                                 </div>
                                 <div>
                                     <input
-                                        type="number"
-                                        name="graduation_year"
-                                        value={formData.graduation_year}
-                                        onChange={handleChange}
+                                        type=""
+                                        name=""
+                                        value={formData.confirmPassword}
+                                        onAbort={handleChange}
                                         className="w-full p-2 border-3 border-[#3E3939] bg-white-700 rounded-md outline-none focus:ring-1"
-                                        placeholder="Year Graduated"
+                                        placeholder="Address"
                                         required
                                     />
                                 </div>
@@ -132,6 +121,7 @@ const Registration = () => {
                                 <button
                                     type="register"
                                     className="font-semibold w-full bg-[#085740] p-2 rounded-md hover:bg-green-600 transition focus:ring-1 focus:ring-green-600"
+                                    
                                 >
                                     Register
                                 </button>

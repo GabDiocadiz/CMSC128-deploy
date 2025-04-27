@@ -1,13 +1,13 @@
 import { useState } from "react";
 import Navbar_landing from "../header_landing";
-
+import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
     const [formData, setFormData] = useState({
         username: "",
         password: "",
     });
-
+    
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -16,6 +16,15 @@ const Login = () => {
         e.preventDefault();
         console.log("Logging in with:", formData);
     };
+    const handleLogin=(e) =>{
+       const login=2;
+       if (login.success){
+
+       }else{
+        
+       }
+    }
+    const navigate = useNavigate()
 
     return (
         <>
@@ -73,6 +82,8 @@ const Login = () => {
                                     <button
                                         type="submit"
                                         className="w-full bg-[#085740] font-bold text-white p-2 rounded-md hover:bg-green-700 transition"
+                                        onClick={()=> 
+                                            navigate('/reg')}
                                     >
                                         Register
                                     </button>
@@ -87,6 +98,7 @@ const Login = () => {
             
             
             </div>
+
         </>
     );
 };

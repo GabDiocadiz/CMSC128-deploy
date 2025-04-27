@@ -1,97 +1,33 @@
 import { useState } from 'react'
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import './App.css'
 import { Landing_page } from './components/sections/Landing_page'
 import "./index.css"
-
+import ReactDOM from 'react-dom/client'
 import Login from './components/sections/Login'
 import Registration from './components/sections/Registration'
-import MainPage from './components/sections/MainPage'
-
-// function App() {
-//   const [count, setCount] = useState(0)
-
-//   return (
-//     <>
-//       {
-        
-//       //<Landing_page></Landing_page>
-//       // <Registration></Registration>
-//       <MainPage></MainPage>
-//      }
-//     </>
-//   )
-// }
-
+import { BrowserRouter,Routes, Route } from 'react-router-dom'
+import { Admin_main } from './components/sections/Admin_main'
+import { Results_page_accounts} from './components/sections/Results_accounts'
+import { Results_page_jobs } from './components/sections/Results_job'
 function App() {
-  const router = createBrowserRouter([
-    // {
-    //   path: "/",
-    //   element: (
-    //     <Landing_page />
-    //   ),
-    // },
-    // {
-    //   path: "/login",
-    //   element: (
-    //     <Login />
-    //   )
-    // },{
-    //   path: "/register",
-    //   element: (
-    //     <Registration />
-    //   )
-    // },
-    {
-      path: "/",
-      element: (
-        <MainPage />
-      )
-    },
-    {
-      path: "/home",
-      element: (
-        <MainPage />
-      )
-    },
-    {
-      path: "/jobs",
-      element: (
-        <Landing_page />
-      )
-    },
-    {
-      path: "/book-event",
-      element: (
-        <Landing_page />
-      )
-    },
-    {
-      path: "/search-alumni",
-      element: (
-        <Landing_page />
-      )
-    },
-    {
-      path: "/job-details/:id",
-      // element: < />
-    },
-    {
-      path: "/event-details/:id",
-      // element: < />
-    },
-    {
-      path: "/announcement-details/:id",
-      // element: < />
-    }
-  ]);
-
+  const [count, setCount] = useState(0)
   return (
-    <div className="h-full w-full bg-base0">
-      <RouterProvider router={router} />
-    </div>
-  );
+    <>
+      {
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Results_page_jobs/>} />
+          <Route path="/reg" element={<Registration/>} />
+          <Route path="/login" element={<Login/>} />
+          <Route path="/admin_main" element={<Admin_main/>} />
+          
+        </Routes>
+        
+      </BrowserRouter>
+     }
+    </>
+  )
 }
 
 export default App
