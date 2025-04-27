@@ -9,4 +9,4 @@ const DonationSchema = new Schema({
 });
 
 const Donation = mongoose.model('Donation', DonationSchema);
-module.exports = Donation;
+export default Donation;
