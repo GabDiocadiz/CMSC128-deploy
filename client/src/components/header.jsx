@@ -1,8 +1,18 @@
 import { useState } from "react";
+
 import Notification from "./notification";
+<<<<<<< HEAD
 import uplbLogo from "../assets/uplblogo.png";
 import notifications from "../assets/notifications.png";
 import humanIcon from "../assets/Human Icon.png";
+=======
+
+import uplbLogo from "../assets/uplblogo.png";
+import notifications from "../assets/notifications.png";
+import humanIcon from "../assets/Human Icon.png";
+
+
+>>>>>>> 499d886849f31507397d008e95d7e79d1028fb01
 export default function Navbar() {
   const  [notification_modal, setnotification_modal] = useState(false)
   return (

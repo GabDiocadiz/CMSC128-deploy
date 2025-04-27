@@ -1,7 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMemo } from "react";
+import { Link } from "react-router-dom";
 import Navbar from "../header";
+import Footer from "../footer";
 import { BookmarkIcon } from '@heroicons/react/24/solid';
+import { jobList } from "../../utils/models";
+import { ScrollToTop } from "../../utils/helper";
 
 const dummyJobs = [
   {
@@ -54,6 +58,7 @@ const dummyJobs = [
 export const Results_page_jobs = () => {
   const [sortBy, setSortBy] = useState("");
   const [bookmarkedIds, setBookmarkedIds] = useState([]);
+  const [jobs, setJobs] = useState(jobList);
 
   const toggleBookmark = (id) => {
     if (bookmarkedIds.includes(id)) {
@@ -63,14 +68,20 @@ export const Results_page_jobs = () => {
     }
   };
 
-  const sortedEvents = useMemo(() => {
+  const sortedJobs = useMemo(() => {
     if (sortBy === "date") {
-      return [...dummyJobs].sort((a, b) => new Date(a.date) - new Date(b.date));
+      return [...jobs].sort((a, b) => new Date(a.date_posted) - new Date(b.date_posted));
     } else if (sortBy === "title") {
-      return [...dummyJobs].sort((a, b) => a.title.localeCompare(b.title));
+      return [...jobs].sort((a, b) => a.job_title.localeCompare(b.job_title));
     }
-    return dummyJobs;
-  }, [sortBy]);
+    return jobs;
+  }, [sortBy, jobs]);
+
+  useEffect(() => {
+    const approvedJobs = jobList.filter((job) => job.status === "approved");
+    setJobs(approvedJobs);
+    ScrollToTop();
+  }, []);
 
   return (
     <>
@@ -97,21 +108,23 @@ export const Results_page_jobs = () => {
           {/* Sort by */}
 
           {/* Jobs Display */}
-        <div className="flex justify-center items-center">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
-          {sortedEvents.map((event) => (
-            <div key={event.id} className="bg-white rounded-xl shadow-md overflow-hidden">
-              <img src={event.image} alt={event.title} className="w-full h-48 object-cover" />
+        <div className="flex justify-center w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {sortedJobs.map((job) => (
+            <div key={job.job_id} className="bg-white rounded-xl shadow-md overflow-hidden">
+              <Link to={`/job-details/${job.job_id}`}>
+                <img src={job.image} alt={job.job_title} className="w-full h-48 object-cover" />
+              </Link>
               <div className="p-4">
                 
                 {/* Moved bookmark icon here */}
                 <div className="flex justify-end mb-2">
                   <button
-                    onClick={() => toggleBookmark(event.id)}
+                    onClick={() => toggleBookmark(job.job_id)}
                     className="text-white-400 hover:text-white-500 focus:outline-none"
-                    title={bookmarkedIds.includes(event.id) ? "Remove Bookmark" : "Bookmark"}
+                    title={bookmarkedIds.includes(job.job_id) ? "Remove Bookmark" : "Bookmark"}
                   >
-                    {bookmarkedIds.includes(event.id) ? (
+                    {bookmarkedIds.includes(job.job_id) ? (
                       <BookmarkIcon className="w-6 h-6" />
                     ) : (
                       <BookmarkIcon className="w-6 h-6 opacity-50" />
@@ -120,11 +133,17 @@ export const Results_page_jobs = () => {
                 </div>
 
                 {/* Text content */}
-                <h2 className="text-xl font-semibold mb-1">{event.title}</h2>
-                <h3 className="text-lg text-gray-600 mb-1">{event.company}</h3>
-                <p className="text-sm text-gray-500 mb-2">{event.location}</p>
-                <p className="text-gray-700">{event.description}</p>
-                <p className="text-sm text-right text-gray-500 mb-2">{event.date}</p>
+                <h2 className="text-xl font-semibold mb-1">{job.job_title}</h2>
+                <h3 className="text-lg text-gray-600 mb-1">{job.company}</h3>
+                <p className="text-sm text-gray-500 mb-2">{job.location}</p>
+                <p className="text-gray-700">{job.job_description}</p>
+                <p className="text-sm text-right text-gray-500 mb-2">
+                  {new Date(job.date_posted).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                  </p>
               </div>
             </div>
           ))}
@@ -134,6 +153,9 @@ export const Results_page_jobs = () => {
           {/* Jobs Section */}
           
         </div>
+      </div>
+      <div className="w-full z-50">
+        <Footer />
       </div>
     </>
   );

@@ -5,6 +5,7 @@ import { JobPosting } from '../models/Job_Posting.js';
 import { Event } from '../models/Event.js';
 import { alumniData, adminData, jobPostingsData, eventData } from './data.js';
 
+import Notification from '../models/Notification.js';
 //load environment variables
 dotenv.config();
 
