@@ -6,8 +6,11 @@ import Navbar from "../header";
 import Footer from "../footer";
 import BookEventButton from "../buttons/BookEvent";
 import SearchAlumniButton from "../buttons/SearchAlumni";
+import Error_Message from "../error_message";
+import { useParams } from 'react-router-dom';
 
 export default function MainPage() {
+    const {user_id} =useParams(); //Contains the User Id 
     const [jobs, setJobs] = useState(jobList);
     const [events, setEvents] = useState(eventList);
     const [announcements, setAnnouncements] = useState(announcementList);
@@ -16,6 +19,8 @@ export default function MainPage() {
     const [currentEventIndex, setCurrentEventIndex] = useState(() => parseInt(localStorage.getItem("currentEventIndex")) || 0);
     const [oddNoticeIndex, setOddNoticeIndex] = useState(() => parseInt(localStorage.getItem("oddNoticeIndex")) || 0);
     const [evenNoticeIndex, setEvenNoticeIndex] = useState(() => parseInt(localStorage.getItem("evenNoticeIndex")) || 1);
+    const [Error_MessageBool, setError_MessageBool]= useState(false)
+
 
     useEffect(() => {
         const eventInterval = setInterval(() => {
@@ -51,13 +56,17 @@ export default function MainPage() {
             clearInterval(noticeInterval);
         };
     }, [events.length, announcements.length]);
-
+    
     return (
         <>
+            {/* For testing purposes */}
+            {/* {Error_MessageBool &&(
+                <Error_Message message={"Testing testing"} setVisible={setError_MessageBool}></Error_Message>
+            )} */} 
             <div className="fixed top-0 w-full z-50">
-                <Navbar />
+                <Navbar user_id={user_id}/>
             </div>
-
+            
             <div className="w-screen pt-12">
                 <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-0 min-h-[600px]">
                     {/* Events */}
@@ -68,7 +77,7 @@ export default function MainPage() {
                         >
                             <div className="relative z-10 group/title">
                                 <Link
-                                    to={`/event-details/${events[currentEventIndex].event_id}`}
+                                    to={`/event-details/${events[currentEventIndex].event_id}/${user_id}`}
                                     state={{ event: events[currentEventIndex] }}
                                     className="!text-white !text-3xl sm:!text-4xl md:!text-7xl !font-bold !mb-4 !text-left cursor-pointer block w-full relative z-10 hover:!underline"
                                 >
@@ -108,7 +117,7 @@ export default function MainPage() {
                                 Explore<br />Recent Job<br />Opportunities
                             </h2>
                             <div className="flex justify-end mt-4 pr-10">
-                                <Link to="/jobs">
+                                <Link to={`/jobs/${user_id}`}>
                                     <button className="focus:!outline-none text-[#891839] border-3 border-[#891839] px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:bg-[#891839] hover:text-white">
                                         View more &gt;
                                     </button>
@@ -121,7 +130,7 @@ export default function MainPage() {
                                 jobs.slice(0, 2).map((job, index) => (
                                     <Link
                                         key={index}
-                                        to={`/job-details/${job.job_id}`}
+                                        to={`/job-details/${job.job_id}/${user_id}`}
                                         className="transform transition-transform duration-300 hover:scale-105"
                                     >
                                         <div className="bg-[#891839] p-3 rounded-3xl flex justify-center h-70 w-full shadow-lg hover:shadow-xl">
@@ -154,12 +163,12 @@ export default function MainPage() {
                     <Link to="/book-event">
                         <BookEventButton />
                     </Link>
-                    <Link to="/search-alumni">
+                    <Link to={`/search-alumni/${events[currentEventIndex].event_id}`}>
                         <SearchAlumniButton />
                     </Link>
                 </div>
             </div>
-
+            
             <div className="w-full z-50">
                 <Footer />
             </div>
