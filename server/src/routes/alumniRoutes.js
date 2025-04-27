@@ -1,22 +1,28 @@
-import { Router } from 'express';
-const router = Router();
+import express from 'express';
 import { alumniController } from '../controllers/modelControllers/alumniController.js';
 import { getAllAlumni } from '../controllers/modelControllers/alumniController.js';
-import { authenticateToken, authorizeRoles } from '../middleware/authMiddleware.js';
+import { createRSVP, editRSVP, viewRSVP } from '../controllers/RSVPController/rsvpController.js';
+import { validateToken } from '../middleware/validate-token.js';
+import { authorizeRoles } from '../middleware/authorize-roles.js';
+import { alumniSearch } from '../controllers/modelControllers/alumniController.js';
 
-// fetch all alumni profiles
-router.get('/read', alumniController.read);
+const router = express.Router();
 
-// create a new alumni profile (Admin only)
-// router.post('/alumni', authenticateToken, authorizeRoles(['Admin']), createAlumni);
+// delete by email
+router.delete('/email/:email', alumniController.deleteByEmail);
 
 // fetch all alumni profiles (Admin and Alumni)
-router.get('/alumni', authenticateToken, authorizeRoles(['Admin', 'Alumni']), getAllAlumni);
+router.get('/alumni', validateToken, authorizeRoles(['Admin', 'Alumni']), getAllAlumni);
 
-// create a new alumni profile
-// router.post('/alumni', createAlumni);
+// Create RSVP (Alumni confirming their attendance)
+router.post('/alumni/rsvp', validateToken, authorizeRoles(['Alumni']), createRSVP);
 
-// // fetch all alumni profiles
-// router.get('/get', getAllAlumni);
+// Edit RSVP
+router.put('alumni/rsvp/:eventID', validateToken, authorizeRoles(['Alumni']), editRSVP);
+
+// View RSVPs
+router.get('alumni/view-all-rsvp', validateToken, authorizeRoles(['Alumni']), viewRSVP);
+
+router.get('/search', alumniSearch);
 
 export default router;

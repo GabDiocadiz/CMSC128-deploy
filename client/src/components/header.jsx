@@ -1,5 +1,12 @@
 import { useState } from "react";
+
 import Notification from "./notification";
+
+import uplbLogo from "../assets/uplblogo.png";
+import notifications from "../assets/notifications.png";
+import humanIcon from "../assets/Human Icon.png";
+
+
 export default function Navbar() {
   const  [notification_modal, setnotification_modal] = useState(false)
   return (
@@ -14,7 +21,7 @@ export default function Navbar() {
         <div className="container flex justify-between items-center py-1 px-4">
           {/* Left - Logo */}
           <a href="/">
-            <img src="src/assets/uplblogo.png" className="bg-none w-40 h-auto" alt="UPLB Logo" />
+            <img src={uplbLogo} className="bg-none w-40 h-auto" alt="UPLB Logo" />
           </a>
 
           {/* Right - Notification & Profile Icons */}
@@ -27,12 +34,12 @@ export default function Navbar() {
             }
             className="cursor-pointer"
             >
-              <img src="src/assets/notifications.png" className="w-10 h-10" alt="Notifications" />
+              <img src={notifications} className="w-10 h-10" alt="Notifications" />
             </div>
 
             {/* Profile Icon inside Circle */}
             <a href="/" className="w-10 h-10 bg-none text-white flex items-center justify-center rounded-full">
-              <img src="src/assets/Human Icon.png" className="w-10 h-10" alt="Profile" />
+              <img src={humanIcon} className="w-10 h-10" alt="Profile" />
             </a>
           </div>
         </div>

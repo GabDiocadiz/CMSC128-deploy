@@ -2,7 +2,8 @@ import request from "supertest";
 import app from "../server.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-dotenv.config({path:'~/server/.env'});
+
+dotenv.config({path:'../server/.env'});
 
 before(async function() {
   // disable timeout for connection to database
@@ -16,40 +17,14 @@ before(async function() {
 
 });
 
-
-// describe('GET /alumni/read', function() {
-//   before(function() {
-//     console.log('Starting tests...');
-//   });
-
-//   after(function() {
-//     console.log('Tests completed.');
-//   });
-
-//   it('should respond with json', function(done) {
-//     this.timeout(0);
-    
-//     request(app)
-//       .get('/alumni/read')
-//       .set('Accept', 'application/json')
-//       .expect(200)
-//       .end(function(err, res){
-//         if (err) return done(err);
-//         console.log("Test response: ", res.body);
-//         done();
-//       })
-//   })
-// })
-
 describe('POST auth/register', function(){
-  before(function() {
+  before(async function() {
     console.log('Starting tests...');
+    await request(app).delete("/alumni/email/testuser@example.com");
   });
 
   after(function() {
     console.log('Tests completed.');
-
-    // delete test case - comment code to check in database
   });
 
   it("should register a new user", function (done) {
@@ -95,45 +70,45 @@ describe('POST auth/register', function(){
   });
 })
 
-// describe('POST auth/login', function(){
-//   before(function() {
-//     console.log('Starting tests...');
-//   });
+describe('POST auth/login', function(){
+  before(function() {
+    console.log('Starting tests...');
+  });
 
-//   after(function() {
-//     console.log('Tests completed.');
-//   });
+  after(function() {
+    console.log('Tests completed.');
+  });
 
-//   it("should login with valid credentials", function (done) {
-//     request(app)
-//       .post("/auth/login")
-//       .send({
-//         name: "testuser",
-//         password: "testpassword",
-//       })
-//       .set("Accept", "application/json")
-//       .expect(200)
-//       .end(function (err, res) {
-//         if (err) return done(err);
-//         console.log("Test response: ", res.body);
-//         done();
+  it("should login with valid credentials", function (done) {
+    request(app)
+      .post("/auth/login")
+      .send({
+        email: "testuser@example.com",
+        password: "testpassword",
+      })
+      .set("Accept", "application/json")
+      .expect(200)
+      .end(function (err, res) {
+        if (err) return done(err);
+        console.log("Test response: ", res.body);
+        done();
 
-//       });
-//   });
+      });
+  });
 
-//   it("should fail to login with incorrect password", function (done) {
-//     request(app)
-//       .post("/auth/login")
-//       .send({
-//         name: "testuser",
-//         password: "wrongpassword",
-//       })
-//       .set("Accept", "application/json")
-//       .expect(401)
-//       .end(function (err, res) {
-//         if (err) return done(err);
-//         console.log("Test response: ", res.body);
-//         done();
-//       });
-//   });
-// })
+  it("should fail to login with incorrect password", function (done) {
+    request(app)
+      .post("/auth/login")
+      .send({
+        name: "testuser",
+        password: "wrongpassword",
+      })
+      .set("Accept", "application/json")
+      .expect(401)
+      .end(function (err, res) {
+        if (err) return done(err);
+        console.log("Test response: ", res.body);
+        done();
+      });
+  });
+})
