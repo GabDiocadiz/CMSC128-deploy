@@ -5,12 +5,12 @@ import Navbar from "../header";
 import Footer from "../footer";
 import BookEventButton from "../buttons/BookEvent";
 import SearchAlumniButton from "../buttons/SearchAlumni";
-
+import Error_Message from "../error_message";
 export default function MainPage() {
     const [currentEventIndex, setCurrentEventIndex] = useState(0);
     const [oddNoticeIndex, setOddNoticeIndex] = useState(0);
     const [evenNoticeIndex, setEvenNoticeIndex] = useState(1);
-
+    const [Error_MessageBool, setError_MessageBool]= useState(false)
     useEffect(() => {
         const eventInterval = setInterval(() => {
             setCurrentEventIndex((prevIndex) => (prevIndex + 1) % eventList.length);
@@ -29,10 +29,14 @@ export default function MainPage() {
 
     return (
         <>
+            {/* For testing purposes */}
+            {/* {Error_MessageBool &&(
+                <Error_Message message={"Testing testing"} setVisible={setError_MessageBool}></Error_Message>
+            )} */} 
             <div className="fixed top-0 w-full z-50">
                 <Navbar />
             </div>
-
+            
             <div className="w-screen pt-12">
                 <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-0 min-h-[600px]">
                     {/* Events */}
@@ -49,32 +53,7 @@ export default function MainPage() {
                                 >
                                     {eventList[currentEventIndex].event_name}
                                 </Link>
-                                <div
-                                    className="hidden sm:group-hover/title:flex pointer-events-none transition-opacity duration-300 absolute top-1/2 left-1/2 -translate-x-[35%] -translate-y-[45%] z-50 w-[90%] sm:w-[650px] h-auto sm:h-[500px] bg-cover bg-center text-white shadow-2xl backdrop-blur-md items-center justify-center"
-                                    style={{ backgroundImage: `url(${eventList[currentEventIndex].image})` }}
-                                >
-                                    <div className="relative bg-transparent w-[90%] h-[90%] border-2 border-white rounded-2xl px-10 py-6 flex flex-col items-start text-left overflow-y-auto">
-                                        <h2 className="text-md sm:text-5xl md:text-5xl font-bold text-center w-full absolute top-10 left-1/2 -translate-x-1/2 px-4">
-                                            {eventList[currentEventIndex].event_name}
-                                        </h2>
-                                        <div className="pt-45 w-full space-y-3 text-md sm:text-md md:text-md">
-                                            <p>
-                                                {eventList[currentEventIndex].event_description}
-                                            </p>
-                                            <p>
-                                                <span className="font-semibold">Date:</span>{' '}
-                                                {new Date(eventList[currentEventIndex].event_date).toLocaleDateString('en-US', {
-                                                    year: 'numeric',
-                                                    month: 'long',
-                                                    day: 'numeric',
-                                                })}
-                                            </p>
-                                            <p>
-                                                <span className="font-semibold">Venue:</span> {eventList[currentEventIndex].venue}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
+                                
                             </div>
                             <p className="!text-md sm:!text-lg !max-w-2xl !text-left">
                                 {eventList[currentEventIndex].event_description}
@@ -165,7 +144,7 @@ export default function MainPage() {
                     </Link>
                 </div>
             </div>
-
+            
             <div className="w-full z-50">
                 <Footer />
             </div>

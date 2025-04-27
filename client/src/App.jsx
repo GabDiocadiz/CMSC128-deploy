@@ -10,6 +10,7 @@ import { BrowserRouter,Routes, Route } from 'react-router-dom'
 import { Admin_main } from './components/sections/Admin_main'
 import { Results_page_accounts} from './components/sections/Results_accounts'
 import { Results_page_jobs } from './components/sections/Results_job'
+import MainPage from './components/sections/MainPage'
 function App() {
   const [count, setCount] = useState(0)
   return (
@@ -17,7 +18,7 @@ function App() {
       {
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Results_page_jobs/>} />
+          <Route path="/" element={<MainPage/>} />
           <Route path="/reg" element={<Registration/>} />
           <Route path="/login" element={<Login/>} />
           <Route path="/admin_main" element={<Admin_main/>} />
