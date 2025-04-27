@@ -11,7 +11,11 @@ export default function Notification_View({notification_info, setNotification_vi
         
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
           <div className=" relative bg-white rounded-xl p-6 w-[60vw] h-[80vh]  shadow-lg flex flex-col">
-            <h2 className="text-7xl font-bold text-emerald-800 text-start pb-2 ">{notification_info.title}</h2>
+          <div className="w-full">
+            <h2 className="text-[5vh] font-bold text-emerald-800 text-start pb-2">
+                {notification_info.title}
+            </h2>
+          </div>
             <p className="text-black text-start h-10">Sent {notification_info.date}</p>
             {/* https://flowbite.com/docs/forms/textarea/ Text Area */}
             {/* <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your message</label>

@@ -3,6 +3,7 @@ import Navbar_landing from "../header_landing";
 import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
+    const navigate = useNavigate()
     const [formData, setFormData] = useState({
         username: "",
         password: "",
@@ -15,16 +16,22 @@ const Login = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Logging in with:", formData);
-    };
-    const handleLogin=(e) =>{
-       const login=2;
-       if (login.success){
-
+        const login=2;
+        navigate(`/home/${1}`);  //Comment out when connecting  db and change the enclosed in {} to the actual value of the user_id
+        if (login.success){
+            //Check account if admin
+            admin= true;
+            if (admin){
+                navigate('/admin_main/${1}');
+            }else{
+                navigate('/home}');
+            }
+            
        }else{
-        
        }
-    }
-    const navigate = useNavigate()
+    };
+   
+    
 
     return (
         <>
@@ -71,6 +78,7 @@ const Login = () => {
                                         required
                                     />
                                     <button
+                                        
                                         type="submit"
                                         className="w-full bg-[#891839] text-white font-bold p-2 rounded-md hover:bg-red-700 transition"
                                         >

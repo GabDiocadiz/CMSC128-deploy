@@ -247,6 +247,7 @@ export const eventList = [
       venue: 'Room 101, UP Tech Center, Quezon City',
       created_by: 123,
       attendees: [1001, 1002, 1003],
+      donatable:true,
       image: event1
     },
     {
@@ -257,6 +258,7 @@ export const eventList = [
       venue: 'iAcademy Nexus Campus, Makati City',
       created_by: 124,
       attendees: [1004, 1005, 1006],
+      donatable:false,
       image: notice1
     },
     {
@@ -267,6 +269,7 @@ export const eventList = [
       venue: 'The Astbury, Makati',
       created_by: 125,
       attendees: [1007, 1008, 1009],
+      donatable:false,
       image: notice2
     },
     {
@@ -277,6 +280,7 @@ export const eventList = [
       venue: 'SMX Convention Center, Pasay City',
       created_by: 126,
       attendees: [1010, 1011, 1012],
+      donatable:true,
       image: event1
     },
     {
@@ -287,6 +291,7 @@ export const eventList = [
       venue: 'Function Hall B, Cebu IT Park',
       created_by: 127,
       attendees: [1013, 1014, 1015],
+      donatable:false,
       image: notice1
     },
     {
@@ -297,6 +302,7 @@ export const eventList = [
       venue: 'Room 202, FEU Tech Building, Manila',
       created_by: 128,
       attendees: [1016, 1017, 1018],
+      donatable:false,
       image: notice2
     },
     {
@@ -307,6 +313,7 @@ export const eventList = [
       venue: 'Philippine International Convention Center (PICC), Pasay City',
       created_by: 129,
       attendees: [1019, 1020, 1021],
+      donatable:false,
       image: event1
     },
     {
@@ -317,6 +324,7 @@ export const eventList = [
       venue: 'LaunchGarage, Quezon City',
       created_by: 130,
       attendees: [1022, 1023, 1024],
+      donatable:true,
       image: notice1
     },
     {
@@ -327,6 +335,7 @@ export const eventList = [
       venue: 'The Common Ground, BGC, Taguig',
       created_by: 131,
       attendees: [1025, 1026, 1027],
+      donatable:false,
       image: notice2
     },
     {
@@ -337,6 +346,7 @@ export const eventList = [
       venue: 'Cyberzone Conference Hall, SM North EDSA, Quezon City',
       created_by: 132,
       attendees: [1028, 1029, 1030],
+      donatable:false,
       image: event1
     },
 ];  
