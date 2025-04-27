@@ -1,4 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import { FaLocationDot } from "react-icons/fa6";
 import { useEffect, useState } from "react";
@@ -21,7 +22,7 @@ export default function ViewJobDetails() {
     }, [id]);
 
     if (!job) return <div>Job not found</div>;
-
+        
     return (
         <>
         <div className="fixed top-0 w-full z-50">
@@ -29,7 +30,7 @@ export default function ViewJobDetails() {
         </div>
         <div className="w-screen pt-12">
             <div
-                className="bg-cover bg-center text-white flex flex-col justify-center items-start px-8 sm:px-16 py-14 w-full"
+                className="bg-cover bg-center text-white flex flex-col justify-center items-start px-8 sm:px-16 py-14 w-full h-[50vh]"
                 style={{ backgroundImage: `url(${job.image})` }}
             >
             <div
