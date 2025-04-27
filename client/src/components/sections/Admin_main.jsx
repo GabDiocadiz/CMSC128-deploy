@@ -1,10 +1,12 @@
 import Navbar_admin from "../header_admin";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom'
 import Request_Confirmation from "../request_confirmation";
+import { api } from "../../api.js";
 
 export const Admin_main = () => {
     const navigate = useNavigate()
+
     const sample_req = [
         {
             id:1,
@@ -73,24 +75,9 @@ export const Admin_main = () => {
             from: "123@up.edu.ph"
         },
     ];
-    const sample_event=[
-        {
-            name: "Event 1",
-            date: "January 12,2025",           
-        },
-        {
-            name: "Event 1",
-            date: "January 12,2025"
-        },
-        {
-            name: "Event 1",
-            date: "January 12,2025"
-        },
-        {
-            name: "Event 1",
-            date: "January 12,2025"
-        },
-    ]
+
+    const event=[]
+
     const sample_job=[
         {   
             company: "ARTEMIS",   
@@ -116,22 +103,42 @@ export const Admin_main = () => {
             company: "ARTEMIS",   
             job: "Software Development",
         }
-        
-        
     ]
-    const refetchdata=()=>{
-        //refetch the request, events and job variables
-        setRequests()
-        setEvents()
-        setJobs()
-        
+
+    const fetchData = async() => {
+        try {
+            console.log("Fetching data...");
+
+            // const requestResponse = await api.get("/requests");
+            const eventResponse = await api.get("/event/admin-page-events");
+            // const jobResponse = await api.get("/jobs");
+
+            const formattedEvents = eventResponse.data.map( event => ({
+                name: event.event_name,
+                date: new Date(event.event_date).toISOString().split('T')[0]
+            }));
+
+            console.log("Formatted events:", formattedEvents);
+            
+            // setRequests();
+            setEvents(formattedEvents.length > 0 ? formattedEvents : sample_event);
+            // setJobs();
+        } catch (err) {
+            console.error("Failed to fetch data: ", err);
+        }
     }
+
     const [requests, setRequests] = useState(sample_req);
-    const [events,setEvents]= useState(sample_event);
+    const [events,setEvents]= useState(event);
     const [jobs,setJobs]= useState(sample_job);
     const [req_modalOpen, setreq_modalOpen] =useState(false); 
     const [message_modal, setmessage_modal] =useState(0);
     const [request_id, setrequestID]= useState(0);
+    
+    useEffect(() => {
+        fetchData();
+    }, []);
+
     return(
         
         <>
@@ -248,7 +255,7 @@ export const Admin_main = () => {
                                         <button 
                                             key={index}
                                             
-                                            onClick={ navigate('')} 
+                                            onClick = {() => navigate('')} 
                                             
                                             className="grid grid-cols-3 text-black text-lg py-5  hover:bg-[#DDDDDD] w-full  ">
                                                 <p className="col-span-1">{ 
@@ -287,7 +294,7 @@ export const Admin_main = () => {
                                         <button 
                                             key={index}
                                             
-                                            onClick={ navigate('')} 
+                                            onClick={() => navigate('')}
                                             
                                             className="grid grid-cols-2 text-black text-lg py-5  hover:bg-[#DDDDDD] w-full  ">
                                                 <div className="flex justify-center items-center">
@@ -313,7 +320,7 @@ export const Admin_main = () => {
             </div>
             {req_modalOpen && (
                     <div>
-                        <Request_Confirmation request_response={message_modal} setVisible={setreq_modalOpen} id={request_id} refetch={refetchdata}></Request_Confirmation>
+                        <Request_Confirmation request_response={message_modal} setVisible={setreq_modalOpen} id={request_id} refetch={fetchData}></Request_Confirmation>
                     </div>
                 )}
         

@@ -18,15 +18,6 @@ export const alumniController = {
       }
 }
 
-export async function getAllAlumni(req, res) {
-    try {
-        const alumni = await Alumni.find();
-        res.status(200).json(alumni);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-}
-
 // Controller function to search for alumni based on query parameters
 export const alumniSearch = async (req, res) => {
     try {
