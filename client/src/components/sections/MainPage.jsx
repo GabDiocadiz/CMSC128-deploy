@@ -6,7 +6,7 @@ import Navbar from "../header";
 import Footer from "../footer";
 import BookEventButton from "../buttons/BookEvent";
 import SearchAlumniButton from "../buttons/SearchAlumni";
-
+import Error_Message from "../error_message";
 export default function MainPage() {
     const [jobs, setJobs] = useState(jobList);
     const [events, setEvents] = useState(eventList);
@@ -16,6 +16,8 @@ export default function MainPage() {
     const [currentEventIndex, setCurrentEventIndex] = useState(() => parseInt(localStorage.getItem("currentEventIndex")) || 0);
     const [oddNoticeIndex, setOddNoticeIndex] = useState(() => parseInt(localStorage.getItem("oddNoticeIndex")) || 0);
     const [evenNoticeIndex, setEvenNoticeIndex] = useState(() => parseInt(localStorage.getItem("evenNoticeIndex")) || 1);
+    const [Error_MessageBool, setError_MessageBool]= useState(false)
+
 
     useEffect(() => {
         const eventInterval = setInterval(() => {
@@ -54,10 +56,14 @@ export default function MainPage() {
 
     return (
         <>
+            {/* For testing purposes */}
+            {/* {Error_MessageBool &&(
+                <Error_Message message={"Testing testing"} setVisible={setError_MessageBool}></Error_Message>
+            )} */} 
             <div className="fixed top-0 w-full z-50">
                 <Navbar />
             </div>
-
+            
             <div className="w-screen pt-12">
                 <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-0 min-h-[600px]">
                     {/* Events */}
@@ -159,7 +165,7 @@ export default function MainPage() {
                     </Link>
                 </div>
             </div>
-
+            
             <div className="w-full z-50">
                 <Footer />
             </div>
