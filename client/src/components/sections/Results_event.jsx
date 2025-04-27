@@ -1,11 +1,11 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useParams } from "react";
 import { Link } from "react-router-dom";
 import { BookmarkIcon } from '@heroicons/react/24/solid';
 import { eventList } from "../../utils/models";
 import Navbar from "../header";
 import Footer from "../footer";
 
-export const Results_page_events = () => {
+export const Results_page_events = ( { user_id } ) => {
     const [sortBy, setSortBy] = useState("");
     const [bookmarkedIds, setBookmarkedIds] = useState([]);
     const [events, setEvents] = useState(eventList);
@@ -60,7 +60,7 @@ export const Results_page_events = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {sortedEvents.map((event) => (
                     <div key={event.event_id} className="flex flex-col h-full bg-white rounded-xl shadow-md overflow-hidden">
-                    <Link to={`/event-details/${event.event_id}`}>
+                    <Link to={`/event-details/${event.event_id}/${user_id}`}>
                         <img src={event.image} alt={event.event_name} className="w-full h-48 object-cover" />
                     </Link>
                     

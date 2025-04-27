@@ -118,7 +118,7 @@ export default function MainPage() {
                             </h2>
                             <div className="flex justify-end mt-4 pr-10">
                                 <Link to={`/jobs/${user_id}`}>
-                                    <button className="focus:!outline-none text-[#891839] border-3 border-[#891839] px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:bg-[#891839] hover:text-white">
+                                    <button className="focus:!outline-none text-[#891839] border-3 border-[#891839] px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:bg-[#891839] hover:text-white cursor-pointer">
                                         View more &gt;
                                     </button>
                                 </Link>
@@ -160,7 +160,7 @@ export default function MainPage() {
 
                 {/* <div className="w-full h-110 grid grid-cols-2 gap-0"> */}
                 <div className="w-full min-h-[440px] grid grid-cols-1 sm:grid-cols-2">
-                    <Link to="/events">
+                    <Link to={`/events/${user_id}`}>
                         <BookEventButton />
                     </Link>
                     <Link to={`/search-alumni/${events[currentEventIndex].event_id}`}>
