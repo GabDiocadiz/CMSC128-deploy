@@ -6,10 +6,11 @@ export const eventController = {
 
     async adminPageEvents(req, res) {
         try {
-            const items = await Event.find().select('_id event_name event_date');
+            const items = await Event.find()
+                .select('event_name event_date');
             res.status(200).json(items);
         } catch (err) {
-            res.status(400).json({ error: error.message})
+            res.status(400).json({ error: err.message})
         }
     }
 }

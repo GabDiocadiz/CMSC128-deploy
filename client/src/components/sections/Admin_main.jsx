@@ -7,134 +7,48 @@ import { api } from "../../api.js";
 export const Admin_main = () => {
     const navigate = useNavigate()
 
-    const sample_req = [
-        {
-            id:1,
-            type:"Event",
-            name: "Breaking Bad",
-            from: "123@up.edu.ph"
-        },
-        {
-            id:2,
-            type:"Event",
-            name: "Test Bad",
-            from: "123@up.edu.ph"
-        },
-        {
-            id:3,
-            type:"Event",
-            name: "Breaking Bad",
-            from: "123@up.edu.ph"
-        },
-        {
-            id:4,
-            type:"Event",
-            name: "Breaking Bad",
-            from: "123@up.edu.ph"
-        },
-        {
-            id:5,
-            type:"Event",
-            name: "Breaking Bad",
-            from: "123@up.edu.ph"
-        },
-        {
-            id:6,
-            type:"Event",
-            name: "Breaking Bad",
-            from: "123@up.edu.ph"
-        },
-        {
-            id:7,
-            type:"Event",
-            name: "Breaking Bad",
-            from: "123@up.edu.ph"
-        },
-        {
-            id:8,
-            type:"Event",
-            name: "Breaking Bad",
-            from: "123@up.edu.ph"
-        },
-        {
-            id:9,
-            type:"Event",
-            name: "Breaking Bad",
-            from: "123@up.edu.ph"
-        },
-        {
-            id:10,
-            type:"Event",
-            name: "Breaking Bad",
-            from: "123@up.edu.ph"
-        },
-        {
-            id:11,
-            type:"Event",
-            name: "Breaking Bad",
-            from: "123@up.edu.ph"
-        },
-    ];
-
+    const request = []
     const event=[]
-
-    const sample_job=[
-        {   
-            company: "ARTEMIS",   
-            job: "Software Development",
-        },
-        {   
-            company: "ARTEMIS",   
-            job: "Software Development",
-        },
-        {   
-            company: "ARTEMIS",   
-            job: "Software Development",
-        },
-        {   
-            company: "ARTEMIS",   
-            job: "Software Development",
-        },
-        {   
-            company: "ARTEMIS",   
-            job: "Software Development",
-        },
-        {   
-            company: "ARTEMIS",   
-            job: "Software Development",
-        }
-    ]
+    const job=[]
 
     const fetchData = async() => {
         try {
             console.log("Fetching data...");
 
-            // const requestResponse = await api.get("/requests");
             const eventResponse = await api.get("/event/admin-page-events");
-            // const jobResponse = await api.get("/jobs");
+            const jobResponse = await api.get("/jobs/admin-page-jobs");
+            const requestResponse = await api.get("/jobs/admin-page-job-requests");
 
             const formattedEvents = eventResponse.data.map( event => ({
                 name: event.event_name,
                 date: new Date(event.event_date).toISOString().split('T')[0]
             }));
+            const formattedJobs = jobResponse.data.map( job => ({
+                company: job.company,
+                job: job.job_title
+            }))
+            const formattedJobRequests = requestResponse.data.map( job => ({
+                id: job._id,
+                type: 'Job',
+                name: job.job_title,
+                from: job.posted_by.email
+            }))
 
-            console.log("Formatted events:", formattedEvents);
-            
-            // setRequests();
-            setEvents(formattedEvents.length > 0 ? formattedEvents : sample_event);
-            // setJobs();
+            setEvents(formattedEvents);
+            setJobs(formattedJobs);
+            setRequests(formattedJobRequests);
         } catch (err) {
             console.error("Failed to fetch data: ", err);
         }
     }
 
-    const [requests, setRequests] = useState(sample_req);
+    const [requests, setRequests] = useState(request);
     const [events,setEvents]= useState(event);
-    const [jobs,setJobs]= useState(sample_job);
+    const [jobs,setJobs]= useState(job);
     const [req_modalOpen, setreq_modalOpen] =useState(false); 
     const [message_modal, setmessage_modal] =useState(0);
     const [request_id, setrequestID]= useState(0);
-    
+
     useEffect(() => {
         fetchData();
     }, []);
