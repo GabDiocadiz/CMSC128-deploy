@@ -1,31 +1,56 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { eventList, announcementList, jobList } from "../../utils/models";
+import { ScrollToTop } from "../../utils/helper";
 import Navbar from "../header";
 import Footer from "../footer";
 import BookEventButton from "../buttons/BookEvent";
 import SearchAlumniButton from "../buttons/SearchAlumni";
 
 export default function MainPage() {
-    const [currentEventIndex, setCurrentEventIndex] = useState(0);
-    const [oddNoticeIndex, setOddNoticeIndex] = useState(0);
-    const [evenNoticeIndex, setEvenNoticeIndex] = useState(1);
+    const [jobs, setJobs] = useState(jobList);
+    const [events, setEvents] = useState(eventList);
+    const [announcements, setAnnouncements] = useState(announcementList);
+
+    // for events and announcements slideshow
+    const [currentEventIndex, setCurrentEventIndex] = useState(() => parseInt(localStorage.getItem("currentEventIndex")) || 0);
+    const [oddNoticeIndex, setOddNoticeIndex] = useState(() => parseInt(localStorage.getItem("oddNoticeIndex")) || 0);
+    const [evenNoticeIndex, setEvenNoticeIndex] = useState(() => parseInt(localStorage.getItem("evenNoticeIndex")) || 1);
 
     useEffect(() => {
         const eventInterval = setInterval(() => {
-            setCurrentEventIndex((prevIndex) => (prevIndex + 1) % eventList.length);
-        }, 20000);
+            setCurrentEventIndex((prev) => {
+                const next = (prev + 1) % events.length;
+                localStorage.setItem("currentEventIndex", next);
+                return next;
+            });
+        }, 20000);   // 20sec interval for each event
 
         const noticeInterval = setInterval(() => {
-            setOddNoticeIndex((prev) => (prev + 2) % announcementList.length);
-            setEvenNoticeIndex((prev) => (prev + 2) % announcementList.length);
-        }, 30000);
+            setOddNoticeIndex((prev) => {
+                const next = (prev + 2) % announcements.length;
+                localStorage.setItem("oddNoticeIndex", next);
+                return next;
+            });
+            setEvenNoticeIndex((prev) => {
+                const next = (prev + 2) % announcements.length;
+                localStorage.setItem("evenNoticeIndex", next);
+                return next;
+            });
+        }, 30000);  // 30sec interval per two announcements
+
+        // filter and display only approved jobs
+        const approvedJobs = jobs.filter((job) => job.status === "approved");
+        setJobs(approvedJobs);
+        setEvents(eventList);
+        setAnnouncements(announcementList);
+        ScrollToTop();
 
         return () => {
             clearInterval(eventInterval);
             clearInterval(noticeInterval);
         };
-    }, []);
+    }, [events.length, announcements.length]);
 
     return (
         <>
@@ -36,48 +61,22 @@ export default function MainPage() {
             <div className="w-screen pt-12">
                 <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-0 min-h-[600px]">
                     {/* Events */}
-                    {eventList.length > 0 && (
+                    {events.length > 0 && (
                         <div
                             className="col-span-1 sm:col-span-2 bg-cover bg-center text-white flex flex-col justify-center items-start px-8 py-16 sm:px-16 sm:py-32 w-full transition-all duration-1000 relative group"
-                            style={{ backgroundImage: `url(${eventList[currentEventIndex].image})` }}
+                            style={{ backgroundImage: `url(${events[currentEventIndex].image})` }}
                         >
                             <div className="relative z-10 group/title">
                                 <Link
-                                    to={`/event-details/${currentEventIndex}`}
-                                    state={{ event: eventList[currentEventIndex] }}
+                                    to={`/event-details/${events[currentEventIndex].event_id}`}
+                                    state={{ event: events[currentEventIndex] }}
                                     className="!text-white !text-3xl sm:!text-4xl md:!text-7xl !font-bold !mb-4 !text-left cursor-pointer block w-full relative z-10 hover:!underline"
                                 >
-                                    {eventList[currentEventIndex].event_name}
+                                    {events[currentEventIndex].event_name}
                                 </Link>
-                                <div
-                                    className="hidden sm:group-hover/title:flex pointer-events-none transition-opacity duration-300 absolute top-1/2 left-1/2 -translate-x-[35%] -translate-y-[45%] z-50 w-[90%] sm:w-[650px] h-auto sm:h-[500px] bg-cover bg-center text-white shadow-2xl backdrop-blur-md items-center justify-center"
-                                    style={{ backgroundImage: `url(${eventList[currentEventIndex].image})` }}
-                                >
-                                    <div className="relative bg-transparent w-[90%] h-[90%] border-2 border-white rounded-2xl px-10 py-6 flex flex-col items-start text-left overflow-y-auto">
-                                        <h2 className="text-md sm:text-5xl md:text-5xl font-bold text-center w-full absolute top-10 left-1/2 -translate-x-1/2 px-4">
-                                            {eventList[currentEventIndex].event_name}
-                                        </h2>
-                                        <div className="pt-45 w-full space-y-3 text-md sm:text-md md:text-md">
-                                            <p>
-                                                {eventList[currentEventIndex].event_description}
-                                            </p>
-                                            <p>
-                                                <span className="font-semibold">Date:</span>{' '}
-                                                {new Date(eventList[currentEventIndex].event_date).toLocaleDateString('en-US', {
-                                                    year: 'numeric',
-                                                    month: 'long',
-                                                    day: 'numeric',
-                                                })}
-                                            </p>
-                                            <p>
-                                                <span className="font-semibold">Venue:</span> {eventList[currentEventIndex].venue}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                             <p className="!text-md sm:!text-lg !max-w-2xl !text-left">
-                                {eventList[currentEventIndex].event_description}
+                                {events[currentEventIndex].event_description}
                             </p>
                         </div>
                     )}
@@ -88,17 +87,13 @@ export default function MainPage() {
                             <div
                                 key={i}
                                 className="bg-cover bg-center !text-white flex flex-col justify-center items-end text-right px-8 sm:px-10 py-8 sm:py-10 w-full transition-all duration-1000"
-                                style={{ backgroundImage: `url(${announcementList[index].image})` }}
+                                style={{ backgroundImage: `url(${announcements[index].image})` }}
                             >
-                                <Link
-                                    to={`/announcement-details/${index}`}
-                                    state={{ announcement: announcementList[index] }}
-                                    className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4 hover:!underline"
-                                >
-                                    {announcementList[index].title}
-                                </Link>
+                                <h2 className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4">
+                                    {announcements[index].title}
+                                </h2>
                                 <p className="text-sm sm:text-base max-w-md">
-                                    {announcementList[index].context}
+                                    {announcements[index].context}
                                 </p>
                             </div>
                         ))}
@@ -122,12 +117,11 @@ export default function MainPage() {
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:w-2/3">
-                            {jobList.length > 0 ? (
-                                jobList.filter((job) => job.status === "approved").slice(0, 2).map((job, index) => (
+                            {jobs.length > 0 ? (
+                                jobs.slice(0, 2).map((job, index) => (
                                     <Link
                                         key={index}
-                                        to={`/job-details/${index}`}
-                                        state={{ job }}
+                                        to={`/job-details/${job.job_id}`}
                                         className="transform transition-transform duration-300 hover:scale-105"
                                     >
                                         <div className="bg-[#891839] p-3 rounded-3xl flex justify-center h-70 w-full shadow-lg hover:shadow-xl">
