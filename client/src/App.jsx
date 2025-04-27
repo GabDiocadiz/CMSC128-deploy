@@ -22,7 +22,7 @@ function App() {
       {
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<MainPage/>} />
+          <Route path="/" element={<Registration/>} />
           <Route path="/reg" element={<Registration/>} />
           <Route path="/login" element={<Login/>} />
           <Route path="/admin_main" element={<Admin_main/>} />
