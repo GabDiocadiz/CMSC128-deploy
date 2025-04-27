@@ -11,6 +11,8 @@ let refreshSecretKey = process.env.REFRESH_TOKEN_SECRET_KEY;
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
+
+        // console.log(`Login attempt with email: ${email}`);
         const user = await User.findOne({email: email});
 
         if (!user) {
@@ -44,7 +46,7 @@ export const login = async (req, res) => {
             maxAge: 24 * 60 * 60 * 1000
         })
 
-        res.status(200).json({ accessToken });
+        res.status(200).json({ accessToken: accessToken, success: true, userId: user._id, user_type: user.user_type });
     } catch (e) {
         console.error('Login Error: ', e)
         res.status(500).json({ error: 'Login failed' });
