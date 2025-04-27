@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Navbar_landing from "../header_landing";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+import axios from "axios";
 
 const Login = () => {
     const navigate = useNavigate()
@@ -13,22 +14,31 @@ const Login = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Logging in with:", formData);
-        const login=2;
-        navigate(`/home/${1}`);  //Comment out when connecting  db and change the enclosed in {} to the actual value of the user_id
-        if (login.success){
-            //Check account if admin
-            admin= true;
-            if (admin){
-                navigate('/admin_main/${1}');
-            }else{
-                navigate('/home}');
+        // console.log("Logging in with:", formData);
+    
+        try {
+            const res = await axios.post("http://localhost:5050/auth/login", {
+                email: formData.username,
+                password: formData.password,
+            });
+    
+            if (res.data.success) { //check login is successful
+                alert("Login Successful. Redirecting to home page...");
+    
+                if (res.data.user_type === "admin") { //check if admin or alumni
+                    navigate(`/admin_main/${res.data.userId}`);
+                } else {
+                    navigate(`/home/${res.data.userId}`);
+                }
+            } else {
+                alert("Login failed. Please check your credentials.");
             }
-            
-       }else{
-       }
+        } catch (err) {
+            console.error("Login error:", err.response?.data || err.message);
+            alert("Login failed. Please try again.");
+        }
     };
    
     
