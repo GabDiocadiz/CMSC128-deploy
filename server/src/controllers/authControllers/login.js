@@ -46,7 +46,7 @@ export const login = async (req, res) => {
             maxAge: 24 * 60 * 60 * 1000
         })
 
-        res.status(200).json({ accessToken: accessToken, success: true, userId: user._id, user_type: user.user_type });
+        res.status(200).json({ accessToken: accessToken, success: true, user:user, userId: user._id, user_type: user.user_type });
     } catch (e) {
         console.error('Login Error: ', e)
         res.status(500).json({ error: 'Login failed' });
