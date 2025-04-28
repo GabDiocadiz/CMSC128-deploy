@@ -3,10 +3,11 @@ import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom'
 import Request_Confirmation from "../request_confirmation";
 import Speed_Dial_Admin from "../Speed_Dial_Admin";
-import { api } from "../../api.js";
+import { useAuth } from "../../AuthContext.jsx";
 
 export const Admin_main = () => {
     const navigate = useNavigate()
+    const { authAxios, user} = useAuth();
 
     const request = []
     const event=[]
@@ -16,9 +17,9 @@ export const Admin_main = () => {
         try {
             console.log("Fetching data...");
 
-            const eventResponse = await api.get("/event/admin-page-events");
-            const jobResponse = await api.get("/jobs/admin-page-jobs");
-            const requestResponse = await api.get("/jobs/admin-page-job-requests");
+            const eventResponse = await authAxios.get(`events/admin-page-events`);
+            const jobResponse = await authAxios.get(`jobs/admin-page-jobs`);
+            const requestResponse = await authAxios.get(`jobs/admin-page-job-requests`);
 
             const formattedEvents = eventResponse.data.map( event => ({
                 name: event.event_name,

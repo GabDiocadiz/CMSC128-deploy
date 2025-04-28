@@ -25,8 +25,9 @@ const Login = () => {
             
             if (result.success) {
                 alert("Login Successful. Redirecting to home page...");
-                
-                if (result.user.user_type === "admin") {
+
+                console.log("User type: ", result.user.user_type);
+                if (result.user.user_type === "Admin") {
                     navigate(`/admin_main/${result.user._id}`);
                 } else {
                     navigate(`/home/${result.user._id}`);
