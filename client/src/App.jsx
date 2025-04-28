@@ -23,8 +23,7 @@ function App() {
       {
       <BrowserRouter>
         <Routes>
-
-          <Route path="/" element={<Landing_page/>} />  
+          <Route path="/" element={<Landing_page/>} /> 
           <Route path="/reg" element={<Registration/>} />
           <Route path="/login" element={<Login/>} />
           <Route path="/admin_main/:user_id" element={<Admin_main/>} />

@@ -1,3 +1,5 @@
+import { text } from 'express';
+import { Alumni } from './User.js';
 import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
@@ -8,6 +10,7 @@ const eventSchema = new Schema({
     venue: { type: String, required: true },
     created_by: { type: Schema.Types.ObjectId, ref: 'Admin', required: true },
     attendees: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Alumni' }],
+    link: { type: String },
 });
 
 eventSchema.index({ event_name: 1 });

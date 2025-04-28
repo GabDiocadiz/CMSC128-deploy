@@ -17,14 +17,11 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         // console.log("Logging in with:", formData);
-
         try {
             const res = await axios.post("http://localhost:5050/auth/login", {
                 email: formData.username,
                 password: formData.password,
-            }, {
-            });
-
+            }, {});
 
             if (res.data.success) { //check login is successful
                 alert("Login Successful. Redirecting to home page...");
