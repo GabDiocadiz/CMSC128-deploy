@@ -3,7 +3,7 @@ import { alumniController } from '../modelControllers/alumniController.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from "dotenv";
-dotenv.config({path: "../server/.env"})
+dotenv.config({ path: "../server/.env" })
 
 let accessSecretKey = process.env.ACCESS_TOKEN_SECRET_KEY;
 let refreshSecretKey = process.env.REFRESH_TOKEN_SECRET_KEY;
@@ -11,7 +11,9 @@ let refreshSecretKey = process.env.REFRESH_TOKEN_SECRET_KEY;
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const user = await User.findOne({email: email});
+
+        // console.log(`Login attempt with email: ${email}`);
+        const user = await User.findOne({ email: email });
 
         if (!user) {
             return res.status(401).json({ error: 'User not found' });
@@ -39,12 +41,12 @@ export const login = async (req, res) => {
 
         res.cookie('jwt', refreshToken, {
             httpOnly: true,
-            sameSite: 'None', 
+            sameSite: 'None',
             secure: true,
             maxAge: 24 * 60 * 60 * 1000
         })
 
-        res.status(200).json({ accessToken });
+        res.status(200).json({ accessToken: accessToken, success: true, userId: user._id, user_type: user.user_type });
     } catch (e) {
         console.error('Login Error: ', e)
         res.status(500).json({ error: 'Login failed' });
