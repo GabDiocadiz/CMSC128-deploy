@@ -1,5 +1,3 @@
-import { text } from 'express';
-import { Alumni } from './user.js';
 import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
