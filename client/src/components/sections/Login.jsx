@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar_landing from "../header_landing";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+import axios from "axios";
 
 const Login = () => {
     const navigate = useNavigate()
@@ -8,36 +9,48 @@ const Login = () => {
         username: "",
         password: "",
     });
-    
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Logging in with:", formData);
-        const login=2;
-        navigate(`/home/${1}`);  //Comment out when connecting  db and change the enclosed in {} to the actual value of the user_id
-        if (login.success){
-            //Check account if admin
-            admin= true;
-            if (admin){
-                navigate('/admin_main/${1}');
-            }else{
-                navigate('/home}');
+        // console.log("Logging in with:", formData);
+
+        try {
+            const res = await axios.post("http://localhost:5050/auth/login", {
+                email: formData.username,
+                password: formData.password,
+            }, {
+            });
+
+
+            if (res.data.success) { //check login is successful
+                alert("Login Successful. Redirecting to home page...");
+                localStorage.setItem("accessToken", res.data.accessToken);
+
+                if (res.data.user_type === "admin") { //check if admin or alumni
+                    navigate(`/admin_main/${res.data.userId}`);
+                } else {
+                    navigate(`/home/${res.data.userId}`);
+                }
+            } else {
+                alert("Login failed. Please check your credentials.");
             }
-            
-       }else{
-       }
+        } catch (err) {
+            console.error("Login error:", err.response?.data || err.message);
+            alert("Login failed. Please try again.");
+        }
     };
-   
-    
+
+
 
     return (
         <>
             <div className="w-screen">
                 <Navbar_landing></Navbar_landing>
-            </div> 
+            </div>
             <div className="bg-[url('src/assets/Building.png')] bg-cover bg-center w-full h-screen flex flex-col justify-center">
                 <div className="flex  ">
                     <div className="grid grid-cols-5 gap-x-5 px-5">
@@ -46,14 +59,14 @@ const Login = () => {
                                 ARTEMIS
                             </div>
                             <div className="py-2 font-bold flex text-left text-3xl">
-                            Alumni Relations, Tracking, 
-                            <br></br>and Engagement <br></br>
-                            Management Integrated System
+                                Alumni Relations, Tracking,
+                                <br></br>and Engagement <br></br>
+                                Management Integrated System
                             </div>
                             <div className="font-extralight flex text-left text-xl">
-                            "Guiding Alumni Connections, Every Step of the Way."
+                                "Guiding Alumni Connections, Every Step of the Way."
                             </div>
-                            
+
                         </div>
                         {/* <div className="col-span-1"></div> */}
                         <div className="flex flex-col justify-start col-span-2 pr-20">
@@ -78,10 +91,10 @@ const Login = () => {
                                         required
                                     />
                                     <button
-                                        
+
                                         type="submit"
                                         className="w-full bg-[#891839] text-white font-bold p-2 rounded-md hover:bg-red-700 transition"
-                                        >
+                                    >
                                         Login
                                     </button>
 
@@ -90,7 +103,7 @@ const Login = () => {
                                     <button
                                         type="submit"
                                         className="w-full bg-[#085740] font-bold text-white p-2 rounded-md hover:bg-green-700 transition"
-                                        onClick={()=> 
+                                        onClick={() =>
                                             navigate('/reg')}
                                     >
                                         Register
@@ -98,13 +111,13 @@ const Login = () => {
                                 </form>
                             </div>
                         </div>
-                        
+
                     </div>
-                    
-                    
+
+
                 </div>
-            
-            
+
+
             </div>
 
         </>
