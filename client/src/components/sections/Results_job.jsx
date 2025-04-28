@@ -55,7 +55,7 @@ const dummyJobs = [
   },
 ];
 
-export const Results_page_jobs = () => {
+export const Results_page_jobs = ( { user_id }) => {
   const [sortBy, setSortBy] = useState("");
   const [bookmarkedIds, setBookmarkedIds] = useState([]);
   const [jobs, setJobs] = useState(jobList);
@@ -112,7 +112,7 @@ export const Results_page_jobs = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {sortedJobs.map((job) => (
             <div key={job.job_id} className="bg-white rounded-xl shadow-md overflow-hidden">
-              <Link to={`/job-details/${job.job_id}`}>
+              <Link to={`/job-details/${job.job_id}/${user_id}`}>
                 <img src={job.image} alt={job.job_title} className="w-full h-48 object-cover" />
               </Link>
               <div className="p-4">

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { eventList, announcementList, jobList } from "../../utils/models";
 import { ScrollToTop } from "../../utils/helper";
 import Navbar from "../header";
@@ -16,33 +17,18 @@ export default function MainPage() {
     const [announcements, setAnnouncements] = useState(announcementList);
 
     // for events and announcements slideshow
-    const [currentEventIndex, setCurrentEventIndex] = useState(() => parseInt(localStorage.getItem("currentEventIndex")) || 0);
-    const [oddNoticeIndex, setOddNoticeIndex] = useState(() => parseInt(localStorage.getItem("oddNoticeIndex")) || 0);
-    const [evenNoticeIndex, setEvenNoticeIndex] = useState(() => parseInt(localStorage.getItem("evenNoticeIndex")) || 1);
+    const [currentEventIndex, setCurrentEventIndex] = useState(() => parseInt(sessionStorage.getItem("currentEventIndex")) || 0);
+    const [oddNoticeIndex, setOddNoticeIndex] = useState(() => parseInt(sessionStorage.getItem("oddNoticeIndex")) || 0);
+    const [evenNoticeIndex, setEvenNoticeIndex] = useState(() => parseInt(sessionStorage.getItem("evenNoticeIndex")) || 1);
     const [Error_MessageBool, setError_MessageBool]= useState(false)
 
+    const totalEvents = events.length;
+    const eventIntervalRef = useRef(null);
+    const noticeIntervalRef = useRef(null);
 
     useEffect(() => {
-        const eventInterval = setInterval(() => {
-            setCurrentEventIndex((prev) => {
-                const next = (prev + 1) % events.length;
-                localStorage.setItem("currentEventIndex", next);
-                return next;
-            });
-        }, 20000);   // 20sec interval for each event
-
-        const noticeInterval = setInterval(() => {
-            setOddNoticeIndex((prev) => {
-                const next = (prev + 2) % announcements.length;
-                localStorage.setItem("oddNoticeIndex", next);
-                return next;
-            });
-            setEvenNoticeIndex((prev) => {
-                const next = (prev + 2) % announcements.length;
-                localStorage.setItem("evenNoticeIndex", next);
-                return next;
-            });
-        }, 30000);  // 30sec interval per two announcements
+        startEventInterval();
+        startNoticeInterval();
 
         // filter and display only approved jobs
         const approvedJobs = jobs.filter((job) => job.status === "approved");
@@ -52,10 +38,55 @@ export default function MainPage() {
         ScrollToTop();
 
         return () => {
-            clearInterval(eventInterval);
-            clearInterval(noticeInterval);
+            clearInterval(eventIntervalRef.current);
+            clearInterval(noticeIntervalRef.current);
         };
     }, [events.length, announcements.length]);
+
+    const startEventInterval = () => {
+        clearInterval(eventIntervalRef.current);
+        eventIntervalRef.current = setInterval(() => {
+            setCurrentEventIndex((prev) => {
+                const next = (prev + 1) % events.length;
+                sessionStorage.setItem("currentEventIndex", next);
+                return next;
+            });
+        }, 20000);   // 20sec interval for each event
+    };
+
+    const startNoticeInterval = () => {
+        clearInterval(noticeIntervalRef.current);
+        noticeIntervalRef.current = setInterval(() => {
+            setOddNoticeIndex((prev) => {
+                const next = (prev + 2) % announcements.length;
+                sessionStorage.setItem("oddNoticeIndex", next);
+                return next;
+            });
+            setEvenNoticeIndex((prev) => {
+                const next = (prev + 2) % announcements.length;
+                sessionStorage.setItem("evenNoticeIndex", next);
+                return next;
+            });
+        }, 30000);   // 30sec interval per two announcements
+    };
+
+    const handlePrevEvent = () => {
+        setCurrentEventIndex((prev) => {
+            const newIndex = (prev - 1 + totalEvents) % totalEvents;
+            sessionStorage.setItem("currentEventIndex", newIndex);
+            return newIndex;
+        });
+        startEventInterval();
+    };
+
+    const handleNextEvent = () => {
+        setCurrentEventIndex((prev) => {
+            const newIndex = (prev + 1) % totalEvents;
+            sessionStorage.setItem("currentEventIndex", newIndex);
+            return newIndex;
+        });
+        startEventInterval();
+    };
     
     return (
         <>
@@ -87,6 +118,21 @@ export default function MainPage() {
                             <p className="!text-md sm:!text-lg !max-w-2xl !text-left">
                                 {events[currentEventIndex].event_description}
                             </p>
+                            <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex items-center space-x-4">
+                                <button 
+                                    onClick={handlePrevEvent} 
+                                    className="text-sm font-normal cursor-pointer focus:!outline-none"
+                                >
+                                    <IoIosArrowBack size={15} />
+                                </button>
+                                <span className="text-sm font-normal select-none">{`${currentEventIndex + 1} of ${totalEvents}`}</span>
+                                <button 
+                                    onClick={handleNextEvent} 
+                                    className="text-sm font-normal cursor-pointer focus:!outline-none"
+                                >
+                                    <IoIosArrowForward size={15} />
+                                </button>
+                            </div>
                         </div>
                     )}
 
@@ -118,7 +164,7 @@ export default function MainPage() {
                             </h2>
                             <div className="flex justify-end mt-4 pr-10">
                                 <Link to={`/jobs/${user_id}`}>
-                                    <button className="focus:!outline-none text-[#891839] border-3 border-[#891839] px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:bg-[#891839] hover:text-white">
+                                    <button className="focus:!outline-none text-[#891839] border-3 border-[#891839] px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:bg-[#891839] hover:text-white cursor-pointer">
                                         View more &gt;
                                     </button>
                                 </Link>
@@ -160,7 +206,7 @@ export default function MainPage() {
 
                 {/* <div className="w-full h-110 grid grid-cols-2 gap-0"> */}
                 <div className="w-full min-h-[440px] grid grid-cols-1 sm:grid-cols-2">
-                    <Link to="/book-event">
+                    <Link to={`/events/${user_id}`}>
                         <BookEventButton />
                     </Link>
                     <Link to={`/search-alumni/${events[currentEventIndex].event_id}`}>
