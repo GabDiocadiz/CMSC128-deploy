@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BookmarkIcon } from '@heroicons/react/24/solid';
+import { useAuth } from "../../AuthContext";
 import axios from "axios";
 import Navbar from "../header";
 import Footer from "../footer";
 
 export const Results_page_events = ({ user_id }) => {
     const navigate = useNavigate();
+    const {authAxios, user} = useAuth();
+
     const [sortBy, setSortBy] = useState("");
     const [bookmarkedIds, setBookmarkedIds] = useState([]);
     const [events, setEvents] = useState([]);
@@ -23,17 +26,7 @@ export const Results_page_events = ({ user_id }) => {
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                let token = localStorage.getItem("accessToken");
-
-                if (!token) {
-                    navigate("/login");
-                    return;
-                }
-
-                const response = await axios.get(`http://localhost:5050/events/read-sort?sortBy=${sortBy}`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                    withCredentials: true
-                });
+                const response = await authAxios.get(`http://localhost:5050/events/read-sort?sortBy=${sortBy}`);
 
                 setEvents(response.data);
 

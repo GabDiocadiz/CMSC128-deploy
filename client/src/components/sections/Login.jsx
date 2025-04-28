@@ -2,11 +2,14 @@ import { useState, useEffect } from "react";
 import Navbar_landing from "../header_landing";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
+import { useAuth } from "../../AuthContext";
 
 const Login = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const { login } = useAuth();
+
     const [formData, setFormData] = useState({
-        username: "",
+        email: "",
         password: "",
     });
 
@@ -18,25 +21,22 @@ const Login = () => {
         e.preventDefault();
         // console.log("Logging in with:", formData);
         try {
-            const res = await axios.post("http://localhost:5050/auth/login", {
-                email: formData.username,
-                password: formData.password,
-            }, {});
-
-            if (res.data.success) { //check login is successful
+            const result = await login(formData.email, formData.password);
+            
+            if (result.success) {
                 alert("Login Successful. Redirecting to home page...");
-                localStorage.setItem("accessToken", res.data.accessToken);
 
-                if (res.data.user_type === "admin") { //check if admin or alumni
-                    navigate(`/admin_main/${res.data.userId}`);
+                console.log("User type: ", result.user.user_type);
+                if (result.user.user_type === "Admin") {
+                    navigate(`/admin_main/${result.user._id}`);
                 } else {
-                    navigate(`/home/${res.data.userId}`);
+                    navigate(`/home/${result.user._id}`);
                 }
             } else {
                 alert("Login failed. Please check your credentials.");
             }
         } catch (err) {
-            console.error("Login error:", err.response?.data || err.message);
+            console.error("Login error:", err);
             alert("Login failed. Please try again.");
         }
     };
@@ -71,11 +71,11 @@ const Login = () => {
                                 <form onSubmit={handleSubmit} className="space-y-6 ">
                                     <input
                                         type="text"
-                                        name="username"
-                                        value={formData.username}
+                                        name="email"
+                                        value={formData.email}
                                         onChange={handleChange}
                                         className="w-full p-2 border-3 border-[#3E3939] rounded-md outline-none focus:ring-1 "
-                                        placeholder="Username"
+                                        placeholder="Email"
                                         required
                                     />
                                     <input
