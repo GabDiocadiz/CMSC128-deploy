@@ -5,7 +5,7 @@ import { eventController } from "../controllers/modelControllers/eventController
 
 const router = express.Router();
 
-router.get('/', validateToken, eventController.read);
+router.get('/read-sort', validateToken, eventController.readSort);
 router.get("/admin-page-events", // validateToken, authorizeRoles(["Admin"]), * commented for testing
     eventController.adminPageEvents);
 

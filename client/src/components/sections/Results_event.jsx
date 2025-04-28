@@ -30,7 +30,7 @@ export const Results_page_events = ({ user_id }) => {
                     return;
                 }
 
-                const response = await axios.get(`http://localhost:5050/events?sortBy=${sortBy}`, {
+                const response = await axios.get(`http://localhost:5050/events/read-sort?sortBy=${sortBy}`, {
                     headers: { Authorization: `Bearer ${token}` },
                     withCredentials: true
                 });

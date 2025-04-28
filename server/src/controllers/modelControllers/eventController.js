@@ -14,7 +14,7 @@ export const eventController = {
         }
     },
 
-    async readSortByDate(req, res) {
+    async readSort(req, res) {
         try {
 
             const { sortBy } = req.query;
