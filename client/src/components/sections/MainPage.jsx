@@ -9,8 +9,11 @@ import BookEventButton from "../buttons/BookEvent";
 import SearchAlumniButton from "../buttons/SearchAlumni";
 import Error_Message from "../error_message";
 import { useParams } from 'react-router-dom';
+import { useAuth } from "../../AuthContext";
 
 export default function MainPage() {
+    const {authAxios, user} = useAuth();
+
     const {user_id} =useParams(); //Contains the User Id 
     const [jobs, setJobs] = useState(jobList);
     const [events, setEvents] = useState(eventList);
