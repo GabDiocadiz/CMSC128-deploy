@@ -21,7 +21,7 @@ export default function Navbar({user_id}) {
         {/* Flexbox for proper alignment */}
         <div className="container flex justify-between items-center py-1 px-4">
           {/* Left - Logo */}
-          <Link to={`/home/${user_id}`}>
+          <Link to={`/home`}>
             <img src={uplbLogo} className="bg-none w-40 h-auto" alt="UPLB Logo" />
           </Link>
 
