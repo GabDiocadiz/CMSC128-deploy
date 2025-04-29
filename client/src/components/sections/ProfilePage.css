@@ -1,0 +1,209 @@
+/* ProfilePage Custom Styles */
+
+/* Force button styles */
+.force-button {
+    background-color: #ffffff !important;
+    color: #891839 !important;
+    border: 2px solid #891839 !important;
+    padding: 0.5rem 1.5rem;
+    font-weight: 600;
+    border-radius: 9999px;
+    transition: 0.3s;
+}
+
+.force-button:hover {
+    background-color: #891839 !important;
+    color: #ffffff !important;
+}
+
+/* Active tab */
+.active-tab {
+    background-color: #0E4221 !important;
+    color: #ffffff !important;
+    border: 2px solid #0E4221 !important;
+}
+
+/* Save button */
+.save-button {
+    background-color: #891839 !important;
+    color: #ffffff !important;
+    padding: 0.5rem 1.5rem;
+    font-weight: 600;
+    border-radius: 9999px;
+    transition: 0.3s;
+}
+
+.save-button:hover {
+    background-color: #6e132d !important;
+}
+
+/* Profile layout */
+.profile-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.5rem;
+}
+
+.profile-header h2 {
+    margin-top: 0.5rem;
+    font-size: 1.75rem;
+}
+
+.profile-header p {
+    font-size: 0.9rem;
+    color: #6b7280; /* Tailwind's gray-500 */
+}
+
+/* Make profile text layout tighter */
+.profile-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.profile-details-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.profile-details-section h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.profile-field {
+    font-size: 0.9rem;
+    line-height: 1.2;
+}
+
+.profile-field-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #6b7280;
+}
+
+.profile-field-value {
+    font-weight: 600;
+    color: #374151;
+}
+
+/* Calendar Customization */
+.react-calendar {
+    width: 100%;
+    background: #ffffff;
+    border: none;
+    border-radius: 1.5rem;
+    padding: 1rem;
+}
+
+.dark .react-calendar {
+    background: #2d2d2d;
+}
+
+.react-calendar__tile {
+    background: none;
+    border-radius: 0.5rem;
+    padding: 0.75rem 0.5rem;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+.react-calendar__tile--active {
+    background: #891839;
+    color: white;
+}
+
+.react-calendar__tile:hover {
+    background: #0E4221;
+    color: white;
+}
+
+.react-calendar__tile--now {
+    background: #e6f9ed; /* Light greenish background for today */
+    color: #891839;
+    border-radius: 0.75rem;
+}
+
+.dark .react-calendar__tile--now {
+    background: #5a5a5a;
+    color: #0E4221;
+}
+
+.react-calendar__navigation button {
+    color: #891839;
+    font-weight: bold;
+    background: none;
+}
+
+.dark .react-calendar__navigation button {
+    color: #0E4221;
+}
+
+/* Highlight event day */
+.highlight-event {
+    background: #0E4221;
+    color: white;
+    border-radius: 0.75rem;
+}
+
+/* Custom Calendar Squares */
+.custom-calendar {
+    width: 100%;
+    border: none;
+}
+
+.react-calendar__tile {
+    aspect-ratio: 1 / 0.5;
+    padding: 8px;
+    position: relative;
+}
+
+.event-day {
+    font-size: 0.7rem;
+    background-color: #891839;
+    color: white;
+    padding: 2px 4px;
+    border-radius: 6px;
+    margin-top: 2px;
+    text-align: center;
+}
+
+.popup-events {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 10px rgba(0,0,0,0.15);
+    z-index: 10;
+    min-width: 150px;
+    margin-top: 5px;
+  }
+  
+  .popup-event-item {
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.2s;
+    font-size: 0.85rem;
+  }
+  
+  .popup-event-item:hover {
+    background-color: #891839;
+    color: white;
+  }
+  
+  .event-day {
+    background-color: #891839 !important;
+    color: white !important;
+    border-radius: 8px;
+    position: relative; /* important so absolute inside works */
+    overflow: hidden; /* optional for clean corners */
+  }
+  

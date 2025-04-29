@@ -35,7 +35,8 @@ const alumniSchema = new Schema({
     profile_visibility: { type: Boolean, default: true },
     donation_history: [{ type: Schema.Types.ObjectId, ref: 'Donation' }],
     job_postings: [{ type: Schema.Types.ObjectId, ref: 'JobPosting' }],
-    events_attended: [{ type: Schema.Types.ObjectId, ref: 'Event' }]
+    events_attended: [{ type: Schema.Types.ObjectId, ref: 'Event' }],
+    bookmarked_jobs: [{ type: Schema.Types.ObjectId, ref: 'JobPosting' }]
 });
 
 alumniSchema.index({ graduation_year: 1, current_job_title: 1, degree: 1 }); 

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { eventList, announcementList, jobList } from "../../utils/models";
 import { ScrollToTop } from "../../utils/helper";
 import Navbar from "../header";
@@ -8,54 +9,151 @@ import BookEventButton from "../buttons/BookEvent";
 import SearchAlumniButton from "../buttons/SearchAlumni";
 import Error_Message from "../error_message";
 import { useParams } from 'react-router-dom';
+import { useAuth } from "../../AuthContext";
 
 export default function MainPage() {
+    const {authAxios, user} = useAuth();
     const {user_id} =useParams(); //Contains the User Id 
+
     const [jobs, setJobs] = useState(jobList);
     const [events, setEvents] = useState(eventList);
     const [announcements, setAnnouncements] = useState(announcementList);
+    const [isLoading, setIsLoading] = useState(true);
 
     // for events and announcements slideshow
-    const [currentEventIndex, setCurrentEventIndex] = useState(() => parseInt(localStorage.getItem("currentEventIndex")) || 0);
-    const [oddNoticeIndex, setOddNoticeIndex] = useState(() => parseInt(localStorage.getItem("oddNoticeIndex")) || 0);
-    const [evenNoticeIndex, setEvenNoticeIndex] = useState(() => parseInt(localStorage.getItem("evenNoticeIndex")) || 1);
-    const [Error_MessageBool, setError_MessageBool]= useState(false)
+    const [currentEventIndex, setCurrentEventIndex] = useState(() => {
+        const saved = parseInt(sessionStorage.getItem("currentEventIndex"));
+        return isNaN(saved) ? 0 : saved;
+    });
+    const [oddNoticeIndex, setOddNoticeIndex] = useState(() => {
+        const saved = parseInt(sessionStorage.getItem("oddNoticeIndex"));
+        return isNaN(saved) ? 0 : saved;
+    });
+    const [evenNoticeIndex, setEvenNoticeIndex] = useState(() => {
+        const saved = parseInt(sessionStorage.getItem("evenNoticeIndex"));
+        return isNaN(saved) ? 1 : saved;
+    });
+    const [Error_MessageBool, setError_MessageBool]= useState(false);
 
+    const eventIntervalRef = useRef(null);
+    const noticeIntervalRef = useRef(null);
+
+    // fetch data
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setIsLoading(true);
+                console.log("Fetching data...");
+                
+                // Fetch jobs
+                const jobsResponse = await authAxios.get('/jobs/job-results');
+                setJobs(jobsResponse.data);
+                
+                // Fetch events
+                const eventsResponse = await authAxios.get('/events/all');
+                console.log("Events data:", eventsResponse.data);
+                
+                if (Array.isArray(eventsResponse.data) && eventsResponse.data.length > 0) {
+                    setEvents(eventsResponse.data);
+                    
+                    // Reset currentEventIndex if it's out of bounds
+                    if (currentEventIndex >= eventsResponse.data.length) {
+                        setCurrentEventIndex(0);
+                        sessionStorage.setItem("currentEventIndex", "0");
+                    }
+                } else {
+                    console.log("No events data or empty array");
+                    setEvents([]);
+                }
+                
+                // Fetch announcements
+                // const announcementsResponse = await authAxios.get('/announcements');
+                // setAnnouncements(announcementsResponse.data);
+                
+                setIsLoading(false);
+            } catch (err) {
+                console.error("Error fetching data:", err);
+                setIsLoading(false);
+                setError_MessageBool(true);
+            }
+        };
+        
+        fetchData();
+        ScrollToTop();
+    }, [authAxios]);
 
     useEffect(() => {
-        const eventInterval = setInterval(() => {
-            setCurrentEventIndex((prev) => {
-                const next = (prev + 1) % events.length;
-                localStorage.setItem("currentEventIndex", next);
-                return next;
-            });
-        }, 20000);   // 20sec interval for each event
-
-        const noticeInterval = setInterval(() => {
-            setOddNoticeIndex((prev) => {
-                const next = (prev + 2) % announcements.length;
-                localStorage.setItem("oddNoticeIndex", next);
-                return next;
-            });
-            setEvenNoticeIndex((prev) => {
-                const next = (prev + 2) % announcements.length;
-                localStorage.setItem("evenNoticeIndex", next);
-                return next;
-            });
-        }, 30000);  // 30sec interval per two announcements
+        // Only start intervals if we have data
+        if (events.length > 0) {
+            startEventInterval();
+        }
+        
+        if (announcements.length > 0) {
+            startNoticeInterval();
+        }
 
         // filter and display only approved jobs
         const approvedJobs = jobs.filter((job) => job.status === "approved");
         setJobs(approvedJobs);
-        setEvents(eventList);
-        setAnnouncements(announcementList);
         ScrollToTop();
 
         return () => {
-            clearInterval(eventInterval);
-            clearInterval(noticeInterval);
+            clearInterval(eventIntervalRef.current);
+            clearInterval(noticeIntervalRef.current);
         };
     }, [events.length, announcements.length]);
+
+    const startEventInterval = () => {
+        clearInterval(eventIntervalRef.current);
+        eventIntervalRef.current = setInterval(() => {
+            setCurrentEventIndex((prev) => {
+                const next = (prev + 1) % events.length;
+                sessionStorage.setItem("currentEventIndex", next.toString());
+                return next;
+            });
+        }, 20000);   // 20sec interval for each event
+    };
+
+    const startNoticeInterval = () => {
+        clearInterval(noticeIntervalRef.current);
+        noticeIntervalRef.current = setInterval(() => {
+            setOddNoticeIndex((prev) => {
+                const next = (prev + 2) % announcements.length;
+                sessionStorage.setItem("oddNoticeIndex", next.toString());
+                return next;
+            });
+            setEvenNoticeIndex((prev) => {
+                const next = (prev + 2) % announcements.length;
+                sessionStorage.setItem("evenNoticeIndex", next.toString());
+                return next;
+            });
+        }, 30000);   // 30sec interval per two announcements
+    };
+
+    const handlePrevEvent = () => {
+        if (events.length === 0) return;
+        
+        setCurrentEventIndex((prev) => {
+            const newIndex = (prev - 1 + events.length) % events.length;
+            sessionStorage.setItem("currentEventIndex", newIndex.toString());
+            return newIndex;
+        });
+        startEventInterval();
+    };
+
+    const handleNextEvent = () => {
+        if (events.length === 0) return;
+        
+        setCurrentEventIndex((prev) => {
+            const newIndex = (prev + 1) % events.length;
+            sessionStorage.setItem("currentEventIndex", newIndex.toString());
+            return newIndex;
+        });
+        startEventInterval();
+    };
+    
+    // Check if current event is valid before rendering it
+    const currentEvent = events.length > 0 ? events[currentEventIndex] : null;
     
     return (
         <>
@@ -87,6 +185,21 @@ export default function MainPage() {
                             <p className="!text-md sm:!text-lg !max-w-2xl !text-left">
                                 {events[currentEventIndex].event_description}
                             </p>
+                            <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex items-center space-x-4">
+                                <button 
+                                    onClick={handlePrevEvent} 
+                                    className="text-sm font-normal cursor-pointer focus:!outline-none"
+                                >
+                                    <IoIosArrowBack size={15} />
+                                </button>
+                                <span className="text-sm font-normal select-none">{`${currentEventIndex + 1} of ${events.length}`}</span>
+                                <button 
+                                    onClick={handleNextEvent} 
+                                    className="text-sm font-normal cursor-pointer focus:!outline-none"
+                                >
+                                    <IoIosArrowForward size={15} />
+                                </button>
+                            </div>
                         </div>
                     )}
 
@@ -118,7 +231,7 @@ export default function MainPage() {
                             </h2>
                             <div className="flex justify-end mt-4 pr-10">
                                 <Link to={`/jobs/${user_id}`}>
-                                    <button className="focus:!outline-none text-[#891839] border-3 border-[#891839] px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:bg-[#891839] hover:text-white">
+                                    <button className="focus:!outline-none text-[#891839] border-3 border-[#891839] px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:bg-[#891839] hover:text-white cursor-pointer">
                                         View more &gt;
                                     </button>
                                 </Link>
@@ -160,7 +273,7 @@ export default function MainPage() {
 
                 {/* <div className="w-full h-110 grid grid-cols-2 gap-0"> */}
                 <div className="w-full min-h-[440px] grid grid-cols-1 sm:grid-cols-2">
-                    <Link to="/book-event">
+                    <Link to={`/events/${user_id}`}>
                         <BookEventButton />
                     </Link>
                     <Link to={`/search-alumni/${events[currentEventIndex].event_id}`}>

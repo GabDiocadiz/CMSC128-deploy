@@ -1,64 +1,21 @@
 import { useState, useEffect } from "react";
 import { useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../header";
 import Footer from "../footer";
 import { BookmarkIcon } from '@heroicons/react/24/solid';
-import { jobList } from "../../utils/models";
-import { ScrollToTop } from "../../utils/helper";
+// import { jobList } from "../../utils/models";
+// import { ScrollToTop } from "../../utils/helper";
+import axios from "axios";
+import { useAuth } from "../../AuthContext";
 
-const dummyJobs = [
-  {
-    id: 4,
-    title: "UI/UX Designer",
-    date: "December 28, 2025",
-    description: "Design intuitive user interfaces and craft exceptional user experiences.",
-    company: "PixelWave Studio",
-    location: "Makati City, Metro Manila",
-    image: "src/assets/Building.png",
-  },
-  {
-    id: 1,
-    title: "Software Engineer",
-    date: "April 20, 2025",
-    description: "Join our dynamic tech team to build and maintain modern web applications.",
-    company: "TechNova Inc.",
-    location: "Los Baños, Laguna",
-    image: "src/assets/Building.png",
-  },
-  {
-    id: 5,
-    title: "Administrative Assistant",
-    date: "January 30, 2025",
-    description: "Support daily office operations and manage administrative tasks efficiently.",
-    company: "Laguna Agritech Solutions",
-    location: "Bay, Laguna",
-    image: "src/assets/Building.png",
-  },
-  {
-    id: 3,
-    title: "Research Assistant",
-    date: "February 25, 2025",
-    description: "Assist with field and lab research under the College of Agriculture and Food Science.",
-    company: "University of the Philippines Los Baños",
-    location: "UPLB Campus",
-    image: "src/assets/Building.png",
-  },
-  {
-    id: 2,
-    title: "Marketing Coordinator",
-    date: "May 22, 2025",
-    description: "Help execute marketing campaigns and boost brand awareness.",
-    company: "GreenGrow Corp.",
-    location: "Calamba, Laguna",
-    image: "src/assets/Building.png",
-  },
-];
+export const Results_page_jobs = ( { user_id }) => {
+  const navigate = useNavigate();
+  const { authAxios, user } = useAuth();
 
-export const Results_page_jobs = () => {
   const [sortBy, setSortBy] = useState("");
   const [bookmarkedIds, setBookmarkedIds] = useState([]);
-  const [jobs, setJobs] = useState(jobList);
+  const [jobs, setJobs] = useState([]);
 
   const toggleBookmark = (id) => {
     if (bookmarkedIds.includes(id)) {
@@ -68,20 +25,27 @@ export const Results_page_jobs = () => {
     }
   };
 
-  const sortedJobs = useMemo(() => {
-    if (sortBy === "date") {
-      return [...jobs].sort((a, b) => new Date(a.date_posted) - new Date(b.date_posted));
-    } else if (sortBy === "title") {
-      return [...jobs].sort((a, b) => a.job_title.localeCompare(b.job_title));
-    }
-    return jobs;
-  }, [sortBy, jobs]);
+useEffect(() => {
+  const fetchJobs = async () => {
+      try {
+          console.log("Fetching jobs...");
+          const response = await authAxios.get(`jobs/job-results?sortBy=${sortBy}`);
 
-  useEffect(() => {
-    const approvedJobs = jobList.filter((job) => job.status === "approved");
-    setJobs(approvedJobs);
-    ScrollToTop();
-  }, []);
+          setJobs(response.data);
+
+          // Fetch bookmarked jobs
+          const bookmarkedResponse = await authAxios.get(`jobs/bookmarked?userId=${user_id}`);
+
+          setBookmarkedIds(bookmarkedResponse.data.map(job => job._id));
+
+      } catch (error) {
+          console.error("Error fetching jobs:", error);
+      }
+  };
+
+  fetchJobs();
+  window.scrollTo(0, 0);
+}, [sortBy, user_id, navigate]);
 
   return (
     <>
@@ -110,21 +74,21 @@ export const Results_page_jobs = () => {
           {/* Jobs Display */}
         <div className="flex justify-center w-full">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {sortedJobs.map((job) => (
-            <div key={job.job_id} className="bg-white rounded-xl shadow-md overflow-hidden">
-              <Link to={`/job-details/${job.job_id}`}>
-                <img src={job.image} alt={job.job_title} className="w-full h-48 object-cover" />
+          {jobs.map((job) => (
+            <div key={job._id} className="bg-white rounded-xl shadow-md overflow-hidden">
+              <Link to={`/job-details/${job._id}/${user_id}`}>
+                <img src={job.image || "src/assets/Building.png" } alt={job.job_title} className="w-full h-48 object-cover" />
               </Link>
               <div className="p-4">
                 
                 {/* Moved bookmark icon here */}
                 <div className="flex justify-end mb-2">
                   <button
-                    onClick={() => toggleBookmark(job.job_id)}
+                    onClick={() => toggleBookmark(job._id)}
                     className="text-white-400 hover:text-white-500 focus:outline-none"
-                    title={bookmarkedIds.includes(job.job_id) ? "Remove Bookmark" : "Bookmark"}
+                    title={bookmarkedIds.includes(job._id) ? "Remove Bookmark" : "Bookmark"}
                   >
-                    {bookmarkedIds.includes(job.job_id) ? (
+                    {bookmarkedIds.includes(job._id) ? (
                       <BookmarkIcon className="w-6 h-6" />
                     ) : (
                       <BookmarkIcon className="w-6 h-6 opacity-50" />

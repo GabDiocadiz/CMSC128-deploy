@@ -1,22 +1,22 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-dotenv.config({path: "../server/.env"});
+dotenv.config({ path: "../server/.env" });
 
-let accessSecretKey = process.env.ACCESS_TOKEN_SECRET_KEY;  
+let accessSecretKey = process.env.ACCESS_TOKEN_SECRET_KEY;
 
 // Middleware to validate token
-export const validateToken = (req, res) => {
-    const authHeader = req.headers.Authorization;
-    
+export const validateToken = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+
     if (!authHeader?.startsWith('Bearer ')) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
-    
+
     const token = authHeader.split(' ')[1];
 
     jwt.verify(
-        token, 
-        accessSecretKey, 
+        token,
+        accessSecretKey,
         (err, decoded) => {
             if (err) {
                 return res.status(403).json({ error: 'Invalid or expired token' });
@@ -27,7 +27,7 @@ export const validateToken = (req, res) => {
                 userId: decoded.userId,
                 user_type: decoded.user_type
             };
-            
+
             next();
-    });
+        });
 };

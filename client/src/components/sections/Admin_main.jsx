@@ -1,137 +1,60 @@
 import Navbar_admin from "../header_admin";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom'
 import Request_Confirmation from "../request_confirmation";
 import Speed_Dial_Admin from "../Speed_Dial_Admin";
+import { useAuth } from "../../AuthContext.jsx";
+
 export const Admin_main = () => {
     const navigate = useNavigate()
-    const sample_req = [
-        {
-            id:1,
-            type:"Event",
-            name: "Breaking Bad",
-            from: "123@up.edu.ph"
-        },
-        {
-            id:2,
-            type:"Event",
-            name: "Test Bad",
-            from: "123@up.edu.ph"
-        },
-        {
-            id:3,
-            type:"Event",
-            name: "Breaking Bad",
-            from: "123@up.edu.ph"
-        },
-        {
-            id:4,
-            type:"Event",
-            name: "Breaking Bad",
-            from: "123@up.edu.ph"
-        },
-        {
-            id:5,
-            type:"Event",
-            name: "Breaking Bad",
-            from: "123@up.edu.ph"
-        },
-        {
-            id:6,
-            type:"Event",
-            name: "Breaking Bad",
-            from: "123@up.edu.ph"
-        },
-        {
-            id:7,
-            type:"Event",
-            name: "Breaking Bad",
-            from: "123@up.edu.ph"
-        },
-        {
-            id:8,
-            type:"Event",
-            name: "Breaking Bad",
-            from: "123@up.edu.ph"
-        },
-        {
-            id:9,
-            type:"Event",
-            name: "Breaking Bad",
-            from: "123@up.edu.ph"
-        },
-        {
-            id:10,
-            type:"Event",
-            name: "Breaking Bad",
-            from: "123@up.edu.ph"
-        },
-        {
-            id:11,
-            type:"Event",
-            name: "Breaking Bad",
-            from: "123@up.edu.ph"
-        },
-    ];
-    const sample_event=[
-        {
-            name: "Event 1",
-            date: "January 12,2025",           
-        },
-        {
-            name: "Event 1",
-            date: "January 12,2025"
-        },
-        {
-            name: "Event 1",
-            date: "January 12,2025"
-        },
-        {
-            name: "Event 1",
-            date: "January 12,2025"
-        },
-    ]
-    const sample_job=[
-        {   
-            company: "ARTEMIS",   
-            job: "Software Development",
-        },
-        {   
-            company: "ARTEMIS",   
-            job: "Software Development",
-        },
-        {   
-            company: "ARTEMIS",   
-            job: "Software Development",
-        },
-        {   
-            company: "ARTEMIS",   
-            job: "Software Development",
-        },
-        {   
-            company: "ARTEMIS",   
-            job: "Software Development",
-        },
-        {   
-            company: "ARTEMIS",   
-            job: "Software Development",
+    const { authAxios, user} = useAuth();
+
+    const request = []
+    const event=[]
+    const job=[]
+
+    const fetchData = async() => {
+        try {
+            console.log("Fetching data...");
+
+            const eventResponse = await authAxios.get(`events/admin-page-events`);
+            const jobResponse = await authAxios.get(`jobs/admin-page-jobs`);
+            const requestResponse = await authAxios.get(`jobs/admin-page-job-requests`);
+
+            const formattedEvents = eventResponse.data.map( event => ({
+                name: event.event_name,
+                date: new Date(event.event_date).toISOString().split('T')[0]
+            }));
+            const formattedJobs = jobResponse.data.map( job => ({
+                company: job.company,
+                job: job.job_title
+            }))
+            const formattedJobRequests = requestResponse.data.map( job => ({
+                id: job._id,
+                type: 'Job',
+                name: job.job_title,
+                from: job.posted_by.email
+            }))
+
+            setEvents(formattedEvents);
+            setJobs(formattedJobs);
+            setRequests(formattedJobRequests);
+        } catch (err) {
+            console.error("Failed to fetch data: ", err);
         }
-        
-        
-    ]
-    const refetchdata=()=>{
-        //refetch the request, events and job variables
-        setRequests()
-        setEvents()
-        setJobs()
-        
     }
-    const [requests, setRequests] = useState(sample_req);
-    const [events,setEvents]= useState(sample_event);
-    const [jobs,setJobs]= useState(sample_job);
+
+    const [requests, setRequests] = useState(request);
+    const [events,setEvents]= useState(event);
+    const [jobs,setJobs]= useState(job);
     const [req_modalOpen, setreq_modalOpen] =useState(false); 
     const [message_modal, setmessage_modal] =useState(0);
     const [request_id, setrequestID]= useState(0);
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
     return(
         
         <>
@@ -248,7 +171,7 @@ export const Admin_main = () => {
                                         <button 
                                             key={index}
                                             
-                                            onClick={ navigate('')} 
+                                            onClick = {() => navigate('')} 
                                             
                                             className="grid grid-cols-3 text-black text-lg py-5  hover:bg-[#DDDDDD] w-full  ">
                                                 <p className="col-span-1">{ 
@@ -287,7 +210,7 @@ export const Admin_main = () => {
                                         <button 
                                             key={index}
                                             
-                                            onClick={ navigate('')} 
+                                            onClick={() => navigate('')}
                                             
                                             className="grid grid-cols-2 text-black text-lg py-5  hover:bg-[#DDDDDD] w-full  ">
                                                 <div className="flex justify-center items-center">
@@ -313,7 +236,7 @@ export const Admin_main = () => {
             </div>
             {req_modalOpen && (
                     <div>
-                        <Request_Confirmation request_response={message_modal} setVisible={setreq_modalOpen} id={request_id} refetch={refetchdata}></Request_Confirmation>
+                        <Request_Confirmation request_response={message_modal} setVisible={setreq_modalOpen} id={request_id} refetch={fetchData}></Request_Confirmation>
                     </div>
                 )}
         
