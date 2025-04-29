@@ -13,9 +13,14 @@ import { BrowserRouter,Routes, Route } from 'react-router-dom'
 import { Admin_main } from './components/sections/Admin_main'
 import { Results_page_accounts} from './components/sections/Results_accounts'
 import { Results_page_jobs } from './components/sections/Results_job'
+
+import { Create_Event } from './components/sections/Create_event'
+import { Post_Job } from './components/sections/post_job'
+
 import { Results_page_events } from './components/sections/Results_event'
 import { AuthProvider } from './AuthContext'
 import { RoleRoute } from './ProtectedRoutes'
+
 
 function App() {
   const [count, setCount] = useState(0)
@@ -42,10 +47,13 @@ function App() {
               <Route path="/events/:user_id" element={<Results_page_events/>} />
               <Route path="/event-details/:id/:user_id" element={<ViewEventDetails/>} />
               <Route path="/search-alumni/:id/:user_id" element={<Results_page_accounts/>} />
+              <Route path="/create_event" element={<Create_Event/>} />
+              <Route path="/post_job" element={<Post_Job/>} />
             </Route>
 
           </Routes>
         </AuthProvider>
+
       </BrowserRouter>
      }
     </>
