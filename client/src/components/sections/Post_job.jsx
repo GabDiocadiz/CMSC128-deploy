@@ -1,30 +1,59 @@
 import Navbar from "../header";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { ScrollToTop } from "../../utils/helper";
 import Speed_Dial_Admin from "../Speed_Dial_Admin";
 import CreatableSelect from "react-select/creatable";
 import { jobRequiremets } from "../../utils/models";
 import { useParams } from 'react-router-dom';
 import { Button } from "flowbite-react";
-export const Post_Job = () => {
-    
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../AuthContext";
 
+export const Post_Job = () => {
+    const navigate = useNavigate();
+    const { authAxios, user } = useAuth();
+    const [requirementsOptions, setRequirementsOptions] = useState(jobRequiremets.map(req => ({ value: req, label: req })));
+    const [selectedRequirements, setSelectedRequirements] = useState([]);
     const [formData, setFormData] = useState({
         job_id: "",
         job_title: "",
-        company:"",
+        company: "",
         location: "",
         job_description: "",
-        requirements:[],
-        application_link:"",
+        requirements: [],
+        application_link: "",
         date_posted: new Date(),
-        status: 'not approved',
-        approved_by: "",
-        approval_date: null,
-        image:null,
+        start_date: new Date(),
+        end_date: new Date(), 
+        status: user?.user_type === 'Admin' ? 'approved' : 'pending',
+        approved_by: user?.user_type === 'Admin' ? user?._id : "",
+        approval_date: user?.user_type === 'Admin' ? new Date() : null,
+        posted_by: user?._id,
+        image: null,
     });
-    const handleSubmit=()=>{
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
-    }
+    useEffect(() => {
+        ScrollToTop();
+    }, []);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError(null);
+
+        try {
+            const response = await authAxios.post('/jobs/post-job', formData);
+            console.log("Job posted successfully:", response.data);
+            navigate('/jobs');
+        } catch (err) {
+            console.error("Error posting job:", err);
+            setError(err.response?.data?.message || 'Failed to post job.');
+        } finally {
+            setLoading(false);
+        }
+    };
     return(
         <>  
             
