@@ -28,7 +28,7 @@ export const Results_page_accounts = () => {
 
       <div className="w-screen min-h-screen bg-gray-200 pt-20">
         {/* Header Row */}
-        <div className="w-full h-16 bg-red-900 text-white grid grid-cols-3 justify-center items-center px-6">
+        <div className="w-full h-16 bg-[#891839] text-white grid grid-cols-3 justify-center items-center px-6">
           <p>Email</p>
           <p>Name</p>
           <p>Actions</p>
