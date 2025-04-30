@@ -12,6 +12,7 @@ import ViewJobDetails from './components/sections/ViewJobPosting'
 import { BrowserRouter,Routes, Route } from 'react-router-dom'
 import { Admin_main } from './components/sections/Admin_main'
 import { Results_page_accounts} from './components/sections/Results_accounts'
+import { Results_page_accounts_admin} from './components/sections/Results_accounts_admin'
 import { Results_page_jobs } from './components/sections/Results_job'
 
 import { Create_Event } from './components/sections/Create_event'
@@ -39,6 +40,7 @@ function App() {
 
             <Route element={<RoleRoute allowedRoles={['Admin']}/>}>
               <Route path="/admin_main" element={<Admin_main/>} />
+              <Route path="/admin_search-alumni" element={<Results_page_accounts_admin/>} />
             </Route>
 
             <Route element={<RoleRoute allowedRoles={['Admin', 'Alumni']}/>}>
