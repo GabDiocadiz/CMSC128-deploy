@@ -30,7 +30,13 @@ export default function Navbar_search({ searchTerm, setSearchTerm, user_id }) {
     setFilters({ ...filters, startYear: values[0], endYear: values[1] });
   };
 
-
+  const handleLogout=()=>{
+    //Logout
+    const logout=0;
+    //if (logout.success){
+    //}
+    navigate('/')
+  }
   const handleSearch = (e) => {
     e.preventDefault();
   };
@@ -111,13 +117,14 @@ export default function Navbar_search({ searchTerm, setSearchTerm, user_id }) {
               {profileMenuOpen && (
                 <div className="absolute right-0 mt-1 bg-white shadow-lg rounded-sm w-35 z-50 text-center text-sm border border-gray-400">
                   <Link
-                    to={`/`}
+                    to={`/profile`}
                     className="block w-full px-4 py-2 text-gray-700 hover:bg-blue-100 focus:outline-none"
                     onClick={() => setProfileMenuOpen(false)}
                   >
                     View Profile
                   </Link>
                   <button
+                    onClick={handleLogout}
                     className="block w-full px-4 py-2 text-gray-700 hover:bg-[#891839] hover:text-white focus:outline-none"
                   >
                     Logout
