@@ -21,9 +21,11 @@ export default function Navbar_search({ searchTerm, setSearchTerm, user_id }) {
     degree: "",
     jobTitle: "",
     location: "",
-    skills: "",
+    skills: [],
   });
 
+  const [skillInput, setSkillInput] = useState("");
+  
   const handleRangeChange = (values) => {
     setFilters({ ...filters, startYear: values[0], endYear: values[1] });
   };
@@ -45,7 +47,7 @@ export default function Navbar_search({ searchTerm, setSearchTerm, user_id }) {
       degree: "",
       jobTitle: "",
       location: "",
-      skills: "",
+      skills: [],
     });
   };
 
@@ -129,15 +131,14 @@ export default function Navbar_search({ searchTerm, setSearchTerm, user_id }) {
 
       {/* Filter Popup */}
       {filterMenuOpen && (
-        <div
-          className="absolute top-16 left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-md p-6 z-30"
-          style={{ width: "600px" }}
-        >
-          <h3 className="text-lg font-bold mb-4">Filter Options</h3>
-          <div className="space-y-4">
-            {/* Dual Thumb Slider for Graduation Year */}
-            <div>
-              <label className="block text-sm font-medium text-black">Graduation Year</label> {/* Label text color changed to black */}
+        <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-md p-6 z-30 w-[700px]">
+          <h3 className="text-xl font-semibold mb-6 text-gray-800 text-left">Filter</h3>
+
+          {/* Graduation Year and Skills in one row */}
+          <div className="flex gap-6 mb-6 text-left">
+            {/* Graduation Year */}
+            <div className="w-1/2">
+              <label className="block text-lg font-medium mb-2 text-gray-700">Graduation Year</label>
               <div className="flex flex-col space-y-2">
                 <div className="flex justify-between text-sm text-gray-600">
                   <span>{filters.startYear}</span>
@@ -149,117 +150,136 @@ export default function Navbar_search({ searchTerm, setSearchTerm, user_id }) {
                   max={GRADUATION_YEAR_MAX}
                   values={[filters.startYear, filters.endYear]}
                   onChange={handleRangeChange}
-                  renderTrack={({ props, children }) => {
-                    const { key, ...restProps } = props;
-                    return (
-                      <div
-                        key={key}
-                        {...restProps}
-                        className="h-1 bg-gray-300 rounded-md" // Track remains grey
-                        style={{
-                          ...restProps.style,
-                          width: "100%",
-                        }}
-                      >
-                        {children}
-                      </div>
-                    );
-                  }}
-                  renderThumb={({ props }) => {
-                    const { key, ...restProps } = props;
-                    return (
-                      <div
-                        key={key}
-                        {...restProps}
-                        className="h-4 w-4 bg-red-900 rounded-full shadow-md" // Thumbs are red
-                      />
-                    );
-                  }}
+                  renderTrack={({ props, children }) => (
+                    <div
+                      {...props}
+                      className="h-2 bg-gray-300 rounded-md"
+                      style={{ ...props.style, width: "100%" }}
+                    >
+                      {children}
+                    </div>
+                  )}
+                  renderThumb={({ props }) => (
+                    <div
+                      {...props}
+                      className="h-4 w-4 bg-[#891839] rounded-full shadow-md"
+                    />
+                  )}
                 />
               </div>
             </div>
 
-            {/* Degree Filter */}
-            <div>
-              <label className="block text-sm font-medium text-black">Degree</label> {/* Label text color changed to black */}
-              <select
-                name="degree"
-                value={filters.degree}
-                onChange={(e) =>
-                  setFilters({ ...filters, degree: e.target.value })
-                }
-                className="w-full border border-gray-400 rounded-md px-2 py-1"
-              >
-                <option value="">Select Degree</option>
-                <option value="BS Computer Science">BS Computer Science</option>
-                <option value="BS Information Technology">
-                  BS Information Technology
-                </option>
-                <option value="BS Software Engineering">
-                  BS Software Engineering
-                </option>
-              </select>
-            </div>
-
-            {/* Other Filters */}
-            <div>
-              <label className="block text-sm font-medium text-black">Job Title</label> {/* Label text color changed to black */}
-              <input
-                type="text"
-                name="jobTitle"
-                value={filters.jobTitle}
-                onChange={(e) =>
-                  setFilters({ ...filters, jobTitle: e.target.value })
-                }
-                placeholder="Enter Job Title"
-                className="w-full border border-gray-400 rounded-md px-2 py-1"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-black">Location</label> {/* Label text color changed to black */}
-              <input
-                type="text"
-                name="location"
-                value={filters.location}
-                onChange={(e) =>
-                  setFilters({ ...filters, location: e.target.value })
-                }
-                placeholder="Enter Location"
-                className="w-full border border-gray-400 rounded-md px-2 py-1"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-black">Skills</label> {/* Label text color changed to black */}
+            {/* Skills Input and Tags */}
+            <div className="w-1/2">
+              <label className="block text-lg font-medium mb-2 text-gray-700">Skills</label>
               <input
                 type="text"
                 name="skills"
-                value={filters.skills}
-                onChange={(e) =>
-                  setFilters({ ...filters, skills: e.target.value })
-                }
-                placeholder="Enter Skills"
+                value={skillInput}
+                onChange={(e) => setSkillInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && skillInput.trim()) {
+                    e.preventDefault();
+                    if (!filters.skills.includes(skillInput.trim())) {
+                      setFilters({
+                        ...filters,
+                        skills: [...filters.skills, skillInput.trim()],
+                      });
+                    }
+                    setSkillInput("");
+                  }
+                }}
+                placeholder="Add more skills"
                 className="w-full border border-gray-400 rounded-md px-2 py-1"
               />
+              {filters.skills.length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {filters.skills.map((skill, index) => (
+                    <span
+                      key={index}
+                      className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm flex items-center"
+                    >
+                      {skill}
+                      <button
+                        onClick={() =>
+                          setFilters({
+                            ...filters,
+                            skills: filters.skills.filter((_, i) => i !== index),
+                          })
+                        }
+                        className="ml-2 text-red-500 hover:text-red-700"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Dropdowns in one row */}
+          <div className="grid grid-cols-3 gap-4 mb-6">
+            <div>
+              <label className="block text-lg font-medium mb-2 text-gray-700 text-left">Location</label>
+              <select
+                name="location"
+                value={filters.location}
+                onChange={handleFilterChange}
+                className="w-full border border-gray-400 rounded-md px-2 py-1 text-gray-800"
+              >
+                <option value="">Select Location</option>
+                <option value="Laguna">Laguna</option>
+                <option value="Metro Manila">Metro Manila</option>
+                <option value="Remote">Remote</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-lg font-medium mb-2 text-gray-700 text-left">Current Job Title</label>
+              <select
+                name="jobTitle"
+                value={filters.jobTitle}
+                onChange={handleFilterChange}
+                className="w-full border border-gray-400 rounded-md px-2 py-1 text-gray-800"
+              >
+                <option value="">Select Job Title</option>
+                <option value="Software Engineer">Software Engineer</option>
+                <option value="Data Analyst">Data Analyst</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-lg font-medium mb-2 text-gray-700 text-left">Degree</label>
+              <select
+                name="degree"
+                value={filters.degree}
+                onChange={handleFilterChange}
+                className="w-full border border-gray-400 rounded-md px-2 py-1 text-gray-800"
+              >
+                <option value="">Select Degree</option>
+                <option value="BS Computer Science">BS Computer Science</option>
+                <option value="BS Information Technology">BS Information Technology</option>
+              </select>
             </div>
           </div>
 
           {/* Buttons */}
-          <div className="flex justify-end space-x-4 mt-4">
+          <div className="flex justify-between mt-6">
             <button
               onClick={clearFilters}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+              className="text-sm font-semibold text-gray-600 hover:text-black"
             >
-              Clear Filters
+              CLEAR SELECTION
             </button>
             <button
-              onClick={() => setFilterMenuOpen(false)}
-              className="px-4 py-2 bg-blue-500 text-green-600 rounded-md hover:bg-blue-600" // Button text color changed to green
+              onClick={handleSearch}
+              className="px-6 py-2 bg-[#00573F] text-white rounded-full hover:bg-green-700 font-semibold"
             >
-              Apply Selection
+              APPLY FILTER
             </button>
           </div>
         </div>
       )}
+
     </div>
   );
 }
