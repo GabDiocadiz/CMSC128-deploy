@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Notification from "./notification";
+import { useAuth } from "../AuthContext";
 
 import uplbLogo from "../assets/uplblogo.png";
 import notifications from "../assets/notifications.png";
@@ -9,6 +10,12 @@ import humanIcon from "../assets/Human Icon.png";
 export default function Navbar({user_id}) {
   const  [notification_modal, setnotification_modal] = useState(false)
   const  [profileMenuOpen, setProfileMenuOpen] = useState(false);
+
+  const { logout } = useAuth();
+
+  const handleLogout = async (e) => {
+    await logout();
+  }
 
   return (
    <div>
@@ -57,7 +64,7 @@ export default function Navbar({user_id}) {
                     View Profile
                   </Link>
                   <button
-                    // onClick={}
+                    onClick={handleLogout}
                     className="block w-full px-4 py-2 !text-gray-700 hover:bg-[#891839] hover:!text-white focus:!outline-none"
                   >
                     Logout
