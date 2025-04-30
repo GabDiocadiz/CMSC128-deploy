@@ -16,7 +16,7 @@ export const Results_page_jobs = () => {
   const [sortBy, setSortBy] = useState("");
   const [bookmarkedIds, setBookmarkedIds] = useState([]);
   const [jobs, setJobs] = useState([]);
-
+  const [jobButton, setjobButton] = useState(false)
   const [isLoading, setIsLoading] = useState(true);
 
   const toggleBookmark = (id) => {
@@ -56,13 +56,15 @@ useEffect(() => {
       <div className="w-screen pb-10">
         <Navbar />
       </div>
-      <div>
+     {jobButton && (
+       <div>
         <button
           onClick={()=>navigate('/post_job')}
           className="fixed w-auto h-10 bottom-6 right-6 z-50 bg-[#891839]  hover:bg-blue-700 text-white rounded-2xl px-4 shadow-lg transition-colors duration-300">
           Post A Job
         </button>
       </div>
+     )}
       {isLoading ? (
           <div className="min-w-screen min-h-screen bg-gray-200 flex justify-center items-center">
               <div className="w-16 h-16 border-4 border-[#145C44] border-t-transparent rounded-full animate-spin"></div>
@@ -85,7 +87,9 @@ useEffect(() => {
         </svg>
               No jobs found.</div> 
       ) :(
+        
         <div className="min-w-screen min-h-screen bg-gray-200 px-10 py-20 pb-30 flex flex-col justify-center items-center">
+            {setjobButton(true)}
             <div className="container flex flex-col items-start space-y-8 text-black text-left ">
               
               {/* Sort by */}

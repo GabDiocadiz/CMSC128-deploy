@@ -26,14 +26,13 @@ import ProfilePage from './components/sections/ProfilePage'
 
 function App() {
   const [count, setCount] = useState(0)
-  
+  const [theme, setTheme] = useState("dark");
   return (
     <>
       {
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-
             <Route path="/" element={<Landing_page/>} /> 
             <Route path="/reg" element={<Results_page_jobs/>} />
             <Route path="/login" element={<Login/>} />

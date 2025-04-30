@@ -100,11 +100,9 @@ export const Admin_main = () => {
                             <div className="h-[72vh] w-auto overflow-y-auto space-y-1  py-5 bg-white rounded-lg shadow-inner 
                                     [&::-webkit-scrollbar]:w-2
                                     [&::-webkit-scrollbar-track]:rounded-full
-                                [&::-webkit-scrollbar-track]:bg-gray-100
                                 [&::-webkit-scrollbar-thumb]:rounded-full
-                                [&::-webkit-scrollbar-thumb]:bg-gray-300
-                                dark:[&::-webkit-scrollbar-track]:bg-neutral-700
-                                dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 pr-4">
+                                [&::-webkit-scrollbar-track]:bg-neutral-700
+                                [&::-webkit-scrollbar-thumb]:bg-neutral-500 pr-4">
                                     {/* Shows all requests */}
                                 {requests.map((sample_req, index) => (
                                     <div className="py-1">
@@ -159,11 +157,9 @@ export const Admin_main = () => {
                             <div className="h-full  overflow-y-auto space-y-1  py-5 bg-white rounded-lg shadow-inner 
                                     [&::-webkit-scrollbar]:w-2
                                     [&::-webkit-scrollbar-track]:rounded-full
-                                [&::-webkit-scrollbar-track]:bg-gray-100
                                 [&::-webkit-scrollbar-thumb]:rounded-full
-                                [&::-webkit-scrollbar-thumb]:bg-gray-300
-                                dark:[&::-webkit-scrollbar-track]:bg-neutral-700
-                                dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 pr-4">
+                              [&::-webkit-scrollbar-track]:bg-neutral-700
+                                [&::-webkit-scrollbar-thumb]:bg-neutral-500 pr-4">
                                     {/* Shows all Events, Change the navigation to the specific event view page*/}
                                 {events.map((sample_event, index) => {
                                     
@@ -198,11 +194,9 @@ export const Admin_main = () => {
                         <div className="h-full  overflow-y-auto space-y-1  py-5 bg-white rounded-lg shadow-inner 
                                     [&::-webkit-scrollbar]:w-2
                                     [&::-webkit-scrollbar-track]:rounded-full
-                                [&::-webkit-scrollbar-track]:bg-gray-100
                                 [&::-webkit-scrollbar-thumb]:rounded-full
-                                [&::-webkit-scrollbar-thumb]:bg-gray-300
-                                dark:[&::-webkit-scrollbar-track]:bg-neutral-700
-                                dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 pr-4">
+                                [&::-webkit-scrollbar-track]:bg-neutral-700
+                                [&::-webkit-scrollbar-thumb]:bg-neutral-500 pr-4">
                                     {/* Shows all Jobs, Change the navigation to the specific event view page*/}
                                 {jobs.map((sample_job, index) => {
                                     

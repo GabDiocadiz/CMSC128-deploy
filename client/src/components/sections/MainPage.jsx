@@ -10,7 +10,7 @@ import SearchAlumniButton from "../buttons/SearchAlumni";
 import Error_Message from "../error_message";
 import { useParams } from 'react-router-dom';
 import { useAuth } from "../../AuthContext";
-
+import Speed_Dial_Admin from "../Speed_Dial_Admin";
 export default function MainPage() {
     const {authAxios, user} = useAuth();
     const {user_id} =useParams(); //Contains the User Id 
@@ -164,7 +164,9 @@ export default function MainPage() {
             <div className="fixed top-0 w-full z-50">
                 <Navbar user_id={user_id}/>
             </div>
-            
+            {user.user_type ==="Admin" &&(
+                <Speed_Dial_Admin></Speed_Dial_Admin>
+            )}
             <div className="w-screen pt-12">
                 <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-0 min-h-[600px]">
                     {/* Events */}
