@@ -34,7 +34,7 @@ useEffect(() => {
           setJobs(response.data);
 
           // Fetch bookmarked jobs
-          const bookmarkedResponse = await authAxios.get(`jobs/bookmarked?userId=${user_id}`);
+          const bookmarkedResponse = await authAxios.get(`jobs/job-bookmarked`);  
 
           setBookmarkedIds(bookmarkedResponse.data.map(job => job._id));
 
@@ -45,7 +45,7 @@ useEffect(() => {
 
   fetchJobs();
   window.scrollTo(0, 0);
-}, [sortBy, user_id, navigate]);
+}, [sortBy, navigate]);
 
   return (
     <>
@@ -76,7 +76,7 @@ useEffect(() => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {jobs.map((job) => (
             <div key={job._id} className="bg-white rounded-xl shadow-md overflow-hidden">
-              <Link to={`/job-details/${job._id}/${user_id}`}>
+              <Link to={`/job-details/${job._id}`}>
                 <img src={job.image || "src/assets/Building.png" } alt={job.job_title} className="w-full h-48 object-cover" />
               </Link>
               <div className="p-4">
