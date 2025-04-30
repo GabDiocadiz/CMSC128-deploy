@@ -1,5 +1,6 @@
 import { useState } from "react";
-import Navbar from "../header";
+import Navbar_search from "../Navbar_Search"; // Use the new Navbar_search
+
 const dummyAccounts = [
     {
         id: 1,  
@@ -18,14 +19,12 @@ const dummyAccounts = [
         email: "camille_ruz@example.net",  
         name: "Camille Ruz",
         type: "Admin",  
-        
     },
     {
         id: 3,  
         email: "david.khoo@example.com",
         name: "David Khoo",  
         type: "User",
-        
     },
     {
         id: 2,
@@ -33,25 +32,32 @@ const dummyAccounts = [
         name: "Elena Matsuda",
         type: "User", 
     },
-  ];
+];
 
 export const Results_page_accounts = () => {
+    const [searchTerm, setSearchTerm] = useState(""); // State for search term
+    const user_id = sessionStorage.getItem("user_id"); // Retrieve user_id from session storage
+
+    // Filter accounts based on the search term
+    const filteredAccounts = dummyAccounts.filter((account) =>
+        account.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <>
-            <Navbar />
+            <Navbar_search searchTerm={searchTerm} setSearchTerm={setSearchTerm} user_id={user_id} /> {/* Use Navbar_search */}
             
-            <div className="w-screen min-h-screen bg-gray-200 pt-13">
+            <div className="w-screen min-h-screen bg-gray-200 pt-24"> {/* Adjusted padding */}
                 {/* Header Row */}
                 <div className="w-full h-16 bg-red-900 text-white grid grid-cols-4 justify-center items-center px-6">                        
-                        <p>Email</p>
-                        <p>Name</p>
-                        <p>Account Type</p>
-                        <p>Actions</p>
+                    <p>Email</p>
+                    <p>Name</p>
+                    <p>Account Type</p>
+                    <p>Actions</p>
                 </div>
-                {/* Header Row */}   
-                    {/* Account Display */}
-                    <div className="w-full h-full">
-                    {dummyAccounts.map((Account) => (
+                {/* Account Display */}
+                <div className="w-full h-full">
+                    {filteredAccounts.map((Account) => (
                         <div key={Account.id} className="grid grid-cols-4 p-4 text-center text-black border-b border-gray-300">
                             <p>{Account.email}</p>
                             <p>{Account.name}</p>
@@ -69,9 +75,8 @@ export const Results_page_accounts = () => {
                             </div>
                         </div>
                     ))}
-                    </div>
-                    {/* Account Display */}     
+                </div>
             </div>
         </>
-    )
-}
+    );
+};
