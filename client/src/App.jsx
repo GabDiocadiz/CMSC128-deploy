@@ -37,16 +37,16 @@ function App() {
             <Route path="/login" element={<Login/>} />
 
             <Route element={<RoleRoute allowedRoles={['Admin']}/>}>
-              <Route path="/admin_main/:user_id" element={<Admin_main/>} />
+              <Route path="/admin_main" element={<Admin_main/>} />
             </Route>
 
             <Route element={<RoleRoute allowedRoles={['Admin', 'Alumni']}/>}>
-              <Route path="/home/:user_id" element={<MainPage/>} />
-              <Route path="/jobs/:user_id" element={<Results_page_jobs/>} />
-              <Route path="/job-details/:id/:user_id" element={<ViewJobDetails/>} />
-              <Route path="/events/:user_id" element={<Results_page_events/>} />
-              <Route path="/event-details/:id/:user_id" element={<ViewEventDetails/>} />
-              <Route path="/search-alumni/:id/:user_id" element={<Results_page_accounts/>} />
+              <Route path="/home" element={<MainPage/>} />
+              <Route path="/jobs" element={<Results_page_jobs/>} />
+              <Route path="/job-details/:id" element={<ViewJobDetails/>} />
+              <Route path="/events" element={<Results_page_events/>} />
+              <Route path="/event-details/:id" element={<ViewEventDetails/>} />
+              <Route path="/search-alumni" element={<Results_page_accounts/>} />
               <Route path="/create_event" element={<Create_Event/>} />
               <Route path="/post_job" element={<Post_Job/>} />
             </Route>
