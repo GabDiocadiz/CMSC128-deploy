@@ -6,37 +6,41 @@ import Navbar from '../header';
 import Footer from '../footer';
 import { ScrollToTop } from '../../utils/helper';
 import { motion } from 'framer-motion';
+import { useAuth } from '../../AuthContext';
 import './ProfilePage.css';
 
 export default function ProfilePage() {
+  // const mockEvents = [
+  //   { event_id: 1, event_name: "Tech Conference", event_date: "2025-05-15" },
+  //   { event_id: 2, event_name: "Job Fair", event_date: "2025-06-20" },
+  //   { event_id: 3, event_name: "Career Expo", event_date: "2025-05-15" },
+  // ];
+
+  // const mockJobs = [
+  //   { job_id: 1, job_title: "Frontend Developer", company: "Google", location: "Mountain View", date_posted: "2025-04-01", status: "pending" },
+  //   { job_id: 2, job_title: "Backend Engineer", company: "Amazon", location: "Seattle", date_posted: "2025-03-15", status: "approved" },
+  //   { job_id: 3, job_title: "UI Designer", company: "Facebook", location: "Menlo Park", date_posted: "2025-02-10", status: "rejected" },
+  // ];
+
+  // const mockUser = {
+  //   user_id: 1,
+  //   name: "John Doe",
+  //   email: "john@example.com",
+  //   batch_graduated: "2024",
+  //   profile_picture: "https://i.pravatar.cc/300",
+  //   contact_number: "1234567890",
+  //   address: "123 Main Street",
+  //   current_job_title: "Software Engineer",
+  //   company: "Tech Corp",
+  //   industry: "Information Technology",
+  //   skills: "React, Node.js, Python, GraphQL",
+  // };
+
   const navigate = useNavigate();
-
-  const mockUser = {
-    user_id: 1,
-    name: "John Doe",
-    email: "john@example.com",
-    batch_graduated: "2024",
-    profile_picture: "https://i.pravatar.cc/300",
-    contact_number: "1234567890",
-    address: "123 Main Street",
-    current_job_title: "Software Engineer",
-    company: "Tech Corp",
-    industry: "Information Technology",
-    skills: "React, Node.js, Python, GraphQL",
-  };
-
-  const mockEvents = [
-    { event_id: 1, event_name: "Tech Conference", event_date: "2025-05-15" },
-    { event_id: 2, event_name: "Job Fair", event_date: "2025-06-20" },
-    { event_id: 3, event_name: "Career Expo", event_date: "2025-05-15" },
-  ];
-
-  const mockJobs = [
-    { job_id: 1, job_title: "Frontend Developer", company: "Google", location: "Mountain View", date_posted: "2025-04-01", status: "pending" },
-    { job_id: 2, job_title: "Backend Engineer", company: "Amazon", location: "Seattle", date_posted: "2025-03-15", status: "approved" },
-    { job_id: 3, job_title: "UI Designer", company: "Facebook", location: "Menlo Park", date_posted: "2025-02-10", status: "rejected" },
-  ];
-
+  const { authAxios, user } = useAuth();
+  const [profileData, setProfileData] = useState(null);
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [jobApplications, setJobApplications] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editableData, setEditableData] = useState({});
   const [activeTab, setActiveTab] = useState('pending');
@@ -44,19 +48,58 @@ export default function ProfilePage() {
   const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 });
   const [isHoveringTile, setIsHoveringTile] = useState(false);
   const [isHoveringPopup, setIsHoveringPopup] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     document.documentElement.classList.remove('dark');
     ScrollToTop();
-    setEditableData({
-      contact_number: mockUser.contact_number,
-      address: mockUser.address,
-      current_job_title: mockUser.current_job_title,
-      company: mockUser.company,
-      industry: mockUser.industry,
-      skills: mockUser.skills,
-    });
-  }, []);
+    fetchProfileData();
+    fetchUpcomingEvents();
+    fetchJobApplications();
+  }, [authAxios, user?._id]);
+
+  const fetchProfileData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      console.log("Fetching data");
+      const response = await authAxios.get(`/alumni/find-alumni/${user?._id}`);
+      console.log(response.data);
+      setProfileData(response.data);
+      setEditableData({
+        contact_number: response.data?.contact_number || '',
+        address: response.data?.address || '',
+        current_job_title: response.data?.current_job_title || '',
+        company: response.data?.company || '',
+        industry: response.data?.industry || '',
+        skills: response.data?.skills || '',
+      });
+    } catch (err) {
+      console.error('Error fetching profile data:', err);
+      setError('Failed to load profile information.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchUpcomingEvents = async () => {
+    try {
+      const response = await authAxios.get('/events/read-sort');
+      setUpcomingEvents(response.data);
+    } catch (err) {
+      console.error('Error fetching upcoming events:', err);
+    }
+  };
+
+  const fetchJobApplications = async () => {
+    try {
+      const response = await authAxios.get(`/jobs/job-results`);
+      setJobApplications(response.data);
+    } catch (err) {
+      console.error('Error fetching job applications:', err);
+    }
+  };
 
   const handleEditToggle = () => setIsEditing(!isEditing);
 
@@ -65,18 +108,22 @@ export default function ProfilePage() {
     setEditableData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSave = () => {
-    setIsEditing(false);
-    console.log('Save profile changes:', editableData);
+  const handleSave = async () => {
+    try {
+      await authAxios.put(`/alumni/edit-profile/${user?._id}`, editableData);
+      setIsEditing(false);
+      fetchProfileData(); 
+    } catch (err) {
+      console.error('Error updating profile:', err);
+    }
   };
 
-  const upcomingEvents = mockEvents.filter(event => new Date(event.event_date) >= new Date());
-  const filteredJobs = mockJobs.filter(job => job.status === activeTab);
+  const filteredJobs = jobApplications.filter(job => job.status?.toLowerCase() === activeTab);
 
   return (
     <div className="fixed inset-0 overflow-y-auto bg-[#891839]">
       <div className="fixed top-0 w-full z-50">
-        <Navbar user_id={mockUser.user_id} />
+        <Navbar user_id={user._id} />
       </div>
 
       <motion.main
@@ -88,14 +135,14 @@ export default function ProfilePage() {
         <section className="bg-white rounded-3xl shadow-lg p-8 flex flex-col gap-8">
           <div className="flex flex-col md:flex-row items-center justify-center gap-6">
             <img 
-              src={mockUser.profile_picture} 
+              src={profileData?.profile_picture} 
               alt="Profile" 
               className="w-28 h-28 rounded-full object-cover border-4 border-[#891839]" 
             />
             <div className="text-center md:text-left">
-              <h2 className="text-3xl font-bold text-[#891839]">{mockUser.name}</h2>
-              <p className="text-gray-600">{mockUser.email}</p>
-              <p className="text-gray-600">Batch Graduated: {mockUser.batch_graduated}</p>
+              <h2 className="text-3xl font-bold text-[#891839]">{profileData?.name}</h2>
+              <p className="text-gray-600">{profileData?.email}</p>
+              <p className="text-gray-600">Batch Graduated: {profileData?.graduation_year}</p>
             </div>
           </div>
 
