@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BookmarkIcon } from '@heroicons/react/24/solid';
+import { TbMoodEmpty } from "react-icons/tb";
 import { useAuth } from "../../AuthContext";
 import axios from "axios";
 import Navbar from "../header";
@@ -99,43 +100,51 @@ export const Results_page_events = ( ) => {
                         </div>
 
                         {/* Display events */}
-                        <div className="flex justify-center w-full">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                                {events.map(event => (
-                                    <div key={event._id} className="flex flex-col h-full bg-white rounded-xl shadow-md overflow-hidden">
-                                        <Link to={`/event-details/${event._id}`}>
-                                            <img src={event.image} alt={event.event_name} className="w-full h-48 object-cover" />
-                                        </Link>
+                        <div className="flex justify-center w-full overflow-x-hidden">
+                            {events.length > 0 ? (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                                    {events.map(event => (
+                                        <div key={event._id} className="flex flex-col h-full bg-white rounded-xl shadow-md overflow-hidden">
+                                            <Link to={`/event-details/${event._id}`}>
+                                                <img src={event.image} alt={event.event_name} className="w-full h-48 object-cover" />
+                                            </Link>
 
-                                        <div className="p-4 flex flex-col h-full">
-                                            {/* Bookmark button */}
-                                            <div className="flex justify-end mb-2">
-                                                <button
-                                                    onClick={() => toggleBookmark(event._id)}
-                                                    className="text-white-400 hover:text-white-500 focus:outline-none"
-                                                    title={bookmarkedIds.includes(event._id) ? "Remove Bookmark" : "Bookmark"}
-                                                >
-                                                    {bookmarkedIds.includes(event._id) ? (
-                                                        <BookmarkIcon className="w-6 h-6" />
-                                                    ) : (
-                                                        <BookmarkIcon className="w-6 h-6 opacity-50" />
-                                                    )}
-                                                </button>
+                                            <div className="p-4 flex flex-col h-full">
+                                                {/* Bookmark button */}
+                                                <div className="flex justify-end mb-2">
+                                                    <button
+                                                        onClick={() => toggleBookmark(event._id)}
+                                                        className="text-white-400 hover:text-white-500 focus:outline-none"
+                                                        title={bookmarkedIds.includes(event._id) ? "Remove Bookmark" : "Bookmark"}
+                                                    >
+                                                        {bookmarkedIds.includes(event._id) ? (
+                                                            <BookmarkIcon className="w-6 h-6" />
+                                                        ) : (
+                                                            <BookmarkIcon className="w-6 h-6 opacity-50" />
+                                                        )}
+                                                    </button>
+                                                </div>
+                                                <h2 className="text-xl font-semibold mb-1">{event.event_name}</h2>
+                                                <p className="text-sm text-gray-500 mb-2">{event.venue}</p>
+                                                <p className="text-gray-700 flex-grow">{event.event_description}</p>
+                                                <p className="text-sm text-right text-gray-500">
+                                                    {new Date(event.event_date).toLocaleDateString('en-US', {
+                                                        year: 'numeric',
+                                                        month: 'long',
+                                                        day: 'numeric',
+                                                    })}
+                                                </p>
                                             </div>
-                                            <h2 className="text-xl font-semibold mb-1">{event.event_name}</h2>
-                                            <p className="text-sm text-gray-500 mb-2">{event.venue}</p>
-                                            <p className="text-gray-700 flex-grow">{event.event_description}</p>
-                                            <p className="text-sm text-right text-gray-500">
-                                                {new Date(event.event_date).toLocaleDateString('en-US', {
-                                                    year: 'numeric',
-                                                    month: 'long',
-                                                    day: 'numeric',
-                                                })}
-                                            </p>
                                         </div>
-                                    </div>
-                                ))}
-                            </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="flex h-full min-h-[450px] w-full min-w-screen flex-col items-center justify-center text-center pt-45 pb-80">
+                                    <TbMoodEmpty className="w-40 h-40 text-[#145C44] mb-5" />
+                                    <p className="text-md text-[#145C44] font-regular">No events available at the moment.</p>
+                                    <p className="text-sm text-[#145C44]">Please check back later.</p>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
