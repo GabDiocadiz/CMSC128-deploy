@@ -47,7 +47,12 @@ export default function Navbar_search({ searchTerm, setSearchTerm, setFilters, u
   };
 
   const applyFilters = () => {
-    setFilters(localFilters); // Pass filters to parent component
+    const filtersToApply = {
+      ...localFilters,
+      startYear: localFilters.startYear, // Include startYear
+      endYear: localFilters.endYear, // Include endYear
+    };
+    setFilters(filtersToApply); // Pass filters to parent component
     setFilterMenuOpen(false); // Close the filter menu
   };
 

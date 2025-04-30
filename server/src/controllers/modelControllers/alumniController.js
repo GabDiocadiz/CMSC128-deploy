@@ -24,7 +24,8 @@ export const alumniSearch = async (req, res) => {
       const {
         name = '',
         degree = '',
-        graduation_year,
+        startYear,
+        endYear,
         current_job_title = '',
         company = '',
         skills = ''
@@ -47,8 +48,9 @@ export const alumniSearch = async (req, res) => {
         matchStage.skills = { $in: skillsArray }; // Match any skill in the array
       }
   
-      if (graduation_year && !isNaN(graduation_year)) {
-        matchStage.graduation_year = parseInt(graduation_year); // Graduation year match
+      // Handle graduation year range
+      if (startYear && endYear) {
+        matchStage.graduation_year = { $gte: parseInt(startYear), $lte: parseInt(endYear) };
       }
   
       console.log("Match Stage:", matchStage); // Debug match stage

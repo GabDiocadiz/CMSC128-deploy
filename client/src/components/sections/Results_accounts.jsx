@@ -18,7 +18,8 @@ export const Results_page_accounts = () => {
       const queryParams = {
         name: searchTerm,
         degree: filters.degree || "",
-        graduation_year: filters.graduationYear || "",
+        startYear: filters.startYear || "", // Pass startYear
+        endYear: filters.endYear || "", // Pass endYear
         current_job_title: filters.jobTitle || "",
         company: filters.company || "",
         skills: filters.skills?.join(",") || "",
@@ -71,9 +72,9 @@ export const Results_page_accounts = () => {
           ) : error ? (
             <p className="text-center text-red-500">{error}</p>
           ) : accounts.length > 0 ? (
-            accounts.map((account) => (
+            accounts.map((account, index) => (
                 <div
-                  key={account.id} // This is where the key is being set
+                  key={account.id || index} // This is where the key is being set
                   className="grid grid-cols-4 p-4 text-center text-black border-b border-gray-300"
                 >
                   <p>{account.email}</p>
