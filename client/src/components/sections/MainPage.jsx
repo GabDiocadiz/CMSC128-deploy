@@ -95,7 +95,7 @@ export default function MainPage() {
         // filter and display only approved jobs
         const approvedJobs = jobs.filter((job) => job.status === "approved");
         setJobs(approvedJobs);
-        ScrollToTop();
+        // ScrollToTop();
 
         return () => {
             clearInterval(eventIntervalRef.current);
