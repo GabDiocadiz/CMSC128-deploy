@@ -8,8 +8,8 @@ import humanIcon from "../assets/Human Icon.png";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid"; // Search icon
 import { Range } from "react-range"; // Import react-range
 
-const GRADUATION_YEAR_MIN = 2000;
-const GRADUATION_YEAR_MAX = 2030;
+const GRADUATION_YEAR_MIN = 1900;
+const GRADUATION_YEAR_MAX = 2025;
 
 export default function Navbar_search({ searchTerm, setSearchTerm, user_id }) {
   const [notification_modal, setnotification_modal] = useState(false);
@@ -62,29 +62,29 @@ export default function Navbar_search({ searchTerm, setSearchTerm, user_id }) {
         {/* Flexbox for proper alignment */}
         <div className="container flex justify-between items-center py-1 px-4">
           {/* Left - Logo */}
-          <Link to={user_id ? `/home` : `/login`}> {/* Dynamically navigate based on user_id */}
+          <Link to={`/home`}> {/* Dynamically navigate based on user_id */}
             <img src={uplbLogo} className="bg-none w-40 h-auto" alt="UPLB Logo" />
           </Link>
-
+          
           {/* Middle - Search Bar */}
-          <div className="flex-1 flex justify-center">
-            <form onSubmit={handleSearch} className="relative w-[600px]">
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Enter the name"
-                className="w-full pr-10 pl-10 border border-gray-400 rounded-full px-3 py-1 text-left focus:outline-none focus:ring-2 focus:ring-blue-500" // Adjusted padding-left
-              />
-              <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500" />
-              {/* Hamburger Icon */}
-              <span
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer text-xl"
-                onClick={() => setFilterMenuOpen(!filterMenuOpen)}
-              >
-                ☰
-              </span>
-            </form>
+          <div className="flex-1 flex justify-center" style={{ marginLeft: '200px' }}>
+          <form onSubmit={handleSearch} className="relative w-[600px]">
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Enter the name"
+              className="w-full pr-10 pl-10 border border-gray-400 rounded-full px-3 py-1 text-left focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500" />
+            {/* Hamburger Icon or Up Arrow */}
+            <span
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer text-xl"
+              onClick={() => setFilterMenuOpen(!filterMenuOpen)}
+            >
+              {filterMenuOpen ? "▲" : "☰"} {/* Change icon based on filterMenuOpen */}
+            </span>
+          </form>
           </div>
 
           {/* Right - Notification & Profile Icons */}
@@ -150,21 +150,32 @@ export default function Navbar_search({ searchTerm, setSearchTerm, user_id }) {
                   max={GRADUATION_YEAR_MAX}
                   values={[filters.startYear, filters.endYear]}
                   onChange={handleRangeChange}
-                  renderTrack={({ props, children }) => (
-                    <div
-                      {...props}
-                      className="h-2 bg-gray-300 rounded-md"
-                      style={{ ...props.style, width: "100%" }}
-                    >
-                      {children}
-                    </div>
-                  )}
-                  renderThumb={({ props }) => (
-                    <div
-                      {...props}
-                      className="h-4 w-4 bg-[#891839] rounded-full shadow-md"
-                    />
-                  )}
+                  renderTrack={({ props, children }) => {
+                    const { key, ...restProps } = props; // Extract the key
+                    return (
+                      <div
+                        key={key} // Pass the key explicitly
+                        {...restProps}
+                        className="h-2 bg-gray-300 rounded-md"
+                        style={{
+                          ...restProps.style,
+                          width: "100%",
+                        }}
+                      >
+                        {children}
+                      </div>
+                    );
+                  }}
+                  renderThumb={({ props }) => {
+                    const { key, ...restProps } = props; // Extract the key
+                    return (
+                      <div
+                        key={key} // Pass the key explicitly
+                        {...restProps}
+                        className="h-4 w-4 bg-[#891839] rounded-full shadow-md"
+                      />
+                    );
+                  }}
                 />
               </div>
             </div>
