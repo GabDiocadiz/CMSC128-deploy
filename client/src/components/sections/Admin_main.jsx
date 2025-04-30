@@ -21,6 +21,8 @@ export const Admin_main = () => {
             const jobResponse = await authAxios.get(`jobs/admin-page-jobs`);
             const requestResponse = await authAxios.get(`jobs/admin-page-job-requests`);
 
+            console.log(requestResponse.data);
+
             const formattedEvents = eventResponse.data.map( event => ({
                 name: event.event_name,
                 date: new Date(event.event_date).toISOString().split('T')[0]
