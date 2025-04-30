@@ -20,6 +20,7 @@ import { Post_Job } from './components/sections/post_job'
 import { Results_page_events } from './components/sections/Results_event'
 import { AuthProvider } from './AuthContext'
 import { RoleRoute } from './ProtectedRoutes'
+import ProfilePage from './components/sections/ProfilePage'
 
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
               <Route path="/search-alumni" element={<Results_page_accounts/>} />
               <Route path="/create_event" element={<Create_Event/>} />
               <Route path="/post_job" element={<Post_Job/>} />
+              <Route path="/profile" element={<ProfilePage/>} />
             </Route>
 
           </Routes>
