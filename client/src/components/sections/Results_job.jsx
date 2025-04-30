@@ -60,7 +60,7 @@ useEffect(() => {
        <div>
        <button
          onClick={()=>navigate('/post_job')}
-         className="fixed w-auto h-10 bottom-6 right-6 z-50 bg-[#891839]  hover:bg-blue-700 text-white rounded-2xl px-4 shadow-lg transition-colors duration-300">
+         className="fixed w-auto h-10 bottom-6 right-6 z-50 bg-[#891839]  text-white rounded-2xl px-4 shadow-lg transition-colors duration-300">
          Post A Job
        </button>
      </div>
@@ -68,6 +68,7 @@ useEffect(() => {
       {isLoading ? (
           <div className="min-w-screen min-h-screen bg-gray-200 flex justify-center items-center">
               <div className="w-16 h-16 border-4 border-[#145C44] border-t-transparent rounded-full animate-spin"></div>
+              
           </div>
       ) : jobs.length === 0 ? (
         <div className="min-w-screen min-h-screen bg-gray-200 px-10 py-20 pb-30 flex flex-col justify-center items-center text-6xl text-emerald-800 font-extrabold">
@@ -85,7 +86,11 @@ useEffect(() => {
             d="M3 7.75L12 3l9 4.75M4.5 10.25v7.5l7.5 4.25 7.5-4.25v-7.5M4.5 10.25L12 14.5l7.5-4.25"
           />
         </svg>
-              No jobs found.</div> 
+              No jobs found.
+              <button 
+              onClick={()=>navigate('/post_job')}
+              className="bg-[#891839] rounded-xl px-5 py-3 text-2xl text-white mt-5 transform transition-transform duration-300 hover:scale-105">Post a Job</button>
+              </div> 
       ) :(
         
         <div className="min-w-screen min-h-screen bg-gray-200 px-10 py-20 pb-30 flex flex-col justify-center items-center">
