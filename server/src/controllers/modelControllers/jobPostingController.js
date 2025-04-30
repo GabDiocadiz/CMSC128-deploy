@@ -1,4 +1,5 @@
 import { JobPosting } from "../../models/Job_Posting.js";
+import { User } from "../../models/User.js";
 import { createCRUDController } from "../middlewareControllers/createCRUDController/index.js";
 
 export const jobPostingController = {
@@ -18,7 +19,7 @@ export const jobPostingController = {
         try {
             const items = await JobPosting.find({status: 'pending'})
                 .select('_id job_title posted_by')
-                .populate('posted_by', 'email');
+                .populate('posted_by');
             console.log(items);
             res.status(200).json(items);
         } catch (err) {
