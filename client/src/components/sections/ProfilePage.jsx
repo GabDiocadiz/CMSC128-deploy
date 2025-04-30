@@ -55,8 +55,6 @@ export default function ProfilePage() {
     document.documentElement.classList.remove('dark');
     ScrollToTop();
     fetchProfileData();
-    fetchUpcomingEvents();
-    fetchJobApplications();
   }, [authAxios, user?._id]);
 
   const fetchProfileData = async () => {
@@ -67,6 +65,8 @@ export default function ProfilePage() {
       const response = await authAxios.get(`/alumni/find-alumni/${user?._id}`);
       console.log(response.data);
       setProfileData(response.data);
+      setUpcomingEvents(response.data.events_attended);
+      setJobApplications(response.data.job_postings);
       setEditableData({
         contact_number: response.data?.contact_number || '',
         address: response.data?.address || '',
@@ -80,24 +80,6 @@ export default function ProfilePage() {
       setError('Failed to load profile information.');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const fetchUpcomingEvents = async () => {
-    try {
-      const response = await authAxios.get('/events/read-sort');
-      setUpcomingEvents(response.data);
-    } catch (err) {
-      console.error('Error fetching upcoming events:', err);
-    }
-  };
-
-  const fetchJobApplications = async () => {
-    try {
-      const response = await authAxios.get(`/jobs/job-results`);
-      setJobApplications(response.data);
-    } catch (err) {
-      console.error('Error fetching job applications:', err);
     }
   };
 
