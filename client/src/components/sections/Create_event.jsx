@@ -56,10 +56,10 @@ export const Create_Event = () => {
                         
                         <label>
                         <Datepicker 
-                        
+                      
                         selected={formData.event_date}
                         onChange={(date) => setFormData({ ...formData, event_date: date })}
-                        className= "py-4 pr-1"labelTodayButton="Today" labelClearButton="Clear" minDate={new Date()}></Datepicker>
+                        className= "py-4 pr-1"labelTodayButton="Today" labelClearButton="Clear" minDate={new Date()} ></Datepicker>
                         </label> 
                         {console.log(formData)}
                         
@@ -70,7 +70,7 @@ export const Create_Event = () => {
                     value={formData.donatable}
                     onChange={(e) => setFormData({ ...formData, donatable:e.target.value})} 
                     class="sr-only peer"></input>
-                    <div class="relative w-14 h-7 bg-white peer-focus:outline-none rounded-full peer dark:bg-[#891839] peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-green-500 dark:peer-checked:bg-green-600"></div>
+                    <div class="relative w-14 h-7 peer-focus:outline-none rounded-full peer bg-[#891839] peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-green-500 dark:peer-checked:bg-green-600"></div>
 
                     <span class="ms-3 text-lg  text-emerald-800 font-semibold  ">Charity Event?</span>
                     </label>
