@@ -15,8 +15,8 @@ export default function MainPage() {
     const {authAxios, user} = useAuth();
     const {user_id} =useParams(); //Contains the User Id 
 
-    const [jobs, setJobs] = useState(jobList);
-    const [events, setEvents] = useState(eventList);
+    const [jobs, setJobs] = useState([]);
+    const [events, setEvents] = useState([]);
     const [announcements, setAnnouncements] = useState(announcementList);
     const [isLoading, setIsLoading] = useState(true);
 
