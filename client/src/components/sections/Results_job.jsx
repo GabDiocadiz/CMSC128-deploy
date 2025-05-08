@@ -18,7 +18,7 @@ export const Results_page_jobs = () => {
   const [jobs, setJobs] = useState([]);
   const [jobButton, setjobButton] = useState(false)
   const [isLoading, setIsLoading] = useState(true);
-
+  const [jobCount, setJobCount] = useState(0);
   const toggleBookmark = (id) => {
     if (bookmarkedIds.includes(id)) {
       setBookmarkedIds(bookmarkedIds.filter((bid) => bid !== id));
@@ -34,13 +34,13 @@ useEffect(() => {
           const response = await authAxios.get(`jobs/job-results?sortBy=${sortBy}`);
 
           setJobs(response.data);
-          
+          setJobCount(response.data.length);
           setIsLoading(false);
           if (jobs.length === 0){
             setjobButton(true)
           }
 
-
+          console.log("Job Count:", response.data.length);
           // Fetch bookmarked jobs
           const bookmarkedResponse = await authAxios.get(`jobs/job-bookmarked`);  
 
@@ -64,7 +64,11 @@ useEffect(() => {
      {jobButton && (
        <div>
        <button
-         onClick={()=>navigate('/post_job')}
+         onClick={()=>navigate('/post_job' , {
+          state: {
+            jobCount: jobCount,
+          },
+        })}
          className="fixed w-auto h-10 bottom-6 right-6 z-50 bg-[#891839]  text-white rounded-2xl px-4 shadow-lg transition-colors duration-300">
          Post A Job
        </button>
@@ -123,7 +127,7 @@ useEffect(() => {
               {jobs.map((job) => (
                 <div key={job._id} className="bg-white rounded-xl shadow-md overflow-hidden">
                   <Link to={`/job-details/${job._id}`}>
-                    <img src={job.image || "src/assets/Building.png" } alt={job.job_title} className="w-full h-48 object-cover" />
+                    <img src={`http://localhost:5050/uploads/${job.files[0]}` || "src/assets/Building.png" } alt={job.job_title} className="w-full h-48 object-cover" />
                   </Link>
                   <div className="p-4">
                     
