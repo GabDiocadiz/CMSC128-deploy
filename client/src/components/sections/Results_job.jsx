@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../header";
 import Footer from "../footer";
 import { BookmarkIcon } from '@heroicons/react/24/solid';
+import { LuPencil } from "react-icons/lu";
 // import { jobList } from "../../utils/models";
 // import { ScrollToTop } from "../../utils/helper";
 import axios from "axios";
@@ -61,15 +62,7 @@ useEffect(() => {
       <div className="w-screen pb-10">
         <Navbar />
       </div>
-     {jobButton && (
-       <div>
-       <button
-         onClick={()=>navigate('/post_job')}
-         className="fixed w-auto h-10 bottom-6 right-6 z-50 bg-[#891839]  text-white rounded-2xl px-4 shadow-lg transition-colors duration-300">
-         Post A Job
-       </button>
-     </div>
-     )}
+     
       {isLoading ? (
           <div className="min-w-screen min-h-screen bg-gray-200 flex justify-center items-center">
               <div className="w-16 h-16 border-4 border-[#145C44] border-t-transparent rounded-full animate-spin"></div>
@@ -103,19 +96,33 @@ useEffect(() => {
             <div className="container flex flex-col items-start space-y-8 text-black text-left ">
               
               {/* Sort by */}
-              <div className="flex flex-row space-x-4 items-center">
-                <h2>Sort by:</h2>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="border border-gray-400 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Select</option>
-                  <option value="date">Date</option>
-                  <option value="title">Title</option>
-                </select>
+              <div className="w-full flex justify-between items-center">
+                <div className="flex flex-row space-x-4 items-center">
+                  <h2>Sort by:</h2>
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="border border-gray-400 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select</option>
+                    <option value="date">Date</option>
+                    <option value="title">Title</option>
+                  </select>
+                </div>
+                {/* Sort by */}
+
+                {jobButton && (
+                  <div>
+                    <button
+                      onClick={() => navigate('/post_job')}
+                      className="flex items-center space-x-3 bg-[#891839] text-white rounded-md px-6 py-2.5 shadow hover:bg-[#89183aed] cursor-pointer focus:!outline-none"
+                    >
+                      <LuPencil />
+                      <span>Post a Job</span>
+                    </button>
+                  </div>
+                  )}
               </div>
-              {/* Sort by */}
 
               {/* Jobs Display */}
             <div className="flex justify-center w-full">
