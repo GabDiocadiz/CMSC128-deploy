@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom'
 import Request_Confirmation from "../request_confirmation";
 import Speed_Dial_Admin from "../Speed_Dial_Admin";
 import { useAuth } from "../../AuthContext.jsx";
-
+import yes from "../../assets/Check_round_fill.svg"
+import no from "../../assets/Close_round_fill.svg"
 export const Admin_main = () => {
     const navigate = useNavigate()
     const { authAxios, user} = useAuth();
@@ -123,7 +124,7 @@ export const Admin_main = () => {
                                                             
                                                         } 
                                                     className="w-10 hover:ring-3 ring-red-400 rounded-lg">
-                                                        <img src="src/assets/Close_round_fill.svg" className="h-10 w-10"></img>
+                                                        <img src={no} className="h-10 w-10"></img>
                                                     </button>
                                                     <button onClick={()=>{
                                                         setreq_modalOpen(true)
@@ -133,7 +134,7 @@ export const Admin_main = () => {
                                                         
                                                     }
                                                     className="w-10 hover:ring-3 ring-green-400 rounded-lg">
-                                                        <img src="src/assets/Check_round_fill.svg" className="h-10 w-10"></img>
+                                                        <img src={yes} className="h-10 w-10"></img>
                                                     </button>
                                             
                                                 </div>
