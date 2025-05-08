@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import Navbar_search from "../Navbar_Search"; // Import Navbar_search
 import axios from "axios"; // Import axios for API calls
+import Navbar from "../header";
+import Footer from "../footer";
 
 export const Results_page_accounts = () => {
   const [searchTerm, setSearchTerm] = useState(""); // State for search term
@@ -48,6 +50,9 @@ export const Results_page_accounts = () => {
 
   return (
     <>
+      <div className="fixed top-0 w-full z-50">
+          <Navbar />
+      </div>
       {/* Add Navbar_search */}
       <Navbar_search
         searchTerm={searchTerm}
@@ -58,11 +63,11 @@ export const Results_page_accounts = () => {
 
       <div className="w-screen min-h-screen bg-gray-200 pt-13">
         {/* Header Row */}
-        <div className="w-full h-16 bg-red-900 text-white grid grid-cols-4 justify-center items-center px-6">
+        <div className="w-full h-16 bg-red-900 text-white grid grid-cols-3 justify-center items-center px-6">
           <p>Email</p>
           <p>Name</p>
           <p>Account Type</p>
-          <p>Actions</p>
+          {/* <p>Actions</p> */}
         </div>
         {/* Header Row */}
         {/* Account Display */}
@@ -75,22 +80,11 @@ export const Results_page_accounts = () => {
             accounts.map((account, index) => (
                 <div
                   key={account.id || index} // This is where the key is being set
-                  className="grid grid-cols-4 p-4 text-center text-black border-b border-gray-300"
+                  className="grid grid-cols-3 p-4 text-center text-black border-b border-gray-300"
                 >
                   <p>{account.email}</p>
                   <p>{account.name}</p>
                   <p>{account.type || "User"}</p>
-                  <div className="flex justify-center items-center">
-                    {account.type === "Admin" ? (
-                      <button className="w-30 bg-red-600 text-white text-sm py-1 rounded-full hover:bg-red-700 transition">
-                        Report
-                      </button>
-                    ) : (
-                      <button className="w-30 bg-red-600 text-white text-sm py-1 rounded-full hover:bg-red-700 transition">
-                        Ban
-                      </button>
-                    )}
-                  </div>
                 </div>
               ))
           ) : (
@@ -98,6 +92,9 @@ export const Results_page_accounts = () => {
           )}
         </div>
         {/* Account Display */}
+      </div>
+      <div className="fixed top-0 w-full z-50">
+          <Navbar />
       </div>
     </>
   );
