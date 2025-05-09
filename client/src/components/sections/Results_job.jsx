@@ -62,19 +62,7 @@ useEffect(() => {
       <div className="w-screen pb-10">
         <Navbar />
       </div>
-     {jobButton && (
-       <div>
-       <button
-         onClick={()=>navigate('/post_job' , {
-          state: {
-            jobCount: jobCount,
-          },
-        })}
-         className="fixed w-auto h-10 bottom-6 right-6 z-50 bg-[#891839]  text-white rounded-2xl px-4 shadow-lg transition-colors duration-300">
-         Post A Job
-       </button>
-     </div>
-     )}
+     
       {isLoading ? (
           <div className="min-w-screen min-h-screen bg-gray-200 flex justify-center items-center">
               <div className="w-16 h-16 border-4 border-[#145C44] border-t-transparent rounded-full animate-spin"></div>
