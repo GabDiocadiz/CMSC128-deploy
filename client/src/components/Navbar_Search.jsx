@@ -5,6 +5,8 @@ import Notification from "./notification";
 import uplbLogo from "../assets/uplblogo.png";
 import notifications from "../assets/notifications.png";
 import humanIcon from "../assets/Human Icon.png";
+import { CiFilter } from "react-icons/ci";
+import { MdFilterAlt } from "react-icons/md";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid"; // Search icon
 import { Range } from "react-range"; // Import react-range
 
@@ -91,7 +93,7 @@ export default function Navbar_search({ searchTerm, setSearchTerm, setFilters, u
                 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer text-xl"
                 onClick={() => setFilterMenuOpen(!filterMenuOpen)}
               >
-                {filterMenuOpen ? "▲" : "☰"}
+                {filterMenuOpen ? <MdFilterAlt size={21}/> : <CiFilter />}
               </span>
             </form>
           </div>
