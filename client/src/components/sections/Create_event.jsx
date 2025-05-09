@@ -1,14 +1,14 @@
 import Navbar_admin from "../header_admin";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Speed_Dial_Admin from "../Speed_Dial_Admin";
 import { Datepicker, ThemeProvider} from "flowbite-react";
 import { useParams } from 'react-router-dom';
 import axios from "axios";
 import objectId from 'bson-objectid';
 import { useAuth } from '../../AuthContext';
-
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 export const Create_Event = () => {
-    
+    const fileInputRef = useRef(null);
     const { authAxios, user } = useAuth();
     const [formData, setFormData] = useState({
         event_id: objectId().toHexString(),
@@ -25,13 +25,34 @@ export const Create_Event = () => {
     const [files, setFiles] = useState([]);
     const [actualFiles, setActualFiles] = useState([]); // Store actual file objects
     
+     
 
 
-    const handleFileChange = (e) => {
-        const selectedFiles = Array.from(e.target.files);
-        // setFiles(selectedFiles.map(file => file.serverFilename)); // only store names
-        setActualFiles(selectedFiles); // store actual file objects
-    };
+        const handleFileChange = (e) => {
+            const selectedFiles = Array.from(e.target.files);
+            const imageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+          
+            const validFiles = [];
+            const errors = [];
+          
+            selectedFiles.forEach(file => {
+              if (!imageTypes.includes(file.type)) {
+                errors.push(`${file.name} is not a supported image file.`);
+              } else if (file.size > MAX_FILE_SIZE) {
+                errors.push(`${file.name} exceeds the 10MB size limit.`);
+              } else {
+                validFiles.push(file);
+              }
+            });
+          
+            if (errors.length > 0) {
+              alert(errors.join('\n')); // Or use a toast/modal/etc.
+              if (fileInputRef.current) fileInputRef.current.value = "";
+              return;
+            }
+          
+            setActualFiles(validFiles);
+        };
 
     const handleSubmit = async () => {
         try {
@@ -135,6 +156,8 @@ export const Create_Event = () => {
                 </label>
                 <input
                     multiple 
+                    ref={fileInputRef}
+                    accept="image/*"
                     onChange={handleFileChange}
                     className="block w-[30vw] text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-white file:bg-[#891839] file:text-white file:rounded-lg file:border-0 file:px-4 file:py-2 file:cursor-pointer"
                     id="file_input"
@@ -145,7 +168,6 @@ export const Create_Event = () => {
                 <button 
                 
                     onClick={(e) => {
-                        e.preventDefault(); // ✅ Prevents default form submission
                         handleSubmit();
                     }}
                     className="transition-transform duration-300 ease-in-out hover:scale-110 w-50 bg-[#891839] hover:ring-2  text-white text font-bold py-2 px-6 rounded-md">

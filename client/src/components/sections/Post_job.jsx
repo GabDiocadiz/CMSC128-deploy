@@ -1,5 +1,6 @@
+
 import Navbar from "../header";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ScrollToTop } from "../../utils/helper";
 import Speed_Dial_Admin from "../Speed_Dial_Admin";
 import CreatableSelect from "react-select/creatable";
@@ -10,8 +11,10 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../AuthContext";
 import axios from "axios";
 import objectId from 'bson-objectid';
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 export const Post_Job = () => {
+    const fileInputRef = useRef(null);
     const jobCount = useLocation().state.jobCount;
     const navigate = useNavigate();
     const { authAxios, user } = useAuth();
@@ -42,14 +45,33 @@ export const Post_Job = () => {
     
     const handleFileChange = (e) => {
         const selectedFiles = Array.from(e.target.files);
-        // setFiles(selectedFiles.map(file => file.serverFilename)); // only store names
-        setActualFiles(selectedFiles); // store actual file objects
+        const imageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+      
+        const validFiles = [];
+        const errors = [];
+      
+        selectedFiles.forEach(file => {
+          if (!imageTypes.includes(file.type)) {
+            errors.push(`${file.name} is not a supported image file.`);
+          } else if (file.size > MAX_FILE_SIZE) {
+            errors.push(`${file.name} exceeds the 10MB size limit.`);
+          } else {
+            validFiles.push(file);
+          }
+        });
+      
+        if (errors.length > 0) {
+          alert(errors.join('\n')); // Or use a toast/modal/etc.
+          if (fileInputRef.current) fileInputRef.current.value = "";
+          return;
+        }
+      
+        setActualFiles(validFiles);
     };
 
 
     useEffect(() => {
         ScrollToTop();
-        console.log("Job Count:", jobCount);
     }, []);
 
     const handleSubmit = async () => {
@@ -164,6 +186,8 @@ export const Post_Job = () => {
                             id="file_input"
                             type="file"
                             multiple 
+                            ref={fileInputRef}
+                            accept="image/*"
                             onChange={handleFileChange}
                         />
                         <p  className="block mb-2 text-4xl text-start  text-emerald-800 font-bold">Application Link </p>
@@ -175,7 +199,6 @@ export const Post_Job = () => {
                          <div className="py-2 pr-2 flex">
                             <button 
                             onClick={(e) => {
-                                e.preventDefault(); // ✅ Prevents default form submission
                                 handleSubmit();
                             }}
                             className="transition-transform duration-300 ease-in-out hover:scale-110 w-50 bg-[#891839] hover:ring-2  text-white text font-bold py-2 px-6 rounded-md">
