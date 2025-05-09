@@ -29,7 +29,7 @@ export default function Navbar({user_id}) {
         <div className="container flex justify-between items-center py-1 px-4">
           {/* Left - Logo */}
           <Link to={`/home`}>
-            <img src={uplbLogo} className="bg-none w-40 h-auto" alt="UPLB Logo" />
+            <img src={uplbLogo} className="bg-none w-40 h-auto" draggable="false" alt="UPLB Logo" />
           </Link>
 
           {/* Right - Notification & Profile Icons */}
@@ -42,7 +42,7 @@ export default function Navbar({user_id}) {
             }
             className="cursor-pointer"
             >
-              <img src={notifications} className="w-10 h-10" alt="Notifications" />
+              <img src={notifications} className="w-10 h-10" draggable="false" alt="Notifications" />
             </div>
 
             {/* Profile Icon inside Circle */}
@@ -51,7 +51,7 @@ export default function Navbar({user_id}) {
                 onClick={() => setProfileMenuOpen(!profileMenuOpen)}
                 className="w-10 h-10 bg-none flex items-center justify-center rounded-full cursor-pointer"
               >
-                <img src={humanIcon} className="w-10 h-10" alt="Profile" />
+                <img src={humanIcon} className="w-10 h-10" draggable="false" alt="Profile" />
               </div>
 
               {profileMenuOpen && (

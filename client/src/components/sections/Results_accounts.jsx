@@ -11,6 +11,9 @@ export const Results_page_accounts = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Retrieve the current user's ID from localStorage or context
+  const userId = localStorage.getItem("userId"); // Assuming the user ID is stored in localStorage
+
   const fetchAlumni = async () => {
     setLoading(true);
     setError(null);
@@ -26,8 +29,12 @@ export const Results_page_accounts = () => {
         skills: filters.skills?.join(",") || "",
       };
 
+      const token = localStorage.getItem("accessToken");
       const response = await axios.get("http://localhost:5050/alumni/search", {
-        params: queryParams,
+          params: queryParams,
+          headers: {
+              Authorization: `Bearer ${token}`,
+          },
       });
 
       setAccounts(Array.isArray(response.data) ? response.data : []);
@@ -47,15 +54,13 @@ export const Results_page_accounts = () => {
   return (
     <>
       <div className="fixed top-0 w-full z-50">
-          <Navbar />
-      </div>
-      {/* Add Navbar_search */}
-      <Navbar_search
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        setFilters={setFilters}
-        user_id={1}
-      />
+        <Navbar_search
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          setFilters={setFilters}
+          user_id={userId} // Dynamically pass the user ID
+        />
+      </div> 
 
       <div className="w-screen min-h-screen bg-gray-200 pt-13">
         {/* Header Row */}
@@ -110,9 +115,6 @@ export const Results_page_accounts = () => {
             <p className="text-center text-gray-500">No results found.</p>
           )}
         </div>
-      </div>
-      <div className="fixed top-0 w-full z-50">
-          <Navbar />
       </div>
     </>
   );

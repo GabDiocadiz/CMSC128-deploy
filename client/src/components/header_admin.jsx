@@ -48,7 +48,7 @@ export default function Navbar_admin() {
       <div className="container flex justify-between items-center py-1 px-4">
         {/* Left - Logo */}
         <a href="/">
-          <img src="src/assets/uplblogo.png" className="bg-none w-40 h-auto" alt="UPLB Logo" />
+          <img src="src/assets/uplblogo.png" className="bg-none w-40 h-auto" draggable="false" alt="UPLB Logo" />
         </a>
         {/* Modal for Sending An Announcement */}
         {isOpen && (
@@ -95,7 +95,7 @@ export default function Navbar_admin() {
         <div className="absolute top-1 right-4 flex items-center space-x-5">
             <button onClick={()=>setIsOpen(true)}
             className="bg-[#891839] rounded-lg pr-5 pl-2 py-1 font-semibold text-left text-sm flex justify-center h-12">
-                <img src={speakerIcon} className="w-10 h-10 py-1"></img>
+                <img src={speakerIcon} draggable="false" className="w-10 h-10 py-1"></img>
                 <div className="pl-5">
                 Make an <br></br> Announcement
                 </div>
@@ -107,7 +107,7 @@ export default function Navbar_admin() {
                 }}
                 className="cursor-pointer"
                 >
-                  <img src={notifications} className="w-10 h-10" alt="Notifications" />
+                  <img src={notifications} className="w-10 h-10" draggable="false" alt="Notifications" />
               </div>
 
             {/* Profile Icon inside Circle */}
@@ -116,7 +116,7 @@ export default function Navbar_admin() {
                 onClick={() => setProfileMenuOpen(!profileMenuOpen)}
                 className="w-10 h-10 bg-none flex items-center justify-center rounded-full cursor-pointer"
               >
-                <img src={humanIcon} className="w-10 h-10" alt="Profile" />
+                <img src={humanIcon} className="w-10 h-10" draggable="false" alt="Profile" />
               </div>
 
               {profileMenuOpen && (
