@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
-import Navbar_search from "../Navbar_Search";
-import axios from "axios";
+import Navbar_search from "../Navbar_Search"; // Import Navbar_search
+import axios from "axios"; // Import axios for API calls
+import Navbar from "../header";
+import Footer from "../footer";
 
 export const Results_page_accounts = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -44,6 +46,10 @@ export const Results_page_accounts = () => {
 
   return (
     <>
+      <div className="fixed top-0 w-full z-50">
+          <Navbar />
+      </div>
+      {/* Add Navbar_search */}
       <Navbar_search
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
@@ -52,7 +58,16 @@ export const Results_page_accounts = () => {
       />
 
       <div className="w-screen min-h-screen bg-gray-200 pt-13">
-        <div className="w-full h-full px-6 py-8">
+        {/* Header Row */}
+        <div className="w-full h-16 bg-red-900 text-white grid grid-cols-3 justify-center items-center px-6">
+          <p>Email</p>
+          <p>Name</p>
+          <p>Account Type</p>
+          {/* <p>Actions</p> */}
+        </div>
+        {/* Header Row */}
+        {/* Account Display */}
+        <div className="w-full h-full">
           {loading ? (
             <p className="text-center text-gray-500">Loading...</p>
           ) : error ? (
@@ -88,8 +103,6 @@ export const Results_page_accounts = () => {
                         ))}
                     </div>
                   </div>
-
-
                 </div>
               ))}
             </div>
@@ -97,6 +110,9 @@ export const Results_page_accounts = () => {
             <p className="text-center text-gray-500">No results found.</p>
           )}
         </div>
+      </div>
+      <div className="fixed top-0 w-full z-50">
+          <Navbar />
       </div>
     </>
   );
