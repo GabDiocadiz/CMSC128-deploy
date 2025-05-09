@@ -60,7 +60,7 @@ export const Post_Job = () => {
           const file_res = await axios.post(`http://localhost:5050/jobs/${formData.job_id}/upload`, fileFormData, {
             headers: { "Content-Type": "multipart/form-data" },
           });
-          setFiles(file_res.data.files.map(file => file.serverFilename));
+          const uploadedFiles = file_res.data.files.map(file => file.serverFilename)
           const jobcnt_res = await axios.get(`http://localhost:5050/jobs/job-count`);
           const jobPostingData = {
             job_id: (jobcnt_res.data)+1,
@@ -75,7 +75,7 @@ export const Post_Job = () => {
             end_date: formData.end_date,
             date_posted: new Date(),
             status: "pending",
-            files: files, // Remove this line
+            files: uploadedFiles, // Remove this line
           };
           console.log(jobPostingData);
           const res = await axios.post("http://localhost:5050/jobs/create", jobPostingData); // Send as JSON
