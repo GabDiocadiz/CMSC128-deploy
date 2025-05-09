@@ -218,9 +218,15 @@ export default function MainPage() {
                                     className="bg-cover bg-center !text-white flex flex-col justify-center items-end text-right px-8 sm:px-10 py-8 sm:py-10 w-full transition-all duration-1000"
                                     style={{ backgroundImage: `url(${announcements[index].image})` }}
                                 >
-                                    <h2 className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4">
-                                        {announcements[index].title}
-                                    </h2>
+                                    <div>
+                                        <Link
+                                            to={`/announcement-details/${announcements[index].announcement_id}`}
+                                            // state={{ event: events[currentEventIndex] }}
+                                            className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4 hover:!underline"
+                                        >
+                                            {announcements[index].title}
+                                        </Link>
+                                    </div>
                                     <p className="text-sm sm:text-base max-w-md">
                                         {announcements[index].context}
                                     </p>

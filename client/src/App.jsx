@@ -9,6 +9,7 @@ import Registration from './components/sections/Registration'
 import MainPage from './components/sections/MainPage'
 import ViewEventDetails from './components/sections/ViewEvent'
 import ViewJobDetails from './components/sections/ViewJobPosting'
+import ViewAnnouncementDetails from './components/sections/ViewAnnouncement'
 import { BrowserRouter,Routes, Route } from 'react-router-dom'
 import { Admin_main } from './components/sections/Admin_main'
 import { Results_page_accounts} from './components/sections/Results_accounts'
@@ -48,6 +49,7 @@ function App() {
               <Route path="/job-details/:id" element={<ViewJobDetails/>} />
               <Route path="/events" element={<Results_page_events/>} />
               <Route path="/event-details/:id" element={<ViewEventDetails/>} />
+              <Route path="/announcement-details/:id" element={<ViewAnnouncementDetails/>} />
               <Route path="/search-alumni" element={<Results_page_accounts/>} />
               <Route path="/create_event" element={<Create_Event/>} />
               <Route path="/post_job" element={<Post_Job/>} />
