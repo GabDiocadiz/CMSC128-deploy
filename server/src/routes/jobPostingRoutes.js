@@ -14,6 +14,8 @@ router.get("/admin-page-job-requests", validateToken, authorizeRoles(["Admin"]),
 router.get("/job-results", validateToken, authorizeRoles(["Admin", "Alumni"]), jobPostingController.jobResults);
 router.get("/job-bookmarked", validateToken, authorizeRoles(["Admin", "Alumni"]), jobPostingController.bookmarkJob);
 
+router.put("/:job_id/approve", jobPostingController.approveJob);
+router.put("/:job_id/reject", jobPostingController.disapproveJob);
 
 router.post("/create", upload.array('files[]'), jobPostingController.create);
 router.get("/job-count", jobPostingController.fetchJobCount);
