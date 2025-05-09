@@ -297,7 +297,7 @@ export default function MainPage() {
                         <Link to={`/events`}>
                             <BookEventButton />
                         </Link>
-                        <Link to={`/search-alumni`}>
+                        <Link to={user?.user_type === 'Admin' ? '/admin_search-alumni' : '/search-alumni'}>
                             <SearchAlumniButton />
                         </Link>
                     </div>

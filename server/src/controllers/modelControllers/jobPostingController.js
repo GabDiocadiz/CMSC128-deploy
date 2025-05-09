@@ -1,7 +1,12 @@
 import { JobPosting } from "../../models/Job_Posting.js";
 import { User } from "../../models/User.js";
 import { createCRUDController } from "../middlewareControllers/createCRUDController/index.js";
-
+import {
+    uploadFilesForModel,
+    getFilesForModel,
+    deleteFileFromModel,
+    downloadFile
+  } from "../fileController/fileController.js";
 export const jobPostingController = {
     ...createCRUDController(JobPosting),
 
@@ -103,6 +108,18 @@ export const jobPostingController = {
             res.status(500).json({ message: e.message });
         }
     },
+    async fetchJobCount (req, res) {
+        try {
+           
+            let jobs = await JobPosting.find(); // Default: no sorting
+            
+            console.log("Fetched Jobs:", jobs.length);
+            res.status(200).json(jobs.length);
+        } catch (e) {
+            console.error("Error in jobPostingController.jobResults:", e);
+            res.status(500).json({ message: e.message });
+        }
+    },
 
      //  Add Bookmark
      async bookmarkJob(req, res) {
@@ -157,5 +174,17 @@ export const jobPostingController = {
             console.error("Error fetching bookmarked jobs:", error);
             res.status(500).json({ message: "Internal server error" });
         }
+    },
+
+    async uploadJobFiles (req, res){
+        req.params.modelName = "JobPosting";
+        req.params.id = req.params.job_id; // Assuming job_id is passed in the URL
+        return uploadFilesForModel(req, res);
+    },
+      
+    
+    async getJobFiles(req, res) {
+        req.params.modelName = "JobPosting";
+        return getFilesForModel(req, res);
     }
 }

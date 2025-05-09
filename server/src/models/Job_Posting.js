@@ -22,7 +22,17 @@ const jobPostingSchema = new Schema({
     approval_date: {
         type: Date,
         default: null
-    }
+    },
+    files: [
+        {
+          name: String,
+          size: Number,
+          type: String,
+          lastModified: Number,
+          serverFilename: String, // optional
+        },
+    ],
+
 });
 
 // Add indexes

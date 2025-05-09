@@ -4,18 +4,21 @@ import { ScrollToTop } from "../../utils/helper";
 import Speed_Dial_Admin from "../Speed_Dial_Admin";
 import CreatableSelect from "react-select/creatable";
 import { jobRequiremets } from "../../utils/models";
-import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Button } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../AuthContext";
+import axios from "axios";
+import objectId from 'bson-objectid';
 
 export const Post_Job = () => {
+    const jobCount = useLocation().state.jobCount;
     const navigate = useNavigate();
     const { authAxios, user } = useAuth();
     const [requirementsOptions, setRequirementsOptions] = useState(jobRequiremets.map(req => ({ value: req, label: req })));
     const [selectedRequirements, setSelectedRequirements] = useState([]);
     const [formData, setFormData] = useState({
-        job_id: "",
+        job_id: 0,
         job_title: "",
         company: "",
         location: "",
@@ -29,31 +32,61 @@ export const Post_Job = () => {
         approved_by: user?.user_type === 'Admin' ? user?._id : "",
         approval_date: user?.user_type === 'Admin' ? new Date() : null,
         posted_by: user?._id,
-        image: null,
+        files:[]
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [files, setFiles] = useState([]);
+    const [actualFiles, setActualFiles] = useState([]); // Store actual file objects
+    
+    
+    const handleFileChange = (e) => {
+        const selectedFiles = Array.from(e.target.files);
+        // setFiles(selectedFiles.map(file => file.serverFilename)); // only store names
+        setActualFiles(selectedFiles); // store actual file objects
+    };
+
 
     useEffect(() => {
         ScrollToTop();
+        console.log("Job Count:", jobCount);
     }, []);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setError(null);
-
+    const handleSubmit = async () => {
         try {
-            const response = await authAxios.post('/jobs/post-job', formData);
-            console.log("Job posted successfully:", response.data);
-            navigate('/jobs');
+          const fileFormData = new FormData();
+          actualFiles.forEach(file => fileFormData.append("files[]", file));
+      
+          const file_res = await axios.post(`http://localhost:5050/jobs/${formData.job_id}/upload`, fileFormData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+          setFiles(file_res.data.files.map(file => file.serverFilename));
+          const jobcnt_res = await axios.get(`http://localhost:5050/jobs/job-count`);
+          const jobPostingData = {
+            job_id: (jobcnt_res.data)+1,
+            posted_by: `${user?._id}`,
+            job_title: formData.job_title,
+            company: formData.company,
+            location: formData.location,
+            job_description: formData.job_description,
+            requirements: formData.requirements,
+            application_link: formData.application_link,
+            start_date: formData.start_date,
+            end_date: formData.end_date,
+            date_posted: new Date(),
+            status: "pending",
+            files: files, // Remove this line
+          };
+          console.log(jobPostingData);
+          const res = await axios.post("http://localhost:5050/jobs/create", jobPostingData); // Send as JSON
+          alert("Job posting submitted successfully!");
+          console.log("Response:", res.data);
         } catch (err) {
-            console.error("Error posting job:", err);
-            setError(err.response?.data?.message || 'Failed to post job.');
-        } finally {
-            setLoading(false);
+          console.error("Error creating job posting:", err);
+          alert("Submission failed.");
         }
-    };
+      };
+      
     return(
         <>  
             
@@ -130,8 +163,8 @@ export const Post_Job = () => {
                             className="block w-[30vw] text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-white file:bg-[#891839] file:text-white file:rounded-lg file:border-0 file:px-4 file:py-2 file:cursor-pointer"
                             id="file_input"
                             type="file"
-                            value={formData.image}
-                            onChange={(e)=> setFormData({...formData, image:e.target.value})}
+                            multiple 
+                            onChange={handleFileChange}
                         />
                         <p  className="block mb-2 text-4xl text-start  text-emerald-800 font-bold">Application Link </p>
                             <textarea id="link" rows="2" class="block p-2.5 w-[30vw] text-lg text-gray-900 bg-gray-50 rounded-2xl border border-gray-30 resize-none "
@@ -141,7 +174,10 @@ export const Post_Job = () => {
                             ></textarea>
                          <div className="py-2 pr-2 flex">
                             <button 
-                            onClick={handleSubmit}
+                            onClick={(e) => {
+                                e.preventDefault(); // ✅ Prevents default form submission
+                                handleSubmit();
+                            }}
                             className="transition-transform duration-300 ease-in-out hover:scale-110 w-50 bg-[#891839] hover:ring-2  text-white text font-bold py-2 px-6 rounded-md">
                             Submit
                         </button> 
