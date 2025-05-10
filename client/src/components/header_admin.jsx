@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import speakerIcon from '../assets/Speaker_Icon.svg';
 import Notification from "./notification";
@@ -6,27 +6,36 @@ import { useNavigate } from 'react-router-dom'
 import uplbLogo from "../assets/uplblogo.png";
 import notifications from "../assets/notifications.png";
 import humanIcon from "../assets/Human Icon.png";
+import { useAuth } from "../AuthContext";
+
+import axios from "axios";
 export default function Navbar_admin() {
+  const { authAxios, user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate()
   const  [notification_modal, setnotification_modal] = useState(false)
+  const [announcementModal, setAnnouncementModal] = useState(false);
   const [formData, setFormData] = useState({
+    type:"announcement",
     title:"",
     read:false,
-    description:"",
+    content:"",
+    posted_by:user?._id
   })
 
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
-  const handleSend=(e)=>{
-    
-    // await send= NULL;
-    const send=0; //temporary var
-    if (send.success){ // Successful sending
+  const handleSend=async (e)=>{
+    try{
+      const res = await axios.post("http://localhost:5050/announcement/create", formData);
       console.log("Successfully sent to all users");
       setIsOpen(false);
-    }else{ //Sending Failed
-
     }
+    catch(err){
+      console.error("Error creating announcement", err);
+      alert("Submission failed.");
+    }
+    
+
     // setIsOpen(false); Remove after implementing the proper backend stuff
   }
   const handleLogout=()=>{
@@ -36,6 +45,11 @@ export default function Navbar_admin() {
     //}
     navigate('/')
   }
+
+  useEffect(()=>{
+    console.log(formData)
+  },[formData]);
+
   return (
     <>
     {notification_modal &&(
@@ -68,8 +82,8 @@ export default function Navbar_admin() {
               placeholder="Title"></textarea>
             
               <textarea 
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              value={formData.content}
+              onChange={(e) => setFormData({ ...formData, content: e.target.value })}
               id="message" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-2xl border border-gray-30 resize-none h-[40vh]"
               placeholder="Write your message here..."></textarea>
             </div>

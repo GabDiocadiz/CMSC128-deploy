@@ -87,7 +87,7 @@ useEffect(() => {
               No jobs found.
               <button 
               onClick={()=>navigate('/post_job')}
-              className="bg-[#891839] rounded-xl px-5 py-3 text-2xl text-white mt-5 transform transition-transform duration-300 hover:scale-105">Post a Job</button>
+              className="bg-[#891839] rounded-md px-6 py-3 text-lg text-white font-light mt-5 transform transition-transform duration-300 hover:scale-105 focus:!outline-none">Post a Job</button>
               </div> 
       ) :(
         

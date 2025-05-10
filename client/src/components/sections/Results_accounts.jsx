@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import Navbar_search from "../Navbar_Search"; // Import Navbar_search
-import axios from "axios"; // Import axios for API calls
 import Navbar from "../header";
 import Footer from "../footer";
+import { useAuth } from "../../AuthContext";
 
 export const Results_page_accounts = () => {
+  const {authAxios, user} = useAuth();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({});
   const [accounts, setAccounts] = useState([]);
@@ -29,13 +31,11 @@ export const Results_page_accounts = () => {
         skills: filters.skills?.join(",") || "",
       };
 
-      const token = localStorage.getItem("accessToken");
-      const response = await axios.get("http://localhost:5050/alumni/search", {
-          params: queryParams,
-          headers: {
-              Authorization: `Bearer ${token}`,
-          },
+      const response = await authAxios.get("/alumni/search", {
+        params: queryParams,
       });
+
+      console.log(response);
 
       setAccounts(Array.isArray(response.data) ? response.data : []);
     } catch (err) {
@@ -53,26 +53,15 @@ export const Results_page_accounts = () => {
 
   return (
     <>
-      <div className="fixed top-0 w-full z-50">
-        <Navbar_search
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          setFilters={setFilters}
-          user_id={userId} // Dynamically pass the user ID
-        />
-      </div> 
+      <Navbar_search
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        setFilters={setFilters}
+        user_id={1}
+      />
 
       <div className="w-screen min-h-screen bg-gray-200 pt-13">
-        {/* Header Row */}
-        <div className="w-full h-16 bg-red-900 text-white grid grid-cols-3 justify-center items-center px-6">
-          <p>Email</p>
-          <p>Name</p>
-          <p>Account Type</p>
-          {/* <p>Actions</p> */}
-        </div>
-        {/* Header Row */}
-        {/* Account Display */}
-        <div className="w-full h-full">
+        <div className="w-full h-full px-6 py-8">
           {loading ? (
             <p className="text-center text-gray-500">Loading...</p>
           ) : error ? (
@@ -108,6 +97,8 @@ export const Results_page_accounts = () => {
                         ))}
                     </div>
                   </div>
+
+
                 </div>
               ))}
             </div>

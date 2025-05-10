@@ -25,6 +25,8 @@ export const uploadFilesForModel = async (req, res) => {
   if (!files || files.length === 0) {
     return res.status(400).json({ message: "No files uploaded" });
   }
+  
+
 
   try {
     const Model = getModel(modelName); // You need to have this getModel
