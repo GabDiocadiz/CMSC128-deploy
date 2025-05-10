@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import Navbar_search from "../Navbar_Search"; // Import Navbar_search
-import axios from "axios"; // Import axios for API calls
 import Navbar from "../header";
 import Footer from "../footer";
+import { useAuth } from "../../AuthContext";
 
 export const Results_page_accounts = () => {
+  const {authAxios, user} = useAuth();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({});
   const [accounts, setAccounts] = useState([]);
@@ -26,9 +28,11 @@ export const Results_page_accounts = () => {
         skills: filters.skills?.join(",") || "",
       };
 
-      const response = await axios.get("http://localhost:5050/alumni/search", {
+      const response = await authAxios.get("/alumni/search", {
         params: queryParams,
       });
+
+      console.log(response);
 
       setAccounts(Array.isArray(response.data) ? response.data : []);
     } catch (err) {
