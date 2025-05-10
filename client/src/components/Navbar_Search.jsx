@@ -75,7 +75,7 @@ export default function Navbar_search({ searchTerm, setSearchTerm, setFilters, u
         <div className="container flex justify-between items-center py-1 px-4">
           {/* Left - Logo */}
           <Link to={`/home`}>
-            <img src={uplbLogo} className="bg-none w-40 h-auto" alt="UPLB Logo" />
+            <img src={uplbLogo} className="bg-none w-40 h-auto" draggable="false" alt="UPLB Logo" />
           </Link>
 
           {/* Middle - Search Bar */}
@@ -107,7 +107,7 @@ export default function Navbar_search({ searchTerm, setSearchTerm, setFilters, u
               }}
               className="cursor-pointer"
             >
-              <img src={notifications} className="w-10 h-10" alt="Notifications" />
+              <img src={notifications} className="w-10 h-10" draggable="false" alt="Notifications" />
             </div>
 
             {/* Profile Icon */}
@@ -116,7 +116,7 @@ export default function Navbar_search({ searchTerm, setSearchTerm, setFilters, u
                 onClick={() => setProfileMenuOpen(!profileMenuOpen)}
                 className="w-10 h-10 bg-none flex items-center justify-center rounded-full cursor-pointer"
               >
-                <img src={humanIcon} className="w-10 h-10" alt="Profile" />
+                <img src={humanIcon} className="w-10 h-10" draggable="false" alt="Profile" />
               </div>
 
               {profileMenuOpen && (

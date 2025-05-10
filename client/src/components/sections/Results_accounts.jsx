@@ -13,6 +13,9 @@ export const Results_page_accounts = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Retrieve the current user's ID from localStorage or context
+  const userId = localStorage.getItem("userId"); // Assuming the user ID is stored in localStorage
+
   const fetchAlumni = async () => {
     setLoading(true);
     setError(null);
