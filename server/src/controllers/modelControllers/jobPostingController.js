@@ -120,7 +120,50 @@ export const jobPostingController = {
             res.status(500).json({ message: e.message });
         }
     },
+    async approveJob(req, res){
+        try {
+            const {userId, jobId} = req.body;
+            const user = await User.findById(userId);
+            if (user.user_type != "Admin") return res.status(401).json({ message: "Unauthorized" });
 
+            const job = await JobPosting.findById(jobId);
+            if(!job) return res.status(404).json({ message: "Job not found" });
+            
+            if(job.status == "approved") return res.status(400).json({ message: "Job already approved" }); 
+            else if(job.status == "rejected") return res.status(400).json({ message: "Job already rejected" }); 
+            job.approval_date = new Date();
+            job.status = "approved";
+            await job.save();
+
+            res.status(200).json({message: "Job approved successfully"});
+        }
+        catch(e){
+            console.error("Error approving job:", error);
+            res.status(500).json({ message: "Internal server error" });
+        }
+    },
+    async disapproveJob(req, res){
+        try {
+            const {userId, jobId} = req.body;
+            const user = await User.findById(userId);
+            if (user.user_type != "Admin") return res.status(401).json({ message: "Unauthorized" });
+
+            const job = await JobPosting.   findById(jobId);
+            if(!job) return res.status(404).json({ message: "Job not found" });
+            
+            if(job.status == "rejected") return res.status(400).json({ message: "Job already rejected" }); 
+            if(job.status == "approved") return res.status(400).json({ message: "Job already approved" }); 
+            
+            job.status = "rejected";
+            await job.save();
+
+            res.status(200).json({message: "Job rejected successfully"});
+        }
+        catch(e){
+            console.error("Error rejecting job:", error);
+            res.status(500).json({ message: "Internal server error" });
+        }
+    },
      //  Add Bookmark
      async bookmarkJob(req, res) {
         try {
