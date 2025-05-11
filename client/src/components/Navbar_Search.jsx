@@ -149,44 +149,56 @@ export default function Navbar_search({ searchTerm, setSearchTerm, setFilters, u
           {/* Graduation Year and Skills */}
           <div className="flex gap-6 mb-6 text-left">
             <div className="w-1/2">
-              <label className="block text-lg font-medium mb-2 text-gray-700">Graduation Year</label>
-              <div className="flex flex-col space-y-2">
-                <div className="flex justify-between text-sm text-gray-600">
-                  <span>{localFilters.startYear}</span>
-                  <span>{localFilters.endYear}</span>
+              <label className="block text-lg font-medium mb-4 text-gray-700">Graduation Year Range</label>
+
+              <div className="flex gap-4">
+                {/* Start Year Dropdown */}
+                <div className="flex flex-col w-1/2">
+                  <label className="text-sm text-gray-600 mb-1">Start Year</label>
+                  <select
+                    value={localFilters.startYear}
+                    onChange={(e) => setLocalFilters({ ...localFilters, startYear: Number(e.target.value) })}
+                    className="border text-gray-600 rounded-md px-2 py-1"
+                  >
+                    {Array.from({ length: GRADUATION_YEAR_MAX - GRADUATION_YEAR_MIN + 1 }, (_, i) => {
+                      const year = GRADUATION_YEAR_MIN + i;
+                      return (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      );
+                    })}
+                  </select>
                 </div>
-                <Range
-                  step={1}
-                  min={GRADUATION_YEAR_MIN}
-                  max={GRADUATION_YEAR_MAX}
-                  values={[localFilters.startYear, localFilters.endYear]}
-                  onChange={handleRangeChange}
-                  renderTrack={({ props, children }) => {
-                    const { key, ...restProps } = props; // Destructure key from props
-                    return (
-                      <div
-                        key={key} // Pass key directly
-                        {...restProps} // Spread the rest of the props
-                        className="h-2 bg-gray-300 rounded-md"
-                        style={{ ...restProps.style, width: "100%" }}
-                      >
-                        {children}
-                      </div>
-                    );
-                  }}
-                  renderThumb={({ props }) => {
-                    const { key, ...restProps } = props; // Destructure key from props
-                    return (
-                      <div
-                        key={key} // Pass key directly
-                        {...restProps} // Spread the rest of the props
-                        className="h-4 w-4 bg-[#891839] rounded-full shadow-md"
-                      />
-                    );
-                  }}
-                />
+
+                {/* End Year Dropdown */}
+                <div className="flex text-gray-600 flex-col w-1/2">
+                  <label className="text-sm text-gray-600 mb-1">End Year (optional)</label>
+                  <select
+                    value={localFilters.endYear}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setLocalFilters({
+                        ...localFilters,
+                        endYear: value ? Number(value) : GRADUATION_YEAR_MAX,
+                      });
+                    }}
+                    className="border rounded-md px-2 py-1"
+                  >
+                    <option value="">(Default: {GRADUATION_YEAR_MAX})</option>
+                    {Array.from({ length: GRADUATION_YEAR_MAX - GRADUATION_YEAR_MIN + 1 }, (_, i) => {
+                      const year = GRADUATION_YEAR_MIN + i;
+                      return (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
               </div>
             </div>
+
 
             <div className="w-1/2">
               <label className="block text-lg font-medium mb-2 text-gray-700">Skills</label>
