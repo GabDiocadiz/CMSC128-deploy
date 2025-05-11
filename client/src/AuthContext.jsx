@@ -122,6 +122,7 @@ export const AuthProvider = ({ children }) => {
 
             // Check if the error is due to expired token
             if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {
+                console.log("Expired access token");
                 originalRequest._retry = true;
 
                 try {
@@ -156,7 +157,7 @@ export const AuthProvider = ({ children }) => {
             accessToken,
             login,
             logout,
-            authAxios // Provide the configured axios instance
+            authAxios
         }}>
             {children}
         </AuthContext.Provider>

@@ -66,10 +66,6 @@ export default function MainPage() {
                     setEvents([]);
                 }
                 
-                // Fetch announcements
-                // const announcementsResponse = await authAxios.get('/announcements');
-                // setAnnouncements(announcementsResponse.data);
-                
                 setIsLoading(false);
             } catch (err) {
                 console.error("Error fetching data:", err);
