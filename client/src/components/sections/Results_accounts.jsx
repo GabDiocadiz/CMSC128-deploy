@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Navbar_search from "../Navbar_Search"; // Import Navbar_search
 import Navbar from "../header";
 import Footer from "../footer";
-import { useAuth } from "../../AuthContext";
+import { useAuth } from "../../auth/AuthContext";
 
 export const Results_page_accounts = () => {
   const {authAxios, user} = useAuth();

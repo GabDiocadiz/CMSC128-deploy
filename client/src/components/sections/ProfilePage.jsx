@@ -6,7 +6,7 @@ import Navbar from '../header';
 import Footer from '../footer';
 import { ScrollToTop } from '../../utils/helper';
 import { motion } from 'framer-motion';
-import { useAuth } from '../../AuthContext';
+import { useAuth } from '../../auth/AuthContext';
 import './ProfilePage.css';
 
 export default function ProfilePage() {

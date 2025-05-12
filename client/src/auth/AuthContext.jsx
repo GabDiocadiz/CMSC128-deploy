@@ -1,14 +1,13 @@
-import { createContext, useState, useContext, useEffect } from 'react'; // Import useEffect
+import { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 
 const AuthContext = createContext(null);
 
-// Keys for localStorage
 const ACCESS_TOKEN_KEY = 'accessToken';
 const USER_KEY = 'user';
 
 export const AuthProvider = ({ children }) => {
-    // Initialize state from localStorage or null if not found
+    // initialize state from localStorage or null if not found
     const [accessToken, setAccessToken] = useState(() => localStorage.getItem(ACCESS_TOKEN_KEY));
     const [user, setUser] = useState(() => {
         const storedUser = localStorage.getItem(USER_KEY);
@@ -16,7 +15,7 @@ export const AuthProvider = ({ children }) => {
             return storedUser ? JSON.parse(storedUser) : null;
         } catch (error) {
             console.error("Failed to parse stored user:", error);
-            localStorage.removeItem(USER_KEY); // Clear invalid stored user data
+            localStorage.removeItem(USER_KEY); // clear invalid stored user data
             return null;
         }
     });
@@ -84,13 +83,12 @@ export const AuthProvider = ({ children }) => {
             });
 
             if (res.data.accessToken && res.data.user) {
-                // Set state
                 setAccessToken(res.data.accessToken);
                 setUser(res.data.user);
 
                 return { success: true, user: res.data.user };
             } else {
-                logout(); // Use logout function to clear everything
+                logout();
                 return { success: false };
             }
         } catch (error) {
@@ -110,11 +108,11 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
             console.error("Logout API call error:", error);
         } finally {
-             // Clear state and localStorage
+             // clear state and localStorage
             setAccessToken(null);
             setUser(null);
         }
-        return true; // Indicate client-side logout was attempted/completed
+        return true;
     };
 
     const refreshToken = async () => {
@@ -124,7 +122,7 @@ export const AuthProvider = ({ children }) => {
             });
 
             if (res.data.accessToken) {
-                 // Update state
+                 // update state
                 setAccessToken(res.data.accessToken);
                 return true;
             }
@@ -137,10 +135,10 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    // Create axios instance with authorization header
+    // create axios instance with authorization header
     const authAxios = axios.create({baseURL: 'http://localhost:5050'} );
 
-    // Add token to all requests
+    // add token to all requests
     authAxios.interceptors.request.use(
         config => {
             if (accessToken) {
@@ -151,23 +149,23 @@ export const AuthProvider = ({ children }) => {
         error => Promise.reject(error)
     );
 
-    // Handle token expiration
+    // handle token expiration
     authAxios.interceptors.response.use(
         response => response,
         async error => {
             const originalRequest = error.config;
 
-            // Check if the error is due to expired token
+            // check if the error is due to expired token
             if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {
                 originalRequest._retry = true;
 
                 try {
-                    const refreshed = await refreshToken(); // Attempt to refresh
+                    const refreshed = await refreshToken(); // attempt to refresh
                     if (refreshed) {
                         console.log("Token refreshed successfully. Retrying original request.");
                         return authAxios(originalRequest);
                     } else {
-                         // If refresh failed, logout the user
+                         // if refresh failed, logout the user
                         console.log("Token refresh failed. Logging out.");
                         // redirect to login page
                         return Promise.reject(error);

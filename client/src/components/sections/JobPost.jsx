@@ -8,7 +8,7 @@ import { jobRequiremets } from "../../utils/models";
 import { useParams } from 'react-router-dom';
 import { Button } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../AuthContext";
+import { useAuth } from "../../auth/AuthContext";
 import { LuPencil } from "react-icons/lu";
 import { IoIosArrowBack } from "react-icons/io";
 

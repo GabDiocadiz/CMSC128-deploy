@@ -3,7 +3,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import { FaLocationDot } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import { ScrollToTop } from "../../utils/helper";
-import { useAuth } from "../../AuthContext";
+import { useAuth } from "../../auth/AuthContext";
 import Navbar from "../header";
 import Footer from "../footer";
 import axios from "axios";

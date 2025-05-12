@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom'
 import Request_Confirmation from "../request_confirmation";
 import Speed_Dial_Admin from "../Speed_Dial_Admin";
-import { useAuth } from "../../AuthContext.jsx";
+import { useAuth } from "../../auth/AuthContext.jsx";
 import yes from "../../assets/Check_round_fill.svg"
 import no from "../../assets/Close_round_fill.svg"
 export const Admin_main = () => {

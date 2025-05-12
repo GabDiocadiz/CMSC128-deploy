@@ -9,7 +9,7 @@ import BookEventButton from "../buttons/BookEvent";
 import SearchAlumniButton from "../buttons/SearchAlumni";
 import Error_Message from "../error_message";
 import { useParams } from 'react-router-dom';
-import { useAuth } from "../../AuthContext";
+import { useAuth } from "../../auth/AuthContext";
 import Speed_Dial_Admin from "../Speed_Dial_Admin";
 export default function MainPage() {
     const {authAxios, user} = useAuth();

@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import uplbLogo from "../assets/uplblogo.png";
 import notifications from "../assets/notifications.png";
 import humanIcon from "../assets/Human Icon.png";
-import { useAuth } from "../AuthContext";
+import { useAuth } from "../auth/AuthContext";
 
 import axios from "axios";
 export default function Navbar_admin() {
