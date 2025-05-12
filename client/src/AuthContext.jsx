@@ -20,6 +20,40 @@ export const AuthProvider = ({ children }) => {
             return null;
         }
     });
+    const [isLoading, setIsLoading] = useState(true);
+
+    // initial auth check
+    useEffect(() => {
+        const initializeAuth = async () => {
+            setIsLoading(true);
+            const storedToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+
+            if (storedToken) {
+                try {
+                    setAccessToken(storedToken);
+                } catch (e) {
+                    console.log("Error in auth: ", e);
+                    await logout(); // clear invalid session
+                }
+            }
+            else {
+                try {
+                    const refreshed = await refreshToken();
+                    console.log(refreshed);
+                    if (!refreshed) {
+                        await logout();
+                    }
+                } catch (e) {
+                    console.log("Error in auth: ", e);
+                    await logout();
+                }
+            }
+
+            setIsLoading(false);
+        };
+
+        initializeAuth();
+    }, []);
 
     // update localStorage when state changes
     useEffect(() => {
@@ -40,6 +74,7 @@ export const AuthProvider = ({ children }) => {
 
 
     const login = async (email, password) => {
+        setIsLoading(true);
         try {
             const res = await axios.post("http://localhost:5050/auth/login", {
                 email,
@@ -62,6 +97,8 @@ export const AuthProvider = ({ children }) => {
             console.error("Login error:", error.response?.data || error.message);
             logout();
             return { success: false, error };
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -91,11 +128,11 @@ export const AuthProvider = ({ children }) => {
                 setAccessToken(res.data.accessToken);
                 return true;
             }
-            logout();
+            await logout();
             return false;
         } catch (error) {
             console.error("Refresh token error:", error);
-            logout();
+            await logout();
             return false;
         }
     };
@@ -122,7 +159,6 @@ export const AuthProvider = ({ children }) => {
 
             // Check if the error is due to expired token
             if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {
-                console.log("Expired access token");
                 originalRequest._retry = true;
 
                 try {
@@ -133,15 +169,11 @@ export const AuthProvider = ({ children }) => {
                     } else {
                          // If refresh failed, logout the user
                         console.log("Token refresh failed. Logging out.");
-                        await logout();
                         // redirect to login page
-                        window.location.href = '/login';
                         return Promise.reject(error);
                     }
                 } catch (refreshError) {
                      console.error("Error during refresh token process:", refreshError);
-                     await logout();
-                     window.location.href = '/login';
                      return Promise.reject(error);
                 }
 
@@ -155,6 +187,7 @@ export const AuthProvider = ({ children }) => {
         <AuthContext.Provider value={{
             user,
             accessToken,
+            isLoading,
             login,
             logout,
             authAxios
