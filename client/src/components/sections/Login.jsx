@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Navbar_landing from "../header_landing";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
-import { useAuth } from "../../AuthContext";
+import { useAuth } from "../../auth/AuthContext";
 
 const Login = () => {
     const navigate = useNavigate();

@@ -5,7 +5,7 @@ import { Datepicker, ThemeProvider} from "flowbite-react";
 import { useParams } from 'react-router-dom';
 import axios from "axios";
 import objectId from 'bson-objectid';
-import { useAuth } from '../../AuthContext';
+import { useAuth } from '../../auth/AuthContext';
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 export const Create_Event = () => {
     const fileInputRef = useRef(null);

@@ -20,8 +20,8 @@ import { Create_Event } from './components/sections/Create_event'
 import { Post_Job } from './components/sections/JobPost'
 
 import { Results_page_events } from './components/sections/Results_event'
-import { AuthProvider } from './AuthContext'
-import { RoleRoute } from './ProtectedRoutes'
+import { AuthProvider } from './auth/AuthContext'
+import { RoleRoute } from './auth/ProtectedRoutes'
 import ProfilePage from './components/sections/ProfilePage'
 
 

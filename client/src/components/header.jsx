@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Notification from "./notification";
-import { useAuth } from "../AuthContext";
+import { useAuth } from "../auth/AuthContext";
 
 import uplbLogo from "../assets/uplblogo.png";
 import notifications from "../assets/notifications.png";

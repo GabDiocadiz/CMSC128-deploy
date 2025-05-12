@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BookmarkIcon } from '@heroicons/react/24/solid';
 import { TbMoodEmpty } from "react-icons/tb";
-import { useAuth } from "../../AuthContext";
+import { useAuth } from "../../auth/AuthContext";
 import axios from "axios";
 import Navbar from "../header";
 import Footer from "../footer";

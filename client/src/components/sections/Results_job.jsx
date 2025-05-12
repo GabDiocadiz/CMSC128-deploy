@@ -8,7 +8,7 @@ import { LuPencil } from "react-icons/lu";
 // import { jobList } from "../../utils/models";
 // import { ScrollToTop } from "../../utils/helper";
 import axios from "axios";
-import { useAuth } from "../../AuthContext";
+import { useAuth } from "../../auth/AuthContext";
 
 export const Results_page_jobs = () => {
   const navigate = useNavigate();

@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import uplbLogo from "../assets/uplblogo.png";
 import notifications from "../assets/notifications.png";
 import humanIcon from "../assets/Human Icon.png";
-import { useAuth } from "../AuthContext";
+import { useAuth } from "../auth/AuthContext";
 
 import axios from "axios";
 export default function Navbar_admin() {
@@ -84,8 +84,13 @@ export default function Navbar_admin() {
               <textarea 
               value={formData.content}
               onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-              id="message" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-2xl border border-gray-30 resize-none h-[40vh]"
+              id="message" 
+              maxLength={500}
+              class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-2xl border border-gray-30 resize-none h-[40vh]"
               placeholder="Write your message here..."></textarea>
+              <p className="text-sm text-gray-500 mt-1">
+                {formData.description.length}/500 characters
+              </p>
             </div>
             {console.log(formData)}
             <div className="grid grid-cols-2 absolute bottom-4 right-4 gap-x-4">
