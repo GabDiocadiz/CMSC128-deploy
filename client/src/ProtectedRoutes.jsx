@@ -1,16 +1,22 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from './AuthContext';
+import { useEffect } from 'react';
 
-// Role-based route component
 export const RoleRoute = ({ allowedRoles, children }) => {
-    const { user, accessToken } = useAuth();
+    const { user, accessToken, logout } = useAuth();
     const location = useLocation();
-  
-    // Check if user's role is in the allowed roles
-    if (!allowedRoles.includes(user.user_type)) {
-      // Redirect to home page if role not allowed
-      return <Navigate to="/login" replace />;
+
+    useEffect(() => {
+        if (user && !allowedRoles.includes(user.user_type)) {
+            console.log('Unauthorized access. Logging out...');
+            logout();
+        }
+    }, [user, allowedRoles, logout, location]);
+
+    if (allowedRoles.includes(user.user_type)) {
+        return children || <Outlet />;
     }
-  
-    return children || <Outlet />;
-  };
+
+    // If not authenticated or role not allowed, navigate to login
+    return <Navigate to="/login" state={{ from: location }} replace />;
+};
