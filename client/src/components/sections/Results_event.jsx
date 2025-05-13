@@ -6,7 +6,7 @@ import { useAuth } from "../../auth/AuthContext";
 import axios from "axios";
 import Navbar from "../header";
 import Footer from "../footer";
-
+import Sidebar from "../Sidebar";
 export const Results_page_events = ( ) => {
     const navigate = useNavigate();
     const {authAxios, user} = useAuth();
@@ -16,7 +16,8 @@ export const Results_page_events = ( ) => {
     const [events, setEvents] = useState([]);
 
     const [isLoading, setIsLoading] = useState(true);
-
+    const [sidebarOpen, setSidebarOpen] = useState(false); // Sidebar toggle state
+    const toggleSidebar = () => setSidebarOpen((prev) => !prev);
     const toggleBookmark = (id) => {
         if (bookmarkedIds.includes(id)) {
             setBookmarkedIds(bookmarkedIds.filter((bid) => bid !== id));
@@ -74,8 +75,16 @@ export const Results_page_events = ( ) => {
     return (
         <>
             <div className="fixed top-0 w-full z-50">
-                <Navbar />
+                <Navbar toggleSidebar={toggleSidebar} />
             </div>
+            <div
+                className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${
+                sidebarOpen ? "translate-x-0" : "-translate-x-full"
+            }`}
+            >
+                <Sidebar/>
+            </div>
+            <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
 
             {isLoading ? (
                 <div className="min-w-screen min-h-screen bg-gray-200 flex justify-center items-center">
@@ -149,7 +158,7 @@ export const Results_page_events = ( ) => {
                     </div>
                 </div>
             )}
-
+            </div>
             <div className="w-full z-50">
                 <Footer />
             </div>
