@@ -6,7 +6,7 @@ import Footer from "../footer";
 import { BookmarkIcon } from '@heroicons/react/24/solid';
 import { LuPencil } from "react-icons/lu";
 // import { jobList } from "../../utils/models";
-// import { ScrollToTop } from "../../utils/helper";
+import { ScrollToTop } from "../../utils/helper";
 import axios from "axios";
 import { useAuth } from "../../auth/AuthContext";
 import Sidebar from "../Sidebar";
