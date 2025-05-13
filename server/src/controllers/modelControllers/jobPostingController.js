@@ -9,6 +9,72 @@ import {
   } from "../fileController/fileController.js";
 export const jobPostingController = {
     ...createCRUDController(JobPosting),
+    
+    async create(req, res) {
+        try {
+            const jobDataFromRequest = { ...req.body };
+
+            if (jobDataFromRequest.requirements && typeof jobDataFromRequest.requirements === 'string') {
+                jobDataFromRequest.requirements = [jobDataFromRequest.requirements];
+            } else if (jobDataFromRequest.requirements && !Array.isArray(jobDataFromRequest.requirements)) {
+                jobDataFromRequest.requirements = Object.values(jobDataFromRequest.requirements);
+            }
+
+
+            const jobDocument = {
+                posted_by: jobDataFromRequest.posted_by,
+                job_title: jobDataFromRequest.job_title,
+                company: jobDataFromRequest.company,
+                location: jobDataFromRequest.location,
+                job_description: jobDataFromRequest.job_description,
+                requirements: jobDataFromRequest.requirements || [],
+                application_link: jobDataFromRequest.application_link,
+                start_date: jobDataFromRequest.start_date,
+                end_date: jobDataFromRequest.end_date,
+                status: jobDataFromRequest.status || 'pending',
+                files: [],
+            };
+
+            if (jobDataFromRequest.status === 'approved') {
+                jobDocument.approved_by = jobDataFromRequest.approved_by;
+                jobDocument.approval_date = jobDataFromRequest.approval_date || new Date();
+            }
+
+            if (req.files && req.files.length > 0) {
+                jobDocument.files = req.files.map(file => ({
+                    name: file.originalname,
+                    serverFilename: file.filename, 
+                    type: file.mimetype,
+                    size: file.size,
+                }));
+            }
+
+            const newJobPosting = new JobPosting(jobDocument);
+            const savedJobPosting = await newJobPosting.save();
+
+            res.status(201).json(savedJobPosting);
+
+        } catch (error) {
+            console.error("Error in createJobPostingWithFiles:", error);
+
+            if (req.files && req.files.length > 0) {
+                console.log("Attempting to clean up uploaded files due to an error...");
+                for (const file of req.files) {
+                    try {
+                        await fs.unlink(file.path);
+                        console.log(`Deleted orphaned file: ${file.path}`);
+                    } catch (cleanupError) {
+                        console.error(`Failed to delete orphaned file ${file.path}:`, cleanupError);
+                    }
+                }
+            }
+
+            if (error.name === 'ValidationError') {
+                return res.status(400).json({ message: "Validation Error", errors: error.errors });
+            }
+            res.status(500).json({ message: "Server error while creating job posting" });
+        }
+    },
 
     async adminPageJobs(req, res) {
         try {
@@ -47,19 +113,6 @@ export const jobPostingController = {
     
             console.log("Fetched Jobs:", jobs.length);
             res.status(200).json(jobs);
-        } catch (e) {
-            console.error("Error in jobPostingController.jobResults:", e);
-            res.status(500).json({ message: e.message });
-        }
-    },
-
-    async fetchJobCount (req, res) {
-        try {
-           
-            let jobs = await JobPosting.find(); // Default: no sorting
-            
-            console.log("Fetched Jobs:", jobs.length);
-            res.status(200).json(jobs.length);
         } catch (e) {
             console.error("Error in jobPostingController.jobResults:", e);
             res.status(500).json({ message: e.message });
@@ -169,7 +222,7 @@ export const jobPostingController = {
 
     async uploadJobFiles (req, res){
         req.params.modelName = "JobPosting";
-        req.params.id = req.params.job_id; // Assuming job_id is passed in the URL
+        req.params.id = req.params._id;
         return uploadFilesForModel(req, res);
     },
       
