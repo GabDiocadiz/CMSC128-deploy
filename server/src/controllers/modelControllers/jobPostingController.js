@@ -20,7 +20,6 @@ export const jobPostingController = {
                 jobDataFromRequest.requirements = Object.values(jobDataFromRequest.requirements);
             }
 
-
             const jobDocument = {
                 posted_by: jobDataFromRequest.posted_by,
                 job_title: jobDataFromRequest.job_title,
@@ -40,14 +39,19 @@ export const jobPostingController = {
                 jobDocument.approval_date = jobDataFromRequest.approval_date || new Date();
             }
 
+            const filesForDb = [];
             if (req.files && req.files.length > 0) {
-                jobDocument.files = req.files.map(file => ({
+                req.files.forEach(file => {
+                const fileMetadataObject = {
                     name: file.originalname,
                     serverFilename: file.filename, 
                     type: file.mimetype,
                     size: file.size,
-                }));
+                };
+                filesForDb.push(fileMetadataObject);
+                });
             }
+            jobDocument.files = filesForDb;
 
             const newJobPosting = new JobPosting(jobDocument);
             const savedJobPosting = await newJobPosting.save();

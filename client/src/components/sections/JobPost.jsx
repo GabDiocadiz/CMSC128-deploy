@@ -65,7 +65,7 @@ export const Post_Job = () => {
         setActualFiles(validFiles);
     };
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
@@ -82,6 +82,7 @@ export const Post_Job = () => {
             });
             submissionFormData.append('application_link', formData.application_link);
             submissionFormData.append('status', 'pending');
+            submissionFormData.append('date_posted', Date.now)
             submissionFormData.append('start_date', formData.start_date);
             submissionFormData.append('end_date', formData.end_date);
             submissionFormData.append('posted_by', user?._id);
