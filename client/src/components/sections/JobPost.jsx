@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 import { LuPencil } from "react-icons/lu";
 import { IoIosArrowBack } from "react-icons/io";
-
+import Sidebar from "../Sidebar";
 export const Post_Job = () => {
     const fileInputRef = useRef(null);
     const navigate = useNavigate();
@@ -37,6 +37,9 @@ export const Post_Job = () => {
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const toggleSidebar = () => setSidebarOpen((prev) => !prev);
+
 
     useEffect(() => {
         ScrollToTop();
@@ -62,10 +65,17 @@ export const Post_Job = () => {
     return (
         <>  
             <div className="w-screen">
-                <Navbar />
+                <Navbar toggleSidebar={toggleSidebar}/>
             </div>
-
-            <form
+            <div
+                className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${
+                    sidebarOpen ? "translate-x-0" : "-translate-x-full"
+                }`}
+                >
+             <Sidebar />
+        </div>
+            <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
+                <form
                 onSubmit={handleSubmit}
                 className="bg-gray-100 px-4 sm:px-6 lg:px-10 py-12 flex flex-col items-center gap-8 min-h-screen"
             >
@@ -229,7 +239,7 @@ export const Post_Job = () => {
 
                 {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
             </form>
-
+            </div>
             <div className="w-full z-50">
                 <Footer />
             </div>
