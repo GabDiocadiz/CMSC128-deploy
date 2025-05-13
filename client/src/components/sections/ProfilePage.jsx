@@ -6,9 +6,9 @@ import Navbar from '../header';
 import Footer from '../footer';
 import { ScrollToTop } from '../../utils/helper';
 import { motion } from 'framer-motion';
-import { useAuth } from '../../AuthContext';
+import { useAuth } from '../../auth/AuthContext';
 import './ProfilePage.css';
-
+import Sidebar from '../Sidebar';
 export default function ProfilePage() {
   // const mockEvents = [
   //   { event_id: 1, event_name: "Tech Conference", event_date: "2025-05-15" },
@@ -50,7 +50,8 @@ export default function ProfilePage() {
   const [isHoveringPopup, setIsHoveringPopup] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const [sidebarOpen, setSidebarOpen] = useState(false); // Sidebar toggle state
+  const toggleSidebar = () => setSidebarOpen((prev) => !prev);
   useEffect(() => {
     document.documentElement.classList.remove('dark');
     ScrollToTop();
@@ -105,8 +106,16 @@ export default function ProfilePage() {
   return (
     <div className="fixed inset-0 overflow-y-auto bg-[#891839]">
       <div className="fixed top-0 w-full z-50">
-        <Navbar user_id={user._id} />
+        <Navbar toggleSidebar={toggleSidebar} />
       </div>
+      <div
+          className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+      }`}
+      >
+          <Sidebar/>
+      </div>
+      <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
 
       <motion.main
         className="pt-24 px-4 md:px-6 lg:px-8 w-full max-w-5xl mx-auto space-y-12"
@@ -239,7 +248,7 @@ export default function ProfilePage() {
           <JobList jobs={filteredJobs} />
         </section>
       </motion.main>
-
+      </div>
       <Footer />
     </div>
   );

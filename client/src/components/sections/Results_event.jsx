@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BookmarkIcon } from '@heroicons/react/24/solid';
 import { TbMoodEmpty } from "react-icons/tb";
-import { useAuth } from "../../AuthContext";
+import { useAuth } from "../../auth/AuthContext";
 import axios from "axios";
 import Navbar from "../header";
 import Footer from "../footer";
-
+import Sidebar from "../Sidebar";
 export const Results_page_events = ( ) => {
     const navigate = useNavigate();
     const {authAxios, user} = useAuth();
@@ -16,7 +16,8 @@ export const Results_page_events = ( ) => {
     const [events, setEvents] = useState([]);
 
     const [isLoading, setIsLoading] = useState(true);
-
+    const [sidebarOpen, setSidebarOpen] = useState(false); // Sidebar toggle state
+    const toggleSidebar = () => setSidebarOpen((prev) => !prev);
     const toggleBookmark = (id) => {
         if (bookmarkedIds.includes(id)) {
             setBookmarkedIds(bookmarkedIds.filter((bid) => bid !== id));
@@ -74,8 +75,16 @@ export const Results_page_events = ( ) => {
     return (
         <>
             <div className="fixed top-0 w-full z-50">
-                <Navbar />
+                <Navbar toggleSidebar={toggleSidebar} />
             </div>
+            <div
+                className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${
+                sidebarOpen ? "translate-x-0" : "-translate-x-full"
+            }`}
+            >
+                <Sidebar/>
+            </div>
+            <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
 
             {isLoading ? (
                 <div className="min-w-screen min-h-screen bg-gray-200 flex justify-center items-center">
@@ -100,13 +109,13 @@ export const Results_page_events = ( ) => {
                         </div>
 
                         {/* Display events */}
-                        <div className="flex justify-center w-full overflow-x-hidden">
+                        <div className="flex justify-center w-full overflow-x-hidden mb-35">
                             {events.length > 0 ? (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                                     {events.map(event => (
                                         <div key={event._id} className="flex flex-col h-full bg-white rounded-xl shadow-md overflow-hidden">
                                             <Link to={`/event-details/${event._id}`}>
-                                                <img src={event.image} alt={event.event_name} className="w-full h-48 object-cover" />
+                                                <img src={`http://localhost:5050/uploads/${event.files[0]}`} alt={event.event_name} className="w-full h-48 object-cover" />
                                             </Link>
 
                                             <div className="p-4 flex flex-col h-full">
@@ -149,7 +158,7 @@ export const Results_page_events = ( ) => {
                     </div>
                 </div>
             )}
-
+            </div>
             <div className="w-full z-50">
                 <Footer />
             </div>

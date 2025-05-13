@@ -9,14 +9,14 @@ import BookEventButton from "../buttons/BookEvent";
 import SearchAlumniButton from "../buttons/SearchAlumni";
 import Error_Message from "../error_message";
 import { useParams } from 'react-router-dom';
-import { useAuth } from "../../AuthContext";
-import Speed_Dial_Admin from "../Speed_Dial_Admin";
+import { useAuth } from "../../auth/AuthContext";
+import Sidebar from "../Sidebar";
 export default function MainPage() {
     const {authAxios, user} = useAuth();
     const {user_id} =useParams(); //Contains the User Id 
 
-    const [jobs, setJobs] = useState(jobList);
-    const [events, setEvents] = useState(eventList);
+    const [jobs, setJobs] = useState([]);
+    const [events, setEvents] = useState([]);
     const [announcements, setAnnouncements] = useState(announcementList);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -37,7 +37,8 @@ export default function MainPage() {
 
     const eventIntervalRef = useRef(null);
     const noticeIntervalRef = useRef(null);
-
+    const [sidebarOpen, setSidebarOpen] = useState(false); // Sidebar toggle state
+    const toggleSidebar = () => setSidebarOpen((prev) => !prev);
     // fetch data
     useEffect(() => {
         const fetchData = async () => {
@@ -65,10 +66,6 @@ export default function MainPage() {
                     console.log("No events data or empty array");
                     setEvents([]);
                 }
-                
-                // Fetch announcements
-                // const announcementsResponse = await authAxios.get('/announcements');
-                // setAnnouncements(announcementsResponse.data);
                 
                 setIsLoading(false);
             } catch (err) {
@@ -162,12 +159,17 @@ export default function MainPage() {
                 <Error_Message message={"Testing testing"} setVisible={setError_MessageBool}></Error_Message>
             )} */} 
             <div className="fixed top-0 w-full z-50">
-                <Navbar user_id={user_id}/>
+                <Navbar toggleSidebar={toggleSidebar} />
             </div>
-            {user.user_type ==="Admin" &&(
-                <Speed_Dial_Admin></Speed_Dial_Admin>
-            )}
-            {isLoading ? (
+            <div
+                className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${
+                    sidebarOpen ? "translate-x-0" : "-translate-x-full"
+                }`}
+            >
+                <Sidebar/>
+            </div>
+            <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
+                 {isLoading ? (
                 <div className="min-w-screen min-h-screen bg-gray-200 flex justify-center items-center">
                     <div className="w-16 h-16 border-4 border-[#145C44] border-t-transparent rounded-full animate-spin"></div>
                 </div>
@@ -218,9 +220,15 @@ export default function MainPage() {
                                     className="bg-cover bg-center !text-white flex flex-col justify-center items-end text-right px-8 sm:px-10 py-8 sm:py-10 w-full transition-all duration-1000"
                                     style={{ backgroundImage: `url(${announcements[index].image})` }}
                                 >
-                                    <h2 className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4">
-                                        {announcements[index].title}
-                                    </h2>
+                                    <div>
+                                        <Link
+                                            to={`/announcement-details/${announcements[index].announcement_id}`}
+                                            // state={{ event: events[currentEventIndex] }}
+                                            className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4 hover:!underline"
+                                        >
+                                            {announcements[index].title}
+                                        </Link>
+                                    </div>
                                     <p className="text-sm sm:text-base max-w-md">
                                         {announcements[index].context}
                                     </p>
@@ -297,13 +305,13 @@ export default function MainPage() {
                         <Link to={`/events`}>
                             <BookEventButton />
                         </Link>
-                        <Link to={`/search-alumni`}>
+                        <Link to={user?.user_type === 'Admin' ? '/admin_search-alumni' : '/search-alumni'}>
                             <SearchAlumniButton />
                         </Link>
                     </div>
                 </div>
             )}
-            
+            </div>
             <div className="w-full z-50">
                 <Footer />
             </div>

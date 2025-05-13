@@ -4,11 +4,12 @@ import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../header";
 import Footer from "../footer";
 import { BookmarkIcon } from '@heroicons/react/24/solid';
+import { LuPencil } from "react-icons/lu";
 // import { jobList } from "../../utils/models";
 // import { ScrollToTop } from "../../utils/helper";
 import axios from "axios";
-import { useAuth } from "../../AuthContext";
-
+import { useAuth } from "../../auth/AuthContext";
+import Sidebar from "../Sidebar";
 export const Results_page_jobs = () => {
   const navigate = useNavigate();
   const { authAxios, user } = useAuth();
@@ -18,7 +19,9 @@ export const Results_page_jobs = () => {
   const [jobs, setJobs] = useState([]);
   const [jobButton, setjobButton] = useState(false)
   const [isLoading, setIsLoading] = useState(true);
-
+  const [jobCount, setJobCount] = useState(0);
+  const [sidebarOpen, setSidebarOpen] = useState(false); // Sidebar toggle state
+  const toggleSidebar = () => setSidebarOpen((prev) => !prev);
   const toggleBookmark = (id) => {
     if (bookmarkedIds.includes(id)) {
       setBookmarkedIds(bookmarkedIds.filter((bid) => bid !== id));
@@ -34,13 +37,13 @@ useEffect(() => {
           const response = await authAxios.get(`jobs/job-results?sortBy=${sortBy}`);
 
           setJobs(response.data);
-          
+          setJobCount(response.data.length);
           setIsLoading(false);
           if (jobs.length === 0){
             setjobButton(true)
           }
 
-
+          console.log("Job Count:", response.data.length);
           // Fetch bookmarked jobs
           const bookmarkedResponse = await authAxios.get(`jobs/job-bookmarked`);  
 
@@ -59,17 +62,16 @@ useEffect(() => {
   return (
     <>
       <div className="w-screen pb-10">
-        <Navbar />
+        <Navbar toggleSidebar={toggleSidebar}/>
       </div>
-     {jobButton && (
-       <div>
-       <button
-         onClick={()=>navigate('/post_job')}
-         className="fixed w-auto h-10 bottom-6 right-6 z-50 bg-[#891839]  text-white rounded-2xl px-4 shadow-lg transition-colors duration-300">
-         Post A Job
-       </button>
-     </div>
-     )}
+      <div
+        className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${
+            sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+          <Sidebar/>
+      </div>
+      <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
       {isLoading ? (
           <div className="min-w-screen min-h-screen bg-gray-200 flex justify-center items-center">
               <div className="w-16 h-16 border-4 border-[#145C44] border-t-transparent rounded-full animate-spin"></div>
@@ -94,7 +96,7 @@ useEffect(() => {
               No jobs found.
               <button 
               onClick={()=>navigate('/post_job')}
-              className="bg-[#891839] rounded-xl px-5 py-3 text-2xl text-white mt-5 transform transition-transform duration-300 hover:scale-105">Post a Job</button>
+              className="bg-[#891839] rounded-md px-6 py-3 text-lg text-white font-light mt-5 transform transition-transform duration-300 hover:scale-105 focus:!outline-none">Post a Job</button>
               </div> 
       ) :(
         
@@ -103,19 +105,33 @@ useEffect(() => {
             <div className="container flex flex-col items-start space-y-8 text-black text-left ">
               
               {/* Sort by */}
-              <div className="flex flex-row space-x-4 items-center">
-                <h2>Sort by:</h2>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="border border-gray-400 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Select</option>
-                  <option value="date">Date</option>
-                  <option value="title">Title</option>
-                </select>
+              <div className="w-full flex justify-between items-center">
+                <div className="flex flex-row space-x-4 items-center">
+                  <h2>Sort by:</h2>
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="border border-gray-400 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select</option>
+                    <option value="date">Date</option>
+                    <option value="title">Title</option>
+                  </select>
+                </div>
+                {/* Sort by */}
+
+                {jobButton && (
+                  <div>
+                    <button
+                      onClick={() => navigate('/post_job')}
+                      className="flex items-center space-x-3 bg-[#891839] text-white rounded-md px-6 py-2.5 shadow hover:bg-[#89183aed] cursor-pointer focus:!outline-none"
+                    >
+                      <LuPencil />
+                      <span>Post a Job</span>
+                    </button>
+                  </div>
+                  )}
               </div>
-              {/* Sort by */}
 
               {/* Jobs Display */}
             <div className="flex justify-center w-full">
@@ -123,7 +139,7 @@ useEffect(() => {
               {jobs.map((job) => (
                 <div key={job._id} className="bg-white rounded-xl shadow-md overflow-hidden">
                   <Link to={`/job-details/${job._id}`}>
-                    <img src={job.image || "src/assets/Building.png" } alt={job.job_title} className="w-full h-48 object-cover" />
+                    <img src={`http://localhost:5050/uploads/${job.files[0]}` || "src/assets/Building.png" } alt={job.job_title} className="w-full h-48 object-cover" />
                   </Link>
                   <div className="p-4">
                     
@@ -167,6 +183,7 @@ useEffect(() => {
       )
           
       }
+      </div>
       <div className="w-full z-50">
         <Footer />
       </div>
