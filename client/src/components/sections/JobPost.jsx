@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 import { LuPencil } from "react-icons/lu";
 import { IoIosArrowBack } from "react-icons/io";
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 export const Post_Job = () => {
     const fileInputRef = useRef(null);
@@ -37,26 +38,73 @@ export const Post_Job = () => {
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [files, setFiles] = useState([]);
+    const [actualFiles, setActualFiles] = useState([]);
 
     useEffect(() => {
         ScrollToTop();
     }, []);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setError(null);
-
-        try {
-            const response = await authAxios.post('/jobs/post-job', formData);
-            console.log("Job posted successfully:", response.data);
-            navigate('/jobs');
-        } catch (err) {
-            console.error("Error posting job:", err);
-            setError(err.response?.data?.message || 'Failed to post job.');
-        } finally {
-            setLoading(false);
+    const handleFileChange = (e) => {
+        setFormData({ ...formData, image: e.target.files[0] })
+        const selectedFiles = Array.from(e.target.files);
+        const imageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+    
+        const validFiles = [];
+        const errors = [];
+    
+        selectedFiles.forEach(file => {
+        if (!imageTypes.includes(file.type)) {
+            errors.push(`${file.name} is not a supported image file.`);
+        } else if (file.size > MAX_FILE_SIZE) {
+            errors.push(`${file.name} exceeds the 10MB size limit.`);
+        } else {
+            validFiles.push(file);
         }
+        });
+    
+        if (errors.length > 0) {
+        alert(errors.join('\n')); // Or use a toast/modal/etc.
+        if (fileInputRef.current) fileInputRef.current.value = "";
+        return;
+        }
+    
+        setActualFiles(validFiles);
+    };
+
+    const handleSubmit = async () => {
+    try {
+        const fileFormData = new FormData();
+        actualFiles.forEach(file => fileFormData.append("files[]", file));
+    
+        const file_res = await authAxios.post(`jobs/${formData._id}/upload`, fileFormData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        const uploadedFiles = file_res.data.files.map(file => file.serverFilename)
+
+        const jobPostingData = {
+        posted_by: `${user?._id}`,
+        job_title: formData.job_title,
+        company: formData.company,
+        location: formData.location,
+        job_description: formData.job_description,
+        requirements: formData.requirements,
+        application_link: formData.application_link,
+        start_date: formData.start_date,
+        end_date: formData.end_date,
+        status: "pending",
+        files: uploadedFiles, // Remove this line
+        };
+
+        console.log("Submitting data: ", jobPostingData);
+        const res = await authAxios.post("/jobs/create", jobPostingData); // Send as JSON
+        
+        alert("Job posting submitted successfully!");
+        console.log("Response:", res.data);
+    } catch (err) {
+        console.error("Error creating job posting:", err);
+        alert("Submission failed.");
+    }
     };
 
     return (
@@ -189,9 +237,7 @@ export const Post_Job = () => {
                             accept="image/*"
                             ref={fileInputRef}
                             className="block w-full max-w-xs text-sm text-gray-900 border border-gray-300 rounded-md file:bg-[#891839] file:text-white file:border-none file:px-4 file:py-2"
-                            onChange={(e) =>
-                                setFormData({ ...formData, image: e.target.files[0] })
-                            }
+                            onChange={handleFileChange}
                         />
                     </div>
                 </div>
@@ -213,7 +259,7 @@ export const Post_Job = () => {
                 <div className="flex flex-col sm:flex-row md:flex-row lg:flex-row justify-end w-full gap-4 mt-5 pl-15 pr-15 mb-8">
                     <button
                         type="button"
-                        onClick={() => navigate(-1)}
+                        onClick={handleSubmit}
                         className="bg-[#891839] text-white font-medium px-6 py-2 rounded-md cursor-pointer focus:!outline-none"
                     >
                         Cancel

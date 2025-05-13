@@ -10,62 +10,6 @@ import {
 export const jobPostingController = {
     ...createCRUDController(JobPosting),
 
-    async postJob(req, res) {
-        try {
-            const {
-                job_title,
-                company,
-                location,
-                job_description,
-                requirements,
-                application_link,
-                start_date,
-                end_date,
-                posted_by
-            } = req.body;
-    
-            let status = 'pending';
-            let approved_by = null;
-            let approval_date = null;
-    
-            if (req.user.user_type === 'Admin') {
-                status = 'approved';
-                approved_by = req.user.userId;
-                approval_date = new Date();
-            }
-    
-            const newJob = new JobPosting({
-                posted_by: req.user.userId,
-                job_title,
-                company,
-                location,
-                job_description,
-                requirements,
-                application_link,
-                date_posted: new Date(),
-                start_date,
-                end_date,
-                status,
-                approved_by,
-                approval_date
-            });
-            
-            const savedJob = await newJob.save();
-    
-            if (req.user.user_type === 'Alumni') {
-                await User.findByIdAndUpdate(req.user.userId, {
-                    $push: { job_postings: savedJob._id }
-                });
-            }
-    
-            res.status(201).json({ message: 'Job posted successfully', job: savedJob });
-    
-        } catch (error) {
-            console.error('Error posting job:', error);
-            res.status(500).json({ message: 'Failed to post job', error: error.message });
-        }
-    },
-
     async adminPageJobs(req, res) {
         try {
             const items = await JobPosting.find({status: 'approved'})
@@ -108,6 +52,7 @@ export const jobPostingController = {
             res.status(500).json({ message: e.message });
         }
     },
+
     async fetchJobCount (req, res) {
         try {
            
@@ -120,6 +65,7 @@ export const jobPostingController = {
             res.status(500).json({ message: e.message });
         }
     },
+
     async approveJob(req, res){
         try {
             const {userId, jobId} = req.body;
@@ -142,6 +88,7 @@ export const jobPostingController = {
             res.status(500).json({ message: "Internal server error" });
         }
     },
+
     async disapproveJob(req, res){
         try {
             const {userId, jobId} = req.body;
@@ -164,8 +111,9 @@ export const jobPostingController = {
             res.status(500).json({ message: "Internal server error" });
         }
     },
+
      //  Add Bookmark
-     async bookmarkJob(req, res) {
+    async bookmarkJob(req, res) {
         try {
             const { userId, jobId } = req.body;
 

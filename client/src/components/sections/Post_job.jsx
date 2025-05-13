@@ -21,7 +21,6 @@ export const Post_Job = () => {
     const [requirementsOptions, setRequirementsOptions] = useState(jobRequiremets.map(req => ({ value: req, label: req })));
     const [selectedRequirements, setSelectedRequirements] = useState([]);
     const [formData, setFormData] = useState({
-        job_id: 0,
         job_title: "",
         company: "",
         location: "",
@@ -75,39 +74,39 @@ export const Post_Job = () => {
     }, []);
 
     const handleSubmit = async () => {
-        try {
-          const fileFormData = new FormData();
-          actualFiles.forEach(file => fileFormData.append("files[]", file));
-      
-          const file_res = await axios.post(`http://localhost:5050/jobs/${formData.job_id}/upload`, fileFormData, {
-            headers: { "Content-Type": "multipart/form-data" },
-          });
-          const uploadedFiles = file_res.data.files.map(file => file.serverFilename)
-          const jobcnt_res = await axios.get(`http://localhost:5050/jobs/job-count`);
-          const jobPostingData = {
-            job_id: (jobcnt_res.data)+1,
-            posted_by: `${user?._id}`,
-            job_title: formData.job_title,
-            company: formData.company,
-            location: formData.location,
-            job_description: formData.job_description,
-            requirements: formData.requirements,
-            application_link: formData.application_link,
-            start_date: formData.start_date,
-            end_date: formData.end_date,
-            date_posted: new Date(),
-            status: "pending",
-            files: uploadedFiles, // Remove this line
-          };
-          console.log(jobPostingData);
-          const res = await axios.post("http://localhost:5050/jobs/create", jobPostingData); // Send as JSON
-          alert("Job posting submitted successfully!");
-          console.log("Response:", res.data);
-        } catch (err) {
-          console.error("Error creating job posting:", err);
-          alert("Submission failed.");
-        }
-      };
+      try {
+        const fileFormData = new FormData();
+        actualFiles.forEach(file => fileFormData.append("files[]", file));
+    
+        // const file_res = await authAxios.post(`jobs/${formData.job_id}/upload`, fileFormData, {
+        //   headers: { "Content-Type": "multipart/form-data" },
+        // });
+        const uploadedFiles = file_res.data.files.map(file => file.serverFilename)
+
+        const jobPostingData = {
+          posted_by: `${user?._id}`,
+          job_title: formData.job_title,
+          company: formData.company,
+          location: formData.location,
+          job_description: formData.job_description,
+          requirements: formData.requirements,
+          application_link: formData.application_link,
+          start_date: formData.start_date,
+          end_date: formData.end_date,
+          status: "pending",
+          files: uploadedFiles, // Remove this line
+        };
+
+        console.log("Submitting data: ", jobPostingData);
+        const res = await authAxios.post("/jobs/create", jobPostingData); // Send as JSON
+        
+        alert("Job posting submitted successfully!");
+        console.log("Response:", res.data);
+      } catch (err) {
+        console.error("Error creating job posting:", err);
+        alert("Submission failed.");
+      }
+    };
       
     return(
         <>  

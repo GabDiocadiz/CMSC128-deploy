@@ -40,6 +40,7 @@ app.use("/events", eventRoutes);
 app.use("/notifications", notificationRoutes);
 app.use("/announcement", communicationRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
+
 // temporary default route -- remove when connecting to frontend
 app.get('/', (req, res) => {
   res.send('API is running');
