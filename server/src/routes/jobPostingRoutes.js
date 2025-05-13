@@ -24,4 +24,6 @@ router.post("/:job_id/upload", upload.array('files[]'), jobPostingController.upl
 
 router.get('/:job_id/files',jobPostingController.getJobFiles);
 
+router.get('/find-job/:id', validateToken, authorizeRoles(["Admin", "Alumni"]), jobPostingController.findJobById);
+
 export default router;
