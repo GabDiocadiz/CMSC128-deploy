@@ -9,7 +9,7 @@ import { LuPencil } from "react-icons/lu";
 // import { ScrollToTop } from "../../utils/helper";
 import axios from "axios";
 import { useAuth } from "../../auth/AuthContext";
-
+import Sidebar from "../Sidebar";
 export const Results_page_jobs = () => {
   const navigate = useNavigate();
   const { authAxios, user } = useAuth();
@@ -20,6 +20,8 @@ export const Results_page_jobs = () => {
   const [jobButton, setjobButton] = useState(false)
   const [isLoading, setIsLoading] = useState(true);
   const [jobCount, setJobCount] = useState(0);
+  const [sidebarOpen, setSidebarOpen] = useState(false); // Sidebar toggle state
+  const toggleSidebar = () => setSidebarOpen((prev) => !prev);
   const toggleBookmark = (id) => {
     if (bookmarkedIds.includes(id)) {
       setBookmarkedIds(bookmarkedIds.filter((bid) => bid !== id));
@@ -60,9 +62,16 @@ useEffect(() => {
   return (
     <>
       <div className="w-screen pb-10">
-        <Navbar />
+        <Navbar toggleSidebar={toggleSidebar}/>
       </div>
-     
+      <div
+        className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${
+            sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+          <Sidebar/>
+      </div>
+      <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
       {isLoading ? (
           <div className="min-w-screen min-h-screen bg-gray-200 flex justify-center items-center">
               <div className="w-16 h-16 border-4 border-[#145C44] border-t-transparent rounded-full animate-spin"></div>
@@ -174,6 +183,7 @@ useEffect(() => {
       )
           
       }
+      </div>
       <div className="w-full z-50">
         <Footer />
       </div>
