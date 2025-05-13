@@ -9,7 +9,7 @@ import humanIcon from "../assets/Human Icon.png";
 import { useAuth } from "../auth/AuthContext";
 
 import axios from "axios";
-export default function Navbar_admin() {
+export default function Navbar_admin({toggleSidebar}) {
   const { authAxios, user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate()
@@ -57,13 +57,25 @@ export default function Navbar_admin() {
               <Notification setVisible={setnotification_modal}></Notification>
             </div>
           )}
-    <nav className="bg-white w-full py-1 fixed top-0 left-0 z-20">
+    <nav className="bg-white w-full py-1 fixed top-0 left-0 z-60">
       {/* Flexbox for proper alignment */}
       <div className="container flex justify-between items-center py-1 px-4">
         {/* Left - Logo */}
-        <a href="/">
-          <img src="src/assets/uplblogo.png" className="bg-none w-40 h-auto" draggable="false" alt="UPLB Logo" />
-        </a>
+        <div className="flex">
+          <a
+            href="#"
+            onClick={toggleSidebar}
+            className="flex justify-center items-center  !text-black pr-4">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            </svg>
+              
+          </a>
+            {/* Left - Logo */}
+          <Link to="/admin_main">
+            <img src={uplbLogo} className="bg-none w-40 h-auto" alt="UPLB Logo" />
+          </Link>
+        </div>
         {/* Modal for Sending An Announcement */}
         {isOpen && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
