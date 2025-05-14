@@ -12,6 +12,8 @@ import { useAuth } from "../../auth/AuthContext";
 import { LuPencil } from "react-icons/lu";
 import { IoIosArrowBack } from "react-icons/io";
 import Sidebar from "../Sidebar";
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+
 export const Post_Job = () => {
     const fileInputRef = useRef(null);
     const navigate = useNavigate();
@@ -19,31 +21,52 @@ export const Post_Job = () => {
     const [requirementsOptions, setRequirementsOptions] = useState(jobRequiremets.map(req => ({ value: req, label: req })));
     const [selectedRequirements, setSelectedRequirements] = useState([]);
     const [formData, setFormData] = useState({
-        job_id: "",
         job_title: "",
         company: "",
         location: "",
         job_description: "",
         requirements: [],
         application_link: "",
-        date_posted: new Date(),
-        start_date: new Date(),
-        end_date: new Date(), 
-        status: user?.user_type === 'Admin' ? 'approved' : 'pending',
-        approved_by: user?.user_type === 'Admin' ? user?._id : "",
-        approval_date: user?.user_type === 'Admin' ? new Date() : null,
-        posted_by: user?._id,
-        image: null,
+        start_date: new Date().toISOString().split('T')[0],
+        end_date: new Date().toISOString().split('T')[0],
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [actualFiles, setActualFiles] = useState([]);
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const toggleSidebar = () => setSidebarOpen((prev) => !prev);
-
 
     useEffect(() => {
         ScrollToTop();
     }, []);
+
+    const handleFileChange = (e) => {
+        setFormData({ ...formData, image: e.target.files[0] })
+        const selectedFiles = Array.from(e.target.files);
+        const imageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+    
+        const validFiles = [];
+        const errors = [];
+    
+        selectedFiles.forEach(file => {
+        if (!imageTypes.includes(file.type)) {
+            errors.push(`${file.name} is not a supported image file.`);
+        } else if (file.size > MAX_FILE_SIZE) {
+            errors.push(`${file.name} exceeds the 10MB size limit.`);
+        } else {
+            validFiles.push(file);
+        }
+        });
+    
+        if (errors.length > 0) {
+            alert(errors.join('\n')); // Or use a toast/modal/etc.
+            if (fileInputRef.current) fileInputRef.current.value = "";
+            setActualFiles([])
+            return;
+        }
+    
+        setActualFiles(validFiles);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -51,14 +74,34 @@ export const Post_Job = () => {
         setError(null);
 
         try {
-            const response = await authAxios.post('/jobs/post-job', formData);
-            console.log("Job posted successfully:", response.data);
-            navigate('/jobs');
+            const submissionFormData = new FormData();
+
+            submissionFormData.append('job_title', formData.job_title);
+            submissionFormData.append('company', formData.company);
+            submissionFormData.append('location', formData.location);
+            submissionFormData.append('job_description', formData.job_description);
+            formData.requirements.forEach((req, index) => {
+                submissionFormData.append(`requirements[${index}]`, req);
+            });
+            submissionFormData.append('application_link', formData.application_link);
+            submissionFormData.append('status', 'pending');
+            submissionFormData.append('date_posted', Date.now)
+            submissionFormData.append('start_date', formData.start_date);
+            submissionFormData.append('end_date', formData.end_date);
+            submissionFormData.append('posted_by', user?._id);
+            
+            actualFiles.forEach(fileObject => {
+                submissionFormData.append("files[]", fileObject, fileObject.name);
+            });
+            
+            const res = await authAxios.post("/jobs/create", submissionFormData, {});
+
+            alert("Job posting submitted successfully!");
+            console.log("Response:", res.data);
+            navigate(`/jobs`);
         } catch (err) {
-            console.error("Error posting job:", err);
-            setError(err.response?.data?.message || 'Failed to post job.');
-        } finally {
-            setLoading(false);
+            console.error("Error creating job posting:", err);
+            alert("Submission failed.");
         }
     };
 
@@ -109,7 +152,7 @@ export const Post_Job = () => {
                                     placeholder={`Enter ${label}`}
                                     className="flex-1 border border-gray-300 rounded-md p-2 placeholder:text-sm text-sm"
                                     value={formData[key]}
-                                    onChange={(e) => setFormData({ ...formData, [key]: e.target.value })}
+                                    onChange={(e) => {setFormData({ ...formData, [key]: e.target.value })}}
                                 />
                             </div>
                         ))}
@@ -199,9 +242,7 @@ export const Post_Job = () => {
                             accept="image/*"
                             ref={fileInputRef}
                             className="block w-full max-w-xs text-sm text-gray-900 border border-gray-300 rounded-md file:bg-[#891839] file:text-white file:border-none file:px-4 file:py-2 cursor-pointer"
-                            onChange={(e) =>
-                                setFormData({ ...formData, image: e.target.files[0] })
-                            }
+                            onChange={handleFileChange}
                         />
                     </div>
                 </div>
@@ -223,7 +264,7 @@ export const Post_Job = () => {
                 <div className="flex flex-col sm:flex-row md:flex-row lg:flex-row justify-end w-full gap-4 mt-5 pl-15 pr-15 mb-8">
                     <button
                         type="button"
-                        onClick={() => navigate(-1)}
+                        onClick={handleSubmit}
                         className="bg-[#891839] text-white font-medium px-6 py-2 rounded-md cursor-pointer focus:!outline-none"
                     >
                         Cancel
