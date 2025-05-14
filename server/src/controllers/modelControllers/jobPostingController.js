@@ -229,5 +229,19 @@ export const jobPostingController = {
     async getJobFiles(req, res) {
         req.params.modelName = "JobPosting";
         return getFilesForModel(req, res);
-    }
+    },
+
+    async findJobById(req, res) {
+        try {
+            const { id } = req.params;
+            const job = await JobPosting.findById(id);
+            if (!job) {
+                return res.status(404).json({ message: "Job not found" });
+            }
+            res.status(200).json(job);
+        } catch (e) {
+            console.error("Error in jobController.findJobById:", e);
+            res.status(500).json({ message: e.message });
+        }
+    },
 }

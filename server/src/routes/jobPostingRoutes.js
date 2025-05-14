@@ -12,7 +12,6 @@ router.get("/all", validateToken, authorizeRoles(["Admin", "Alumni"], jobPosting
 router.get("/admin-page-jobs", validateToken, authorizeRoles(["Admin"]), jobPostingController.adminPageJobs);
 router.get("/admin-page-job-requests", validateToken, authorizeRoles(["Admin"]), jobPostingController.adminPageJobRequests);
 router.get("/job-results", validateToken, authorizeRoles(["Admin", "Alumni"]), jobPostingController.jobResults);
-router.get("/job-bookmarked", validateToken, authorizeRoles(["Admin", "Alumni"]), jobPostingController.bookmarkJob);
 
 router.put("/:job_id/approve", jobPostingController.approveJob);
 router.put("/:job_id/reject", jobPostingController.disapproveJob);
@@ -23,5 +22,11 @@ router.get("/job-count", jobPostingController.fetchJobCount);
 router.post("/:job_id/upload", upload.array('files[]'), jobPostingController.uploadJobFiles);
 
 router.get('/:job_id/files',jobPostingController.getJobFiles);
+
+router.get('/find-job/:id', validateToken, authorizeRoles(["Admin", "Alumni"]), jobPostingController.findJobById);
+
+router.post("/bookmark", validateToken, authorizeRoles(["Admin", "Alumni"]), jobPostingController.bookmarkJob);
+router.post("/unbookmark", validateToken, authorizeRoles(["Admin", "Alumni"]), jobPostingController.unbookmarkJob);
+router.get("/job-bookmarked", validateToken, authorizeRoles(["Admin", "Alumni"]), jobPostingController.getbookmarked_jobs);
 
 export default router;
