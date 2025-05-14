@@ -87,7 +87,7 @@ const Login = () => {
                                 />
                                 <button
                                     type="submit"
-                                    className="w-full bg-[#891839] text-white font-bold p-2 rounded-md hover:bg-red-700 transition focus:!outline-none"
+                                    className="w-full bg-[#891839] text-white font-bold p-2 rounded-md hover:bg-red-700 transition focus:!outline-none cursor-pointer"
                                 >
                                     Login
                                 </button>
@@ -96,7 +96,7 @@ const Login = () => {
     
                                 <button
                                     type="button"
-                                    className="w-full bg-[#085740] font-bold text-white p-2 rounded-md hover:bg-green-700 transition focus:!outline-none"
+                                    className="w-full bg-[#085740] font-bold text-white p-2 rounded-md hover:bg-green-700 transition focus:!outline-none cursor-pointer"
                                     onClick={() => navigate('/reg')}
                                 >
                                     Register

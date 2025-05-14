@@ -47,11 +47,11 @@ export const Landing_page = () => {
         </div>
         <div className="flex justify-end pb-15 pr-25">
           <div className="flex gap-4">
-            <button className="text-base sm:text-lg lg:text-xl text-white h-[50px] sm:h-[60px] w-[140px] sm:w-[180px] font-bold px-4 py-2 border-2 border-white rounded-md hover:bg-white hover:text-[#085740]"
+            <button className="text-base sm:text-lg lg:text-xl text-white h-[50px] sm:h-[60px] w-[140px] sm:w-[180px] font-bold px-4 py-2 border-2 border-white rounded-md hover:bg-white hover:text-[#085740] cursor-pointer"
               onClick={()=> navigate('/login')}>
               Log In
             </button>
-            <button className="text-base sm:text-lg lg:text-xl text-white h-[50px] sm:h-[60px] w-[170px] sm:w-[190px] font-bold px-4 py-2 border-2 border-white rounded-md hover:bg-white hover:text-[#085740]">
+            <button className="text-base sm:text-lg lg:text-xl text-white h-[50px] sm:h-[60px] w-[170px] sm:w-[190px] font-bold px-4 py-2 border-2 border-white rounded-md hover:bg-white hover:text-[#085740] cursor-pointer">
               View Job Listing
             </button>
           </div>

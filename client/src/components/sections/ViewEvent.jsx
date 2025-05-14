@@ -4,6 +4,7 @@ import { FaLocationDot } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import { ScrollToTop } from "../../utils/helper";
 import { useAuth } from "../../auth/AuthContext";
+import default_eventbg from "../../assets/event_placeholder.png";
 import Navbar from "../header";
 import Footer from "../footer";
 import axios from "axios";
@@ -11,6 +12,7 @@ import axios from "axios";
 export default function ViewEventDetails() {
     const { id } = useParams();
     const [event, setEvent] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
     const { authAxios, user } = useAuth();
     const navigate = useNavigate();
     console.log(id);
@@ -18,11 +20,12 @@ export default function ViewEventDetails() {
     useEffect(() => {
         const fetchedEvent = async () => {
             try {
+                setIsLoading(true);
                 const response = await authAxios.get(`http://localhost:5050/events/find-event/${id}`);
 
                 setEvent(response.data);
                 console.log("Fetched Event:", response.data);
-
+                setIsLoading(false);
             } catch (error) {
                 if (error.response?.status === 401 || error.response?.status === 403) {
                     console.log("Token invalid/expired. Attempting refresh...");
@@ -45,12 +48,15 @@ export default function ViewEventDetails() {
                         } else {
                             navigate("/login");
                         }
+                        setIsLoading(false);
                     } catch (refreshError) {
                         console.error("Token refresh failed:", refreshError);
                         navigate("/login");
+                        setIsLoading(false);
                     }
                 } else {
                     console.error("Error fetching event:", error);
+                    setIsLoading(false);
                 }
             }
 
@@ -72,14 +78,27 @@ export default function ViewEventDetails() {
             </div>
 
             <div className="w-screen pt-12">
-                <div
-                    className="min-h-[85vh] bg-cover bg-center text-white flex flex-col justify-center items-start px-4 sm:px-8 md:px-16 pb-10 w-full"
-                    style={{ backgroundImage: `url(${event.image})` }}
-                >
-                    <div className="flex flex-col lg:flex-row justify-center w-full">
+
+            {isLoading ? (
+                <div className="min-w-screen min-h-screen bg-gray-200 flex justify-center items-center">
+                    <div className="w-16 h-16 border-4 border-[#145C44] border-t-transparent rounded-full animate-spin"></div>
+                </div>
+            ) : (
+                <div className="min-h-[85vh] bg-cover bg-center text-white flex justify-center items-center px-4 sm:px-8 md:px-16 pb-10 w-full"
+                    style={{
+                        backgroundImage: `url(${
+                        event?.files?.[0]?.trim()
+                            ? `http://localhost:5050/uploads/${event.files[0]}`
+                            : default_eventbg
+                        })`
+                    }}
+                    >
+                    <div className="absolute inset-0 bg-black opacity-60 z-0"></div>
+
+                    <div className="relative z-10 flex flex-col lg:flex-row justify-center items-center w-full h-full">
                         <div className="w-full lg:w-[40%]">
                             <div
-                                className="flex items-center gap-2 cursor-pointer text-white hover:text-gray-300 mb-6 mt-10 sm:mt-[5vh] lg:mt-[8vh]"
+                                className="flex items-center gap-2 cursor-pointer text-white hover:text-gray-200 mb-6 mt-10 sm:mt-[5vh] lg:mt-[8vh]"
                                 onClick={() => navigate(-1)}
                             >
                                 <IoIosArrowBack className="text-sm" />
@@ -119,13 +138,14 @@ export default function ViewEventDetails() {
                             )}
                         </div>
 
-                        <div className="w-full lg:w-[50%] mt-8 mb-10 lg:mt-[10vh] lg:ml-[5vw] px-5">
-                            <div className="text-left relative whitespace-pre-line border-2 rounded-2xl p-5 h-[50vh] overflow-y-auto pr-5 bg-transparent text-white scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-neutral-500 dark:scrollbar-track-neutral-700">
+                        <div className="w-full lg:w-[50%] mt-8 mb-10 lg:mt-[10vh] lg:ml-[5vw] px-5 pt-7 ">
+                            <div className="text-left relative whitespace-pre-line border-2 rounded-2xl p-5 h-[20vh] sm:h-[20vh] md:h-[20vh] lg:h-[50vh] overflow-y-auto pr-5 bg-transparent text-white scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-neutral-500 dark:scrollbar-track-neutral-700">
                                 {event.event_description}
                             </div>
                         </div>
                     </div>
                 </div>
+                )}
             </div>
 
             <div className="w-full z-50">
