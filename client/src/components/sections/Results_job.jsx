@@ -5,6 +5,7 @@ import Navbar from "../header";
 import Footer from "../footer";
 import { BookmarkIcon } from '@heroicons/react/24/solid';
 import { LuPencil } from "react-icons/lu";
+import { CgWorkAlt } from "react-icons/cg";
 // import { jobList } from "../../utils/models";
 import { ScrollToTop } from "../../utils/helper";
 import axios from "axios";
@@ -100,79 +101,84 @@ useEffect(() => {
               </div> 
       ) :(
         
-        <div className="min-w-screen min-h-screen bg-gray-200 px-10 py-20 pb-30 flex flex-col justify-center items-center">
+        <div className="min-w-screen min-h-screen bg-gray-200 px-15 lg:px-25 pt-19 flex flex-col justify-center items-center">
           
             <div className="container flex flex-col items-start space-y-8 text-black text-left ">
-              
-              {/* Sort by */}
-              <div className="w-full flex justify-between items-center">
-                <div className="flex flex-row space-x-4 items-center">
-                  <h2>Sort by:</h2>
-                  <select
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                    className="border border-gray-400 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
-                  >
-                    <option value="">Select</option>
-                    <option value="date">Date</option>
-                    <option value="title">Title</option>
-                  </select>
+              <div className="flex flex-col justify-between items-start w-full">
+                <div className="flex items-center space-x-3 pb-8">
+                    <CgWorkAlt className="text-5xl lg:text-7xl text-[#145C44]" />
+                    <h2 className="text-5xl lg:text-6xl text-[#145C44] font-semibold">Job Listings</h2>
                 </div>
                 {/* Sort by */}
-
-                {jobButton && (
-                  <div>
-                    <button
-                      onClick={() => navigate('/post_job')}
-                      className="flex items-center space-x-3 bg-[#891839] text-white rounded-md px-6 py-2.5 shadow hover:bg-[#89183aed] cursor-pointer focus:!outline-none"
+                <div className="w-full flex justify-between items-center">
+                  <div className="flex flex-row space-x-4 items-center px-2">
+                    <h2>Sort by:</h2>
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value)}
+                      className="border border-gray-400 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
                     >
-                      <LuPencil />
-                      <span>Post a Job</span>
-                    </button>
+                      <option value="">Select</option>
+                      <option value="date">Date</option>
+                      <option value="title">Title</option>
+                    </select>
                   </div>
-                  )}
-              </div>
+                  {/* Sort by */}
 
-              {/* Jobs Display */}
-            <div className="flex justify-center w-full">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {jobs.map((job) => (
-                <div key={job._id} className="bg-white rounded-xl shadow-md overflow-hidden">
-                  <Link to={`/job-details/${job._id}`}>
-                    <img src={`http://localhost:5050/uploads/${job.files[0]}` || "src/assets/Building.png" } alt={job.job_title} className="w-full h-48 object-cover" />
-                  </Link>
-                  <div className="p-4">
-                    
-                    {/* Moved bookmark icon here */}
-                    <div className="flex justify-end mb-2">
+                  {jobButton && (
+                    <div>
                       <button
-                        onClick={() => toggleBookmark(job._id)}
-                        className="text-white-400 hover:text-white-500 focus:outline-none"
-                        title={bookmarkedIds.includes(job._id) ? "Remove Bookmark" : "Bookmark"}
+                        onClick={() => navigate('/post_job')}
+                        className="flex items-center space-x-3 bg-[#891839] text-white rounded-md mr-2 px-4 py-2 md:px-6 md:py-2.5 lg:px-6 lg:py-2.5 shadow hover:bg-[#89183aed] cursor-pointer focus:!outline-none"
                       >
-                        {bookmarkedIds.includes(job._id) ? (
-                          <BookmarkIcon className="w-6 h-6" />
-                        ) : (
-                          <BookmarkIcon className="w-6 h-6 opacity-50" />
-                        )}
+                        <LuPencil />
+                        <span>Post a Job</span>
                       </button>
                     </div>
-
-                    {/* Text content */}
-                    <h2 className="text-xl font-semibold mb-1">{job.job_title}</h2>
-                    <h3 className="text-lg text-gray-600 mb-1">{job.company}</h3>
-                    <p className="text-sm text-gray-500 mb-2">{job.location}</p>
-                    <p className="text-gray-700">{job.job_description}</p>
-                    <p className="text-sm text-right text-gray-500 mb-2">
-                      {new Date(job.date_posted).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                      })}
-                      </p>
-                  </div>
+                    )}
                 </div>
-              ))}
+
+                {/* Jobs Display */}
+              <div className="flex justify-center w-full mb-35 mt-5 px-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {jobs.map((job) => (
+                  <div key={job._id} className="bg-white rounded-xl shadow-md overflow-hidden">
+                    <Link to={`/job-details/${job._id}`}>
+                      <img src={`http://localhost:5050/uploads/${job.files[0]}` || "src/assets/Building.png" } alt={job.job_title} className="w-full h-48 object-cover" />
+                    </Link>
+                    <div className="p-4">
+                      
+                      {/* Moved bookmark icon here */}
+                      <div className="flex justify-end mb-2">
+                        <button
+                          onClick={() => toggleBookmark(job._id)}
+                          className="text-white-400 hover:text-white-500 focus:outline-none"
+                          title={bookmarkedIds.includes(job._id) ? "Remove Bookmark" : "Bookmark"}
+                        >
+                          {bookmarkedIds.includes(job._id) ? (
+                            <BookmarkIcon className="w-6 h-6" />
+                          ) : (
+                            <BookmarkIcon className="w-6 h-6 opacity-50" />
+                          )}
+                        </button>
+                      </div>
+
+                      {/* Text content */}
+                      <h2 className="text-xl font-semibold mb-1">{job.job_title}</h2>
+                      <h3 className="text-lg text-gray-600 mb-1">{job.company}</h3>
+                      <p className="text-sm text-gray-500 mb-2">{job.location}</p>
+                      <p className="text-gray-700">{job.job_description}</p>
+                      <p className="text-sm text-right text-gray-500 mb-2">
+                        {new Date(job.date_posted).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        })}
+                        </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
               </div>
               {/* Jobs Display */}
