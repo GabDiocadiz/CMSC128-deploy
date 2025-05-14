@@ -198,7 +198,7 @@ export const Post_Job = () => {
                             type="file"
                             accept="image/*"
                             ref={fileInputRef}
-                            className="block w-full max-w-xs text-sm text-gray-900 border border-gray-300 rounded-md file:bg-[#891839] file:text-white file:border-none file:px-4 file:py-2"
+                            className="block w-full max-w-xs text-sm text-gray-900 border border-gray-300 rounded-md file:bg-[#891839] file:text-white file:border-none file:px-4 file:py-2 cursor-pointer"
                             onChange={(e) =>
                                 setFormData({ ...formData, image: e.target.files[0] })
                             }

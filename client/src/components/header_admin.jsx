@@ -161,7 +161,7 @@ export default function Navbar_admin({toggleSidebar}) {
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="block w-full px-4 py-2 !text-gray-700 hover:bg-[#891839] hover:!text-white focus:!outline-none"
+                    className="block w-full px-4 py-2 !text-gray-700 hover:bg-[#891839] hover:!text-white focus:!outline-none cursor-pointer"
                   >
                     Logout
                   </button>
