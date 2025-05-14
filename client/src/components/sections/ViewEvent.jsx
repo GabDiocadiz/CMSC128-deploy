@@ -98,7 +98,7 @@ export default function ViewEventDetails() {
                     <div className="relative z-10 flex flex-col lg:flex-row justify-center items-center w-full h-full">
                         <div className="w-full lg:w-[40%]">
                             <div
-                                className="flex items-center gap-2 cursor-pointer text-white hover:text-gray-300 mb-6 mt-10 sm:mt-[5vh] lg:mt-[8vh]"
+                                className="flex items-center gap-2 cursor-pointer text-white hover:text-gray-200 mb-6 mt-10 sm:mt-[5vh] lg:mt-[8vh]"
                                 onClick={() => navigate(-1)}
                             >
                                 <IoIosArrowBack className="text-sm" />
