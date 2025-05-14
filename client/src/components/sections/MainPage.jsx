@@ -186,22 +186,31 @@ export default function MainPage() {
                     >
                     {/* Events */}
                     {events.length > 0 ? (
-                        <div className={`${ announcements.length === 0 ? 'col-span-1 sm:col-span-3' : 'col-span-1 sm:col-span-2'}
+                        <div className={`${announcements.length === 0 ? 'col-span-1 sm:col-span-3' : 'col-span-1 sm:col-span-2'}
                         bg-cover bg-center text-white flex flex-col justify-center items-start px-8 py-16 sm:px-16 sm:py-32 w-full transition-all duration-1000 relative group`}
-                        style={{ backgroundImage: `url(${events[currentEventIndex].image})` }}
-                        >
+                        style={{
+                        backgroundImage: `url(${
+                            events[currentEventIndex]?.files?.[0]
+                            ? `http://localhost:5050/uploads/${events[currentEventIndex].files[0]}`
+                            : default_eventbg
+                        })`
+                        }}
+                    >
+                        <div className="absolute inset-0 bg-black opacity-60 z-0"></div>
+                
                         <div className="relative z-10 group/title">
                             <Link
                                 to={`/event-details/${events[currentEventIndex]._id}`}
                                 state={{ event: events[currentEventIndex] }}
-                                className="!text-white !text-3xl sm:!text-4xl md:!text-7xl !font-bold !mb-4 !text-left cursor-pointer block w-full relative z-10 hover:!underline"
+                                className="!text-white !text-3xl sm:!text-4xl md:!text-7xl !font-bold !mb-4 !text-left cursor-pointer block w-full hover:!underline"
                             >
-                            {events[currentEventIndex].event_name}
+                                {events[currentEventIndex].event_name}
                             </Link>
+
+                            <div className="!text-white !text-md sm:!text-lg !max-w-2xl !text-left">
+                                {events[currentEventIndex].event_description}
+                            </div>
                         </div>
-                        <p className="!text-md sm:!text-lg !max-w-2xl !text-left">
-                            {events[currentEventIndex].event_description}
-                        </p>
 
                         {events.length > 1 && (
                             <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex items-center space-x-4">
