@@ -7,17 +7,19 @@ import Navbar from "../header";
 import Footer from "../footer";
 import BookEventButton from "../buttons/BookEvent";
 import SearchAlumniButton from "../buttons/SearchAlumni";
+import notice1 from "../../assets/notice1.png"  // default bg for announcement
+import notice2 from "../../assets/notice2.png"  // default bg for announcement
 import Error_Message from "../error_message";
 import { useParams } from 'react-router-dom';
 import { useAuth } from "../../auth/AuthContext";
 import Sidebar from "../Sidebar";
 export default function MainPage() {
     const {authAxios, user} = useAuth();
-    const {user_id} =useParams(); //Contains the User Id 
+    const {user_id} = useParams(); //Contains the User Id 
 
     const [jobs, setJobs] = useState([]);
     const [events, setEvents] = useState([]);
-    const [announcements, setAnnouncements] = useState(announcementList);
+    const [announcements, setAnnouncements] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
     // for events and announcements slideshow
@@ -108,7 +110,7 @@ export default function MainPage() {
                 sessionStorage.setItem("currentEventIndex", next.toString());
                 return next;
             });
-        }, 20000);   // 20sec interval for each event
+        }, 30000);   // 30sec interval for each event
     };
 
     const startNoticeInterval = () => {
@@ -124,7 +126,7 @@ export default function MainPage() {
                 sessionStorage.setItem("evenNoticeIndex", next.toString());
                 return next;
             });
-        }, 30000);   // 30sec interval per two announcements
+        }, 20000);   // 20sec interval per two announcements
     };
 
     const handlePrevEvent = () => {
@@ -175,66 +177,138 @@ export default function MainPage() {
                 </div>
             ) : (
                 <div className="w-full min-w-screen min-h-screen pt-12">
-                    <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-0 min-h-[600px]">
-                        {/* Events */}
-                        {events.length > 0 && (
-                            <div
-                                className="col-span-1 sm:col-span-2 bg-cover bg-center text-white flex flex-col justify-center items-start px-8 py-16 sm:px-16 sm:py-32 w-full transition-all duration-1000 relative group"
-                                style={{ backgroundImage: `url(${events[currentEventIndex].image})` }}
+                    <div
+                        className={`w-full grid gap-0 ${
+                            events.length === 0 && announcements.length === 1
+                            ? 'min-h-[400px] grid-cols-1'
+                            : 'min-h-[600px] grid-cols-1 sm:grid-cols-3'
+                        }`}
+                    >
+                    {/* Events */}
+                    {events.length > 0 ? (
+                        <div className={`${ announcements.length === 0 ? 'col-span-1 sm:col-span-3' : 'col-span-1 sm:col-span-2'}
+                        bg-cover bg-center text-white flex flex-col justify-center items-start px-8 py-16 sm:px-16 sm:py-32 w-full transition-all duration-1000 relative group`}
+                        style={{ backgroundImage: `url(${events[currentEventIndex].image})` }}
+                        >
+                        <div className="relative z-10 group/title">
+                            <Link
+                                to={`/event-details/${events[currentEventIndex]._id}`}
+                                state={{ event: events[currentEventIndex] }}
+                                className="!text-white !text-3xl sm:!text-4xl md:!text-7xl !font-bold !mb-4 !text-left cursor-pointer block w-full relative z-10 hover:!underline"
                             >
-                                <div className="relative z-10 group/title">
-                                    <Link
-                                        to={`/event-details/${events[currentEventIndex]._id}`}
-                                        state={{ event: events[currentEventIndex] }}
-                                        className="!text-white !text-3xl sm:!text-4xl md:!text-7xl !font-bold !mb-4 !text-left cursor-pointer block w-full relative z-10 hover:!underline"
-                                    >
-                                        {events[currentEventIndex].event_name}
-                                    </Link>
-                                </div>
-                                <p className="!text-md sm:!text-lg !max-w-2xl !text-left">
-                                    {events[currentEventIndex].event_description}
-                                </p>
-                                <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex items-center space-x-4">
-                                    <button 
-                                        onClick={handlePrevEvent} 
-                                        className="text-sm font-normal cursor-pointer focus:!outline-none"
-                                    >
-                                        <IoIosArrowBack size={15} />
-                                    </button>
-                                    <span className="text-sm font-normal select-none">{`${currentEventIndex + 1} of ${events.length}`}</span>
-                                    <button 
-                                        onClick={handleNextEvent} 
-                                        className="text-sm font-normal cursor-pointer focus:!outline-none"
-                                    >
-                                        <IoIosArrowForward size={15} />
-                                    </button>
-                                </div>
+                            {events[currentEventIndex].event_name}
+                            </Link>
+                        </div>
+                        <p className="!text-md sm:!text-lg !max-w-2xl !text-left">
+                            {events[currentEventIndex].event_description}
+                        </p>
+
+                        {events.length > 1 && (
+                            <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex items-center space-x-4">
+                            <button onClick={handlePrevEvent}>
+                                <IoIosArrowBack size={15} />
+                            </button>
+                            <span className="text-sm font-normal select-none">
+                                {`${currentEventIndex + 1} of ${events.length}`}
+                            </span>
+                            <button onClick={handleNextEvent}>
+                                <IoIosArrowForward size={15} />
+                            </button>
                             </div>
                         )}
-
-                        {/* Announcements */}
-                        <div className="grid grid-rows-2 w-full">
-                            {[oddNoticeIndex, evenNoticeIndex].map((index, i) => (
-                                <div
-                                    key={i}
-                                    className="bg-cover bg-center !text-white flex flex-col justify-center items-end text-right px-8 sm:px-10 py-8 sm:py-10 w-full transition-all duration-1000"
-                                    style={{ backgroundImage: `url(${announcements[index].image})` }}
-                                >
-                                    <div>
-                                        <Link
-                                            to={`/announcement-details/${announcements[index].announcement_id}`}
-                                            // state={{ event: events[currentEventIndex] }}
-                                            className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4 hover:!underline"
-                                        >
-                                            {announcements[index].title}
-                                        </Link>
-                                    </div>
-                                    <p className="text-sm sm:text-base max-w-md">
-                                        {announcements[index].context}
-                                    </p>
-                                </div>
-                            ))}
                         </div>
+                    ) : null}
+
+                    {/* Announcements */}
+                    {announcements.length > 0 ? (
+                    <div
+                        className={`grid grid-rows-2 w-full ${
+                        events.length === 0 ? 'col-span-1 sm:col-span-3' : 'col-span-1'
+                        }`}
+                    >
+                        {announcements.length === 1 ? (
+                        <div className={`row-span-2 bg-cover bg-center !text-white flex flex-col justify-center 
+                            ${events.length === 0 ? 'items-start text-left' : 'items-end text-right'} 
+                            px-8 sm:px-10 py-8 sm:py-10 w-full transition-all duration-1000`}
+                            style={{
+                                backgroundImage: `url(${notice1})`,
+                                height: events.length === 0 ? '400px' : '600px',
+                            }}
+                        >
+                            <div>
+                            <Link
+                                to={`/announcement-details/${announcements[0].announcement_id}`}
+                                className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4 hover:!underline"
+                            >
+                                {announcements[0].title}
+                            </Link>
+                            </div>
+                            <p className="text-sm sm:text-base max-w-md">{announcements[0].context}</p>
+                        </div>
+                        ) : (
+                        <>
+                            <div className="row-span-1 relative overflow-hidden">
+                            {announcements[oddNoticeIndex] && (
+                                <div
+                                    key={announcements[oddNoticeIndex].announcement_id}
+                                    className={`absolute inset-0 bg-cover bg-center !text-white flex flex-col justify-center 
+                                        ${events.length === 0 ? 'items-start text-left' : 'items-end text-right'} 
+                                        px-8 sm:px-10 py-8 sm:py-10 transition-all duration-1000`}
+                                    style={{ backgroundImage: `url(${notice1})` }}
+                                >
+                                <div>
+                                    <Link
+                                        to={`/announcement-details/${announcements[oddNoticeIndex].announcement_id}`}
+                                        className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4 hover:!underline"
+                                    >
+                                    {announcements[oddNoticeIndex].title}
+                                    </Link>
+                                </div>
+                                <p className="text-sm sm:text-base max-w-md">
+                                    {announcements[oddNoticeIndex].context}
+                                </p>
+                                </div>
+                            )}
+                            </div>
+
+                            <div className="row-span-1 relative overflow-hidden">
+                            {announcements[evenNoticeIndex] && (
+                                <div
+                                    key={announcements[evenNoticeIndex].announcement_id}
+                                    className={`absolute inset-0 bg-cover bg-center !text-white flex flex-col justify-center 
+                                        ${events.length === 0 ? 'items-start text-left' : 'items-end text-right'} 
+                                        px-8 sm:px-10 py-8 sm:py-10 transition-all duration-1000`}
+                                    style={{ backgroundImage: `url(${notice2})` }}
+                                >
+                                <div>
+                                    <Link
+                                        to={`/announcement-details/${announcements[evenNoticeIndex].announcement_id}`}
+                                        className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4 hover:!underline"
+                                    >
+                                    {announcements[evenNoticeIndex].title}
+                                    </Link>
+                                </div>
+                                <p className="text-sm sm:text-base max-w-md">
+                                    {announcements[evenNoticeIndex].context}
+                                </p>
+                                </div>
+                            )}
+                            </div>
+                        </>
+                        )}
+                    </div>
+                    ) : events.length === 0 ? (
+                        <div className="col-span-1 sm:col-span-3 flex flex-col items-center justify-center text-center px-8 py-16 text-white"
+                        style={{
+                            backgroundImage: `url(${notice1})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                        }}
+                        >
+                        <p className="text-4xl sm:text-5xl font-bold mb-3">Events & Announcements</p>
+                        <p className="text-md sm:text-lg">Stay tuned for latest events and announcements!</p>
+                        </div>
+                    ) : null}
                     </div>
 
                     {/* Job Postings */}
