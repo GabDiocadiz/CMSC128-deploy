@@ -15,6 +15,7 @@ import { Admin_main } from './components/sections/Admin_main'
 import { Results_page_accounts} from './components/sections/Results_accounts'
 import { Results_page_accounts_admin} from './components/sections/Results_accounts_admin'
 import { Results_page_jobs } from './components/sections/Results_job'
+import { Unauthorized_jobs_results_page } from './components/sections/Unauthorized_jobs_results'
 
 import { Create_Event } from './components/sections/Create_event'
 import { Post_Job } from './components/sections/JobPost'
@@ -37,6 +38,7 @@ function App() {
             <Route path="/" element={<Landing_page/>} /> 
             <Route path="/reg" element={<Registration/>} />
             <Route path="/login" element={<Login/>} />
+            <Route path="/unauthorized_jobs" element={<Unauthorized_jobs_results_page/>} />
 
             <Route element={<RoleRoute allowedRoles={['Admin']}/>}>
               <Route path="/admin_main" element={<Admin_main/>} />

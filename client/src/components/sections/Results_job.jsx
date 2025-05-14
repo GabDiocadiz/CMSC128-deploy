@@ -23,13 +23,20 @@ export const Results_page_jobs = () => {
   const [jobCount, setJobCount] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(false); // Sidebar toggle state
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
-  const toggleBookmark = (id) => {
-    if (bookmarkedIds.includes(id)) {
-      setBookmarkedIds(bookmarkedIds.filter((bid) => bid !== id));
-    } else {
-      setBookmarkedIds([...bookmarkedIds, id]);
+  const toggleBookmark = async (jobId) => {
+    try {
+      if (bookmarkedIds.includes(jobId)) {
+        await authAxios.post('/jobs/unbookmark', { userId: user._id, jobId });
+        setBookmarkedIds(bookmarkedIds.filter((id) => id !== jobId));
+      } else {
+        await authAxios.post('/jobs/bookmark', { userId: user._id, jobId });
+        setBookmarkedIds([...bookmarkedIds, jobId]);
+      }
+    } catch (error) {
+      console.error("Bookmark toggle failed:", error);
     }
   };
+
 
 useEffect(() => {
   const fetchJobs = async () => {
@@ -45,11 +52,6 @@ useEffect(() => {
           }
 
           console.log("Job Count:", response.data.length);
-          // Fetch bookmarked jobs
-          const bookmarkedResponse = await authAxios.get(`jobs/job-bookmarked`);  
-
-          setBookmarkedIds(bookmarkedResponse.data.map(job => job._id));
-
       } catch (error) {
           console.error("Error fetching jobs:", error);
           setIsLoading(false); 
@@ -59,6 +61,21 @@ useEffect(() => {
   fetchJobs();
   window.scrollTo(0, 0);
 }, [sortBy, navigate]);
+
+useEffect(() => {
+  const fetchBookmarkedJobs = async () => {
+    try {
+      const res = await authAxios.get(`/jobs/job-bookmarked?userId=${user._id}`);
+      const ids = res.data.map(job => job._id);
+      setBookmarkedIds(ids);
+    } catch (err) {
+      console.error("Error fetching bookmarked jobs:", err);
+    }
+  };
+
+  if (user?._id) fetchBookmarkedJobs();
+}, [user?._id]);
+
 
   return (
     <>
