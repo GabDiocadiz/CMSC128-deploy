@@ -23,4 +23,8 @@ router.put('/edit-rsvp/:eventID', validateToken, authorizeRoles(['Alumni']), edi
 
 router.post('/donate/:eventID', validateToken, authorizeRoles(['Alumni']), donationController.create)
 
+router.post("/bookmark", validateToken, authorizeRoles(["Admin", "Alumni"]), eventController.bookmarkEvent);
+router.post("/unbookmark", validateToken, authorizeRoles(["Admin", "Alumni"]), eventController.unbookmarkEvent);
+router.get("/event-bookmarked", validateToken, authorizeRoles(["Admin", "Alumni"]), eventController.getbookmarked_events);
+
 export default router

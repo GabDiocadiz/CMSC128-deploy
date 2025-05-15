@@ -21,11 +21,25 @@ export const Results_page_events = ( ) => {
     const [isLoading, setIsLoading] = useState(true);
     const [sidebarOpen, setSidebarOpen] = useState(false); // Sidebar toggle state
     const toggleSidebar = () => setSidebarOpen((prev) => !prev);
-    const toggleBookmark = (id) => {
-        if (bookmarkedIds.includes(id)) {
-            setBookmarkedIds(bookmarkedIds.filter((bid) => bid !== id));
+    // const toggleBookmark = (id) => {
+    //     if (bookmarkedIds.includes(id)) {
+    //         setBookmarkedIds(bookmarkedIds.filter((bid) => bid !== id));
+    //     } else {
+    //         setBookmarkedIds([...bookmarkedIds, id]);
+    //     }
+    // };
+
+      const toggleBookmark = async (eventId) => {
+        try {
+        if (bookmarkedIds.includes(eventId)) {
+            await authAxios.post('/events/unbookmark', { userId: user._id, eventId });
+            setBookmarkedIds(bookmarkedIds.filter((id) => id !== eventId));
         } else {
-            setBookmarkedIds([...bookmarkedIds, id]);
+            await authAxios.post('/events/bookmark', { userId: user._id, eventId });
+            setBookmarkedIds([...bookmarkedIds, eventId]);
+        }
+        } catch (error) {
+        console.error("Bookmark toggle failed:", error);
         }
     };
 
@@ -74,6 +88,20 @@ export const Results_page_events = ( ) => {
         fetchEvents();
         window.scrollTo(0, 0);
     }, [sortBy, navigate]);
+
+      useEffect(() => {
+        const fetchBookmarkedEvents = async () => {
+          try {
+            const res = await authAxios.get(`/events/event-bookmarked?userId=${user._id}`);
+            const ids = res.data.map(event => event._id);
+            setBookmarkedIds(ids);
+          } catch (err) {
+            console.error("Error fetching bookmarked events:", err);
+          }
+        };
+    
+        if (user?._id) fetchBookmarkedEvents();
+      }, [user?._id]);
 
     return (
         <>
@@ -140,11 +168,7 @@ export const Results_page_events = ( ) => {
                                                             className="text-white-400 hover:text-white-500 focus:outline-none"
                                                             title={bookmarkedIds.includes(event._id) ? "Remove Bookmark" : "Bookmark"}
                                                         >
-                                                            {bookmarkedIds.includes(event._id) ? (
-                                                                <BookmarkIcon className="w-6 h-6" />
-                                                            ) : (
-                                                                <BookmarkIcon className="w-6 h-6 opacity-50" />
-                                                            )}
+                                                            <BookmarkIcon className={`w-6 h-6 ${bookmarkedIds.includes(event._id) ? "text-emerald-600" : "opacity-50"}`} />           
                                                         </button>
                                                     </div>
                                                     <h2 className="text-xl font-semibold mb-1">{event.event_name}</h2>

@@ -10,7 +10,7 @@ import { useAuth } from "../auth/AuthContext";
 import { MegaphoneIcon } from '@heroicons/react/24/solid';
 import axios from "axios";
 export default function Navbar_admin({toggleSidebar}) {
-  const { authAxios, user } = useAuth();
+  const { authAxios, user, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate()
   const  [notification_modal, setnotification_modal] = useState(false)
@@ -38,12 +38,8 @@ export default function Navbar_admin({toggleSidebar}) {
 
     // setIsOpen(false); Remove after implementing the proper backend stuff
   }
-  const handleLogout=()=>{
-    //Logout
-    const logout=0;
-    //if (logout.success){
-    //}
-    navigate('/')
+  const handleLogout= async (e)=>{
+    await logout();
   }
 
   useEffect(()=>{

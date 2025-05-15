@@ -175,4 +175,60 @@ export const eventController = {
         req.params.id = req.params.event_id; 
         return getFilesForModel(req, res);
     },
+
+    //  Add Bookmark
+    async bookmarkEvent(req, res) {
+        try {
+            const { userId, eventId } = req.body;
+
+            const user = await User.findById(userId);
+            if (!user) return res.status(404).json({ message: "User not found" });
+
+            if (user.bookmarked_events.includes(eventId)) {
+                return res.status(400).json({ message: "Event already bookmarked" });
+            }
+
+            user.bookmarked_events.push(eventId);
+            await user.save();
+
+            res.status(200).json({ message: "Event bookmarked successfully" });
+        } catch (error) {
+            console.error("Error bookmarking event:", error);
+            res.status(500).json({ message: "Internal server error" });
+        }
+    },
+
+    //  Unbookmark
+    async unbookmarkEvent(req, res) {
+        try {
+            const { userId, eventId } = req.body;
+
+            const user = await User.findById(userId);
+            if (!user) return res.status(404).json({ message: "User not found" });
+
+            user.bookmarked_events = user.bookmarked_events.filter(id => id.toString() !== eventId);
+            await user.save();
+
+            res.status(200).json({ message: "Event unbookmarked successfully" });
+        } catch (error) {
+            console.error("Error unbookmarking event:", error);
+            res.status(500).json({ message: "Internal server error" });
+        }
+    },
+
+    //  Get all bookmarked events for a user
+    async getbookmarked_events(req, res) {
+        try {
+            const { userId } = req.query;
+
+            const user = await User.findById(userId).populate('bookmarked_events');
+            if (!user) return res.status(404).json({ message: "User not found" });
+
+            res.status(200).json(user.bookmarked_events);
+        } catch (error) {
+            console.error("Error fetching bookmarked events:", error);
+            res.status(500).json({ message: "Internal server error" });
+        }
+    },
+    
 }
