@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate} from 'react-router-dom';
+import { useNavigate, Link} from 'react-router-dom';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import Navbar from '../header';
@@ -52,6 +52,7 @@ export default function ProfilePage() {
   const [error, setError] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false); // Sidebar toggle state
   const [bookmarkedJobs, setBookmarkedJobs] = useState([]);
+  const [jobs, setJobs] = useState([]);
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
   useEffect(() => {
     document.documentElement.classList.remove('dark');
@@ -69,7 +70,17 @@ export default function ProfilePage() {
       setProfileData(response.data);
       setUpcomingEvents(response.data.events_attended);
       setJobApplications(response.data.job_postings);
-      setBookmarkedJobs(response.data.bookmarked_jobs);
+      if (response.data.bookmarked_jobs.length > 0) {
+        const jobDetails = await Promise.all(
+          response.data.bookmarked_jobs.map(async (jobRef) => {
+            const jobId = jobRef?.$oid || jobRef?._id || jobRef;
+            const jobRes = await authAxios.get(`/jobs/find-job/${jobId}`);
+            return jobRes.data;
+          })
+        );
+        setBookmarkedJobs(jobDetails);
+      }
+
       setEditableData({
         contact_number: response.data?.contact_number || '',
         address: response.data?.address || '',
@@ -240,15 +251,29 @@ export default function ProfilePage() {
           <p className="text-gray-300 text-center">No bookmarked jobs.</p>
         ) : (
           <ul className="space-y-4">
-            {bookmarkedJobs.map((job) => (
-              <li key={job._id} className="border-2 border-[#891839] rounded-2xl p-6 hover:bg-[#891839] hover:text-white transition">
-                <h4 className="font-bold text-2xl mb-1">{job.job_title || 'No title'}</h4>
-                <p className="text-md">{job.company || 'No company'} - {job.location || 'No location'}</p>
-                <p className="text-sm text-gray-400">
-                  Posted on {job.date_posted ? new Date(job.date_posted).toLocaleDateString() : 'Unknown date'}
-                </p>
-              </li>
-            ))}
+            {bookmarkedJobs.map((job, index) => (
+            <Link
+              key={index}
+              to={`/job-details/${job._id}`}
+              className="transform transition-transform duration-300 hover:scale-105 block"
+            >
+              <div className="bg-[#891839] p-3 rounded-3xl flex justify-center h-50 w-full shadow-lg hover:shadow-xl">
+                <div className="bg-[#891839] text-white px-10 rounded-3xl border-2 border-white w-full flex flex-col items-start justify-center text-left">
+                  <h3 className="text-4xl font-semibold mb-3 pb-5">{job.job_title || 'No title'}</h3>
+                  <p>Company: {job.company || 'No company'}</p>
+                  <p>
+                    Date Posted: {job.date_posted ? new Date(job.date_posted).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    }) : 'Unknown date'}
+                  </p>
+                  <p>Location: {job.location || 'No location'}</p>
+                </div>
+              </div>
+            </Link>
+          ))}
+
           </ul>
         )}
       </section>
