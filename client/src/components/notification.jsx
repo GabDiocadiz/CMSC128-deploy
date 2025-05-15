@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback,useRef } from "react";
 import Notification_View from "./notification_view";
 import { useAuth } from "../auth/AuthContext";
 
@@ -93,26 +93,43 @@ export default function Notification({ setVisible }) {
   const refetchNotifications = () => {
       fetchUnreadNotifications();
   };
+  const modalRef = useRef(null);
+
+  // Close on outside click
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setVisible(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [setVisible]);
 
   return (
-    
     <div className="fixed inset-0 flex justify-end items-start z-70 p-8 bg-black/50">
       {isNotificationViewVisible && currentNotificationForView && (
           <Notification_View
               notification_info={currentNotificationForView}
               setNotification_view={setIsNotificationViewVisible}
           />
+
       )}
-      
+
       {/* Modal content */}
-     <div className="relative bg-white rounded-lg shadow-lg w-[30vw]">
-         {/* Modal header */}
+      <div ref={modalRef} className="relative bg-white rounded-lg shadow-lg w-[30vw]">
+        {/* Modal header */}
+        
         <div className="flex items-center justify-between p-4 border-b border-gray-200 rounded-t">
           <h2 className="text-emerald-800 text-4xl font-extrabold">Notifications</h2>
           <button
             onClick={() => setVisible(false)}
             type="button"
-            className="text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-300 dark:hover:text-black rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center"
+            className="text-gray-400 hover:bg-gray-200 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center"
           >
             <svg
               className="w-3 h-3"
@@ -195,7 +212,6 @@ export default function Notification({ setVisible }) {
                 </ul>
             )}
           </div>
-        
       </div>
     </div>
   );
