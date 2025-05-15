@@ -9,33 +9,8 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../../auth/AuthContext';
 import './ProfilePage.css';
 import Sidebar from '../Sidebar';
+
 export default function ProfilePage() {
-  // const mockEvents = [
-  //   { event_id: 1, event_name: "Tech Conference", event_date: "2025-05-15" },
-  //   { event_id: 2, event_name: "Job Fair", event_date: "2025-06-20" },
-  //   { event_id: 3, event_name: "Career Expo", event_date: "2025-05-15" },
-  // ];
-
-  // const mockJobs = [
-  //   { job_id: 1, job_title: "Frontend Developer", company: "Google", location: "Mountain View", date_posted: "2025-04-01", status: "pending" },
-  //   { job_id: 2, job_title: "Backend Engineer", company: "Amazon", location: "Seattle", date_posted: "2025-03-15", status: "approved" },
-  //   { job_id: 3, job_title: "UI Designer", company: "Facebook", location: "Menlo Park", date_posted: "2025-02-10", status: "rejected" },
-  // ];
-
-  // const mockUser = {
-  //   user_id: 1,
-  //   name: "John Doe",
-  //   email: "john@example.com",
-  //   batch_graduated: "2024",
-  //   profile_picture: "https://i.pravatar.cc/300",
-  //   contact_number: "1234567890",
-  //   address: "123 Main Street",
-  //   current_job_title: "Software Engineer",
-  //   company: "Tech Corp",
-  //   industry: "Information Technology",
-  //   skills: "React, Node.js, Python, GraphQL",
-  // };
-
   const navigate = useNavigate();
   const { authAxios, user } = useAuth();
   const [profileData, setProfileData] = useState(null);
@@ -54,6 +29,7 @@ export default function ProfilePage() {
   const [bookmarkedJobs, setBookmarkedJobs] = useState([]);
   const [jobs, setJobs] = useState([]);
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
+
   useEffect(() => {
     document.documentElement.classList.remove('dark');
     ScrollToTop();
@@ -64,12 +40,12 @@ export default function ProfilePage() {
     setLoading(true);
     setError(null);
     try {
-      console.log("Fetching data");
       const response = await authAxios.get(`/alumni/find-alumni/${user?._id}`);
-      console.log(response.data);
+
       setProfileData(response.data);
       setUpcomingEvents(response.data.events_attended);
       setJobApplications(response.data.job_postings);
+
       if (response.data.bookmarked_jobs.length > 0) {
         const jobDetails = await Promise.all(
           response.data.bookmarked_jobs.map(async (jobRef) => {
@@ -79,6 +55,8 @@ export default function ProfilePage() {
           })
         );
         setBookmarkedJobs(jobDetails);
+      } else {
+        setBookmarkedJobs([]);
       }
 
       setEditableData({
@@ -101,10 +79,23 @@ export default function ProfilePage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEditableData(prev => ({ ...prev, [name]: value }));
+
+    if (name === "contact_number") {
+      // allow only numbers or an empty string
+      if (value === "" || /^[0-9]+$/.test(value)) {
+        setEditableData(prev => ({ ...prev, [name]: value }));
+      }
+    } else {
+      setEditableData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSave = async () => {
+    if (editableData.contact_number && !/^[0-9]+$/.test(editableData.contact_number)) {
+        alert("Invalid phone number.");
+        return;
+    }
+
     try {
       await authAxios.put(`/alumni/edit-profile/${user?._id}`, editableData);
       setIsEditing(false);
