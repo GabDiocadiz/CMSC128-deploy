@@ -5,6 +5,7 @@ import { FaLocationDot } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import { ScrollToTop } from "../../utils/helper";
 import { useAuth } from "../../auth/AuthContext";
+import job_placeholder from "../../assets/job_placeholder.png"
 import Navbar from "../header";
 import Footer from "../footer";
 import axios from "axios";
@@ -44,29 +45,41 @@ export default function ViewJobDetails() {
             <Navbar />
         </div>
         <div className="w-screen pt-12">
-            <div
-                className="bg-cover bg-center text-white flex flex-col justify-center items-start px-8 sm:px-16 py-14 w-full h-[50vh]"
-                style={{ backgroundImage: `url(${job.image})` }}
-            >
-            <div
-                className="flex items-center gap-2 cursor-pointer text-white hover:text-gray-300 mb-10"
-                onClick={() => navigate(-1)}
-            >
-                <IoIosArrowBack className="text-sm" />
-                <span className="text-sm font-light">Back</span>
-            </div>
-            <h1 className="text-5xl sm:text-8xl font-extrabold mb-2">{job.company}</h1>
-            <p className="text-2xl sm:text-3xl font-bold flex items-center gap-3">
-                <FaLocationDot className="text-3xl sm:text-4xl" />
-                {job.location}
-            </p>
-            <p className="text-sm sm:text-lg text-white mt-6 ml-2 mb-1">
-                Posted on: {new Date(job.date_posted).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                })}
-            </p>
+           <div
+                className="relative bg-cover bg-center text-white flex flex-col justify-center items-start px-8 sm:px-16 py-14 w-full h-[50vh]"
+                style={{
+                    backgroundImage: `url(${
+                    job?.files?.[0]?.serverFilename
+                        ? `http://localhost:5050/uploads/${job.files[0].serverFilename}`
+                        : job_placeholder
+                    })`,
+                }}
+                >
+
+                <div className="absolute inset-0 bg-black opacity-60 z-0"></div>
+
+                <div className="relative z-10">
+                    <div
+                        className="flex items-center gap-2 cursor-pointer text-white hover:text-gray-300 mb-10"
+                        onClick={() => navigate(-1)}
+                    >
+                        <IoIosArrowBack className="text-sm" />
+                        <span className="text-sm font-light">Back</span>
+                    </div>
+                    <h1 className="text-5xl sm:text-8xl font-extrabold mb-2 text-left">{job.company}</h1>
+                    <p className="text-2xl sm:text-3xl font-bold flex items-center gap-3">
+                        <FaLocationDot className="text-3xl sm:text-4xl" />
+                        {job.location}
+                    </p>
+                    <p className="text-sm sm:text-lg text-white mt-6 ml-2 mb-1 text-left">
+                        Posted on:{" "}
+                        {new Date(job.date_posted).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                        })}
+                    </p>
+                </div>
             </div>
 
             <div className="bg-white px-10 py-14 space-y-6">
