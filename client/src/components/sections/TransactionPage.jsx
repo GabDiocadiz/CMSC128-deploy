@@ -11,7 +11,6 @@ export default function TransactionPage() {
   const { id } = useParams();
   const { authAxios, user } = useAuth();
   const [event, setEvent] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
@@ -92,10 +91,37 @@ export default function TransactionPage() {
     setForm({ ...form, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Transaction submitted!");
 
+    if (!user || !user._id) {
+      alert("User not found or not logged in.");
+      return;
+    }
+    if (!form.amount || isNaN(form.amount) || Number(form.amount) <= 0) {
+      alert("Please enter a valid donation amount.");
+      return;
+    }
+
+    try {
+      const payload = {
+        event: id,
+        donor: user._id,
+        amount: Number(form.amount)
+      };
+
+      console.log("Submitting donation:", payload);
+
+      const response = await authAxios.post(
+        `http://localhost:5050/events/donate/${id}`,
+        payload,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      console.log("Transaction response:", response.data);
+    } catch (e) {
+      console.error("Transaction error:", e?.response?.data || e);
+      alert("Transaction failed. Please check your input and try again.");
+    }
   };
 
   return (
@@ -205,6 +231,7 @@ export default function TransactionPage() {
                     <img src={paymaya_icon} alt="PayMaya" className="h-10" />
                   </button>
                 </div>
+                {console.log(form.amount)}
               </form>
             </div>
           </div>
