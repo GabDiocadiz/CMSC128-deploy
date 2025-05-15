@@ -3,4 +3,5 @@ import { createCRUDController } from '../middlewareControllers/createCRUDControl
 
 export const donationController = {
     ...createCRUDController(Donation),
+
 }
