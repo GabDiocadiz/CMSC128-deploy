@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate} from 'react-router-dom';
+import { useNavigate, Link} from 'react-router-dom';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import Navbar from '../header';
@@ -9,33 +9,8 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../../auth/AuthContext';
 import './ProfilePage.css';
 import Sidebar from '../Sidebar';
+
 export default function ProfilePage() {
-  // const mockEvents = [
-  //   { event_id: 1, event_name: "Tech Conference", event_date: "2025-05-15" },
-  //   { event_id: 2, event_name: "Job Fair", event_date: "2025-06-20" },
-  //   { event_id: 3, event_name: "Career Expo", event_date: "2025-05-15" },
-  // ];
-
-  // const mockJobs = [
-  //   { job_id: 1, job_title: "Frontend Developer", company: "Google", location: "Mountain View", date_posted: "2025-04-01", status: "pending" },
-  //   { job_id: 2, job_title: "Backend Engineer", company: "Amazon", location: "Seattle", date_posted: "2025-03-15", status: "approved" },
-  //   { job_id: 3, job_title: "UI Designer", company: "Facebook", location: "Menlo Park", date_posted: "2025-02-10", status: "rejected" },
-  // ];
-
-  // const mockUser = {
-  //   user_id: 1,
-  //   name: "John Doe",
-  //   email: "john@example.com",
-  //   batch_graduated: "2024",
-  //   profile_picture: "https://i.pravatar.cc/300",
-  //   contact_number: "1234567890",
-  //   address: "123 Main Street",
-  //   current_job_title: "Software Engineer",
-  //   company: "Tech Corp",
-  //   industry: "Information Technology",
-  //   skills: "React, Node.js, Python, GraphQL",
-  // };
-
   const navigate = useNavigate();
   const { authAxios, user } = useAuth();
   const [profileData, setProfileData] = useState(null);
@@ -52,7 +27,9 @@ export default function ProfilePage() {
   const [error, setError] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false); // Sidebar toggle state
   const [bookmarkedJobs, setBookmarkedJobs] = useState([]);
+  const [jobs, setJobs] = useState([]);
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
+
   useEffect(() => {
     document.documentElement.classList.remove('dark');
     ScrollToTop();
@@ -63,13 +40,25 @@ export default function ProfilePage() {
     setLoading(true);
     setError(null);
     try {
-      console.log("Fetching data");
       const response = await authAxios.get(`/alumni/find-alumni/${user?._id}`);
-      console.log(response.data);
+
       setProfileData(response.data);
       setUpcomingEvents(response.data.events_attended);
       setJobApplications(response.data.job_postings);
-      setBookmarkedJobs(response.data.bookmarked_jobs);
+
+      if (response.data.bookmarked_jobs.length > 0) {
+        const jobDetails = await Promise.all(
+          response.data.bookmarked_jobs.map(async (jobRef) => {
+            const jobId = jobRef?.$oid || jobRef?._id || jobRef;
+            const jobRes = await authAxios.get(`/jobs/find-job/${jobId}`);
+            return jobRes.data;
+          })
+        );
+        setBookmarkedJobs(jobDetails);
+      } else {
+        setBookmarkedJobs([]);
+      }
+
       setEditableData({
         contact_number: response.data?.contact_number || '',
         address: response.data?.address || '',
@@ -90,10 +79,23 @@ export default function ProfilePage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEditableData(prev => ({ ...prev, [name]: value }));
+
+    if (name === "contact_number") {
+      // allow only numbers or an empty string
+      if (value === "" || /^[0-9]+$/.test(value)) {
+        setEditableData(prev => ({ ...prev, [name]: value }));
+      }
+    } else {
+      setEditableData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSave = async () => {
+    if (editableData.contact_number && !/^[0-9]+$/.test(editableData.contact_number)) {
+        alert("Invalid phone number.");
+        return;
+    }
+
     try {
       await authAxios.put(`/alumni/edit-profile/${user?._id}`, editableData);
       setIsEditing(false);
@@ -240,15 +242,29 @@ export default function ProfilePage() {
           <p className="text-gray-300 text-center">No bookmarked jobs.</p>
         ) : (
           <ul className="space-y-4">
-            {bookmarkedJobs.map((job) => (
-              <li key={job._id} className="border-2 border-[#891839] rounded-2xl p-6 hover:bg-[#891839] hover:text-white transition">
-                <h4 className="font-bold text-2xl mb-1">{job.job_title || 'No title'}</h4>
-                <p className="text-md">{job.company || 'No company'} - {job.location || 'No location'}</p>
-                <p className="text-sm text-gray-400">
-                  Posted on {job.date_posted ? new Date(job.date_posted).toLocaleDateString() : 'Unknown date'}
-                </p>
-              </li>
-            ))}
+            {bookmarkedJobs.map((job, index) => (
+            <Link
+              key={index}
+              to={`/job-details/${job._id}`}
+              className="transform transition-transform duration-300 hover:scale-105 block"
+            >
+              <div className="bg-[#891839] p-3 rounded-3xl flex justify-center h-50 w-full shadow-lg hover:shadow-xl">
+                <div className="bg-[#891839] text-white px-10 rounded-3xl border-2 border-white w-full flex flex-col items-start justify-center text-left">
+                  <h3 className="text-4xl font-semibold mb-3 pb-5">{job.job_title || 'No title'}</h3>
+                  <p>Company: {job.company || 'No company'}</p>
+                  <p>
+                    Date Posted: {job.date_posted ? new Date(job.date_posted).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    }) : 'Unknown date'}
+                  </p>
+                  <p>Location: {job.location || 'No location'}</p>
+                </div>
+              </div>
+            </Link>
+          ))}
+
           </ul>
         )}
       </section>
@@ -295,7 +311,11 @@ function ProfileSection({ title, fields, editableData, isEditing, handleChange }
                 className="border-2 rounded-xl p-2 text-gray-800 focus:border-[#891839] w-full"
               />
             ) : (
-              <p className="text-gray-700 font-semibold">{editableData[field.name]}</p>
+              (editableData[field.name] != null && editableData[field.name] != '') ? (
+                <p className="text-gray-700 font-semibold">{editableData[field.name]}</p>
+              ) : (
+                <p className="text-gray-400"> No Data </p>
+              )
             )}
           </div>
         ))}
