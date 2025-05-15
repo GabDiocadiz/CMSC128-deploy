@@ -6,12 +6,25 @@ import { useAuth } from "../../auth/AuthContext";
 
 const Login = () => {
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const { login, user, isLoading } = useAuth();
 
     const [formData, setFormData] = useState({
         email: "",
         password: "",
     });
+
+    useEffect(() => {
+        if (!isLoading) {
+            if (user) {
+                alert("Already logged in. Redirecting...");
+                if (user.user_type === "Admin") {
+                    navigate(`/admin_main`);
+                } else {
+                    navigate(`/home`);
+                }
+            }
+        }
+    }, [user, isLoading, navigate]);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
