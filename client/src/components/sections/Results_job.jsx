@@ -158,7 +158,7 @@ useEffect(() => {
               <div className="flex justify-center w-full mb-35 mt-5 px-2">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {jobs.map((job) => (
-                  <div key={job._id} className="bg-white rounded-xl shadow-md overflow-hidden">
+                  <div key={job._id} className="bg-white rounded-xl shadow-md overflow-hidden" draggable="false">
                     <Link to={`/job-details/${job._id}`}>
                       <img src={`http://localhost:5050/uploads/${job.files[0].serverFilename}` || "src/assets/Building.png" } alt={job.job_title} className="w-full h-48 object-cover" />
                     </Link>
