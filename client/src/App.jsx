@@ -24,7 +24,7 @@ import { Results_page_events } from './components/sections/Results_event'
 import { AuthProvider } from './auth/AuthContext'
 import { RoleRoute } from './auth/ProtectedRoutes'
 import ProfilePage from './components/sections/ProfilePage'
-
+import TransactionPage from './components/sections/TransactionPage'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -56,6 +56,7 @@ function App() {
               <Route path="/create_event" element={<Create_Event/>} />
               <Route path="/post_job" element={<Post_Job/>} />
               <Route path="/profile" element={<ProfilePage/>} />
+              <Route path='/donate/:id' element={<TransactionPage/>}/>
             </Route>
 
           </Routes>
