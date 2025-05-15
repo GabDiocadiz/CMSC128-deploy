@@ -77,7 +77,7 @@ export const CreateAnnouncement = () => {
 
     setIsSubmitting(true);
     try {
-      await axios.post("http://localhost:5050/announcement/create", formData);
+      await axios.post(`${import.meta.env.VITE_API_URL}/announcement/create`, formData);
       console.log("Successfully sent to all users");
     } catch (err) {
       console.error("Error creating announcement", err);

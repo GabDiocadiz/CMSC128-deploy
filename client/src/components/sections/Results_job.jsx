@@ -152,7 +152,7 @@ export const Results_page_jobs = () => {
                   <div key={job._id} className="bg-white rounded-xl shadow-md overflow-hidden">
                     <Link to={`/job-details/${job._id}`}>
                       <img
-                        src={`http://localhost:5050/uploads/${job.files?.[0]?.serverFilename || "placeholder.jpg"}`}
+                        src={`${import.meta.env.VITE_API_URL}/uploads/${job.files?.[0]?.serverFilename || "placeholder.jpg"}`}
                         alt={job.job_title}
                         className="w-full h-48 object-cover"
                       />

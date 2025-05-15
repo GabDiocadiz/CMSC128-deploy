@@ -30,7 +30,7 @@ export default function TransactionPage() {
     const fetchEvent = async () => {
       try {
         setIsLoading(true);
-        const response = await authAxios.get(`http://localhost:5050/events/find-event/${id}`);
+        const response = await authAxios.get(`${import.meta.env.VITE_API_URL}/events/find-event/${id}`);
 
         setEvent(response.data);
         console.log("Fetched Event:", response.data);
@@ -40,14 +40,14 @@ export default function TransactionPage() {
           console.log("Token invalid/expired. Attempting refresh...");
 
           try {
-            const refreshResponse = await axios.get("http://localhost:5050/auth/refresh", { withCredentials: true });
+            const refreshResponse = await axios.get(`${import.meta.env.VITE_API_URL}/auth/refresh`, { withCredentials: true });
 
             if (refreshResponse.data.accessToken) {
               const newToken = refreshResponse.data.accessToken;
               localStorage.setItem("accessToken", newToken);
 
               console.log("Retrying event fetch with new token...");
-              const retryResponse = await axios.get(`http://localhost:5050/events/find-event/${id}`, {
+              const retryResponse = await axios.get(`${import.meta.env.VITE_API_URL}/events/find-event/${id}`, {
                 headers: { Authorization: `Bearer ${newToken}` },
                 withCredentials: true
               });
@@ -111,7 +111,7 @@ export default function TransactionPage() {
 
 
       const response = await authAxios.post(
-        `http://localhost:5050/events/donate/${id}`,
+        `${import.meta.env.VITE_API_URL}/events/donate/${id}`,
         payload,
         { headers: { "Content-Type": "application/json" } }
       );
@@ -149,7 +149,7 @@ export default function TransactionPage() {
               className="w-full md:w-1/2 flex items-center justify-center text-white"
               style={{
                 backgroundImage: `linear-gradient(rgba(14, 66, 33, 0.85), rgba(14, 66, 33, 0.85)), url(${event && event.files && event.files[0] && event.files[0].serverFilename
-                  ? `http://localhost:5050/uploads/${event.files[0].serverFilename}`
+                  ? `${import.meta.env.VITE_API_URL}/uploads/${event.files[0].serverFilename}`
                   : "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1050&q=80"
                   })`,
                 backgroundSize: "cover",

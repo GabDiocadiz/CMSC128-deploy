@@ -38,7 +38,7 @@ export const Unauthorized_jobs_results_page = () => {
         console.log("Fetching jobs...");
 
         // Use public API endpoint without auth
-        const response = await axios.get(`http://localhost:5050/jobs/job-results?sortBy=${sortBy}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/jobs/job-results?sortBy=${sortBy}`);
 
         setJobs(response.data);
         setJobCount(response.data.length);
@@ -98,7 +98,7 @@ export const Unauthorized_jobs_results_page = () => {
                     <div key={job._id} className="bg-white rounded-xl shadow-md overflow-hidden">
                       <Link to={`/job-details/${job._id}`}>
                         <img
-                          src={`http://localhost:5050/uploads/${job.files[0]}` || "src/assets/Building.png"}
+                          src={`${import.meta.env.VITE_API_URL}/uploads/${job.files[0]}` || "src/assets/Building.png"}
                           alt={job.job_title}
                           className="w-full h-48 object-cover"
                         />
