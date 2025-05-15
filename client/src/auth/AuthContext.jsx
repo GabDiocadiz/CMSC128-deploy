@@ -155,7 +155,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     // create axios instance with authorization header
-    const authAxios = axios.create({baseURL: '${import.meta.env.VITE_API_URL}'} );
+    const authAxios = axios.create({baseURL: `${import.meta.env.VITE_API_URL}`} );
 
     // add token to all requests
     authAxios.interceptors.request.use(
