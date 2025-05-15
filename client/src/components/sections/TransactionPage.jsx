@@ -24,7 +24,6 @@ export default function TransactionPage() {
 
   const [errors, setErrors] = useState({});
 
-  console.log(`EVENT_ID: ${id}`);
 
   useEffect(() => {
 
@@ -110,7 +109,6 @@ export default function TransactionPage() {
         amount: Number(form.amount)
       };
 
-      console.log("Submitting donation:", payload);
 
       const response = await authAxios.post(
         `http://localhost:5050/events/donate/${id}`,
@@ -231,7 +229,6 @@ export default function TransactionPage() {
                     <img src={paymaya_icon} alt="PayMaya" className="h-10" />
                   </button>
                 </div>
-                {console.log(form.amount)}
               </form>
             </div>
           </div>
