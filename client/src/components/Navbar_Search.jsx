@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Notification from "./notification";
+import { useAuth } from "../auth/AuthContext";
 
 import uplbLogo from "../assets/uplblogo.png";
 import notifications from "../assets/notifications.png";
@@ -27,6 +28,7 @@ export default function Navbar_search({ searchTerm, setSearchTerm, setFilters, t
   const [notification_modal, setnotification_modal] = useState(false);
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const { logout } = useAuth();
 
   const handleRangeChange = (values) => {
     setLocalFilters({ ...localFilters, startYear: values[0], endYear: values[1] });
@@ -63,6 +65,10 @@ export default function Navbar_search({ searchTerm, setSearchTerm, setFilters, t
     setFilters(localFilters); // Apply filters when searching
   };
 
+  const handleLogout = async (e) => {
+    await logout();
+  }
+  
   return (
     <div>
       {notification_modal && (
