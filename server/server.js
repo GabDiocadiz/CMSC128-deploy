@@ -39,7 +39,14 @@ app.use("/file", fileRoutes);
 app.use("/events", eventRoutes);
 app.use("/notifications", notificationRoutes);
 app.use("/announcement", communicationRoutes);
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Serve frontend files
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+});
 
 // temporary default route -- remove when connecting to frontend
 app.get('/', (req, res) => {
