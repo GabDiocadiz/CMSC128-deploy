@@ -27,10 +27,10 @@ export const Results_page_jobs = () => {
   const toggleBookmark = async (jobId) => {
     try {
       if (bookmarkedIds.includes(jobId)) {
-        await authAxios.post('/jobs/unbookmark', { userId: user._id, jobId });
+        await authAxios.post('/jobs/unbookmark', { userId: user._id, jobId }, { withCredentials: true });
         setBookmarkedIds(bookmarkedIds.filter((id) => id !== jobId));
       } else {
-        await authAxios.post('/jobs/bookmark', { userId: user._id, jobId });
+        await authAxios.post('/jobs/bookmark', { userId: user._id, jobId }, { withCredentials: true });
         setBookmarkedIds([...bookmarkedIds, jobId]);
       }
     } catch (error) {

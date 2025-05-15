@@ -32,10 +32,10 @@ export const Results_page_events = ( ) => {
       const toggleBookmark = async (eventId) => {
         try {
         if (bookmarkedIds.includes(eventId)) {
-            await authAxios.post('/events/unbookmark', { userId: user._id, eventId });
+            await authAxios.post('/events/unbookmark', { userId: user._id, eventId }, { withCredentials: true });
             setBookmarkedIds(bookmarkedIds.filter((id) => id !== eventId));
         } else {
-            await authAxios.post('/events/bookmark', { userId: user._id, eventId });
+            await authAxios.post('/events/bookmark', { userId: user._id, eventId }, { withCredentials: true });
             setBookmarkedIds([...bookmarkedIds, eventId]);
         }
         } catch (error) {

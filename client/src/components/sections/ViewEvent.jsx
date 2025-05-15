@@ -76,7 +76,7 @@ export default function ViewEventDetails() {
             status: "Attending",
         };
 
-        authAxios.post(`${import.meta.env.VITE_API_URL}/events/create-rsvp/${id}`, rsvpData)
+        authAxios.post(`${import.meta.env.VITE_API_URL}/events/create-rsvp/${id}`, rsvpData, { withCredentials: true })
             .then((response) => {
                 console.log("RSVP successful:", response.data);
                 alert("RSVP successful");
