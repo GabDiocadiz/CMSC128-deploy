@@ -142,7 +142,7 @@ export default function ViewEventDetails() {
                                 {true && (
                                     <div className="mt-10 flex justify-center lg:justify-start">
                                         <div className="grid grid-cols-2 gap-4 sm:gap-x-10">
-                                            <Link to={`/donate/${event.id}`}>
+                                            <Link to={`/donate/${id}`}>
                                                 <button className="transition-transform duration-300 ease-in-out hover:scale-110 bg-[#145C44] hover:ring-2 text-white font-bold h-[45px] sm:h-[55px] w-[180px] px-4 py-2 rounded-md">
                                                     Donate
                                                 </button>

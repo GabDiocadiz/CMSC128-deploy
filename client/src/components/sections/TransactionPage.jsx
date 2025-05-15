@@ -1,12 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import Navbar from "../header";
 import Footer from "../footer";
 import gcash_icon from "../../assets/GCash-Logo.png"
 import paymaya_icon from "../../assets/1200px-PayMaya_Logo.png"
 import Sidebar from "../Sidebar";
 import { useAuth } from "../../auth/AuthContext";
+import { ScrollToTop } from "../../utils/helper";
 export default function TransactionPage() {
-  const { authAxios, user} = useAuth();
+  const { id } = useParams();
+  const { authAxios, user } = useAuth();
+  const [event, setEvent] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
   const [form, setForm] = useState({
@@ -19,13 +25,56 @@ export default function TransactionPage() {
 
   const [errors, setErrors] = useState({});
 
-  const eventDetails = {
-    title: "ICS AWARDS 2024",
-    date: "January 1, 2025",
-    category: "Charity",
-    description: "Join us for a cause. Help support this year’s ICS Awards Charity Fund!",
-    imageUrl: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1050&q=80"
-  };
+  console.log(`EVENT_ID: ${id}`);
+
+  useEffect(() => {
+
+    const fetchEvent = async () => {
+      try {
+        setIsLoading(true);
+        const response = await authAxios.get(`http://localhost:5050/events/find-event/${id}`);
+
+        setEvent(response.data);
+        console.log("Fetched Event:", response.data);
+        setIsLoading(false);
+      } catch (error) {
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          console.log("Token invalid/expired. Attempting refresh...");
+
+          try {
+            const refreshResponse = await axios.get("http://localhost:5050/auth/refresh", { withCredentials: true });
+
+            if (refreshResponse.data.accessToken) {
+              const newToken = refreshResponse.data.accessToken;
+              localStorage.setItem("accessToken", newToken);
+
+              console.log("Retrying event fetch with new token...");
+              const retryResponse = await axios.get(`http://localhost:5050/events/find-event/${id}`, {
+                headers: { Authorization: `Bearer ${newToken}` },
+                withCredentials: true
+              });
+
+              setEvent(retryResponse.data);
+
+            } else {
+              navigate("/login");
+            }
+            setIsLoading(false);
+          } catch (refreshError) {
+            console.error("Token refresh failed:", refreshError);
+            navigate("/login");
+            setIsLoading(false);
+          }
+        } else {
+          console.error("Error fetching event:", error);
+          setIsLoading(false);
+        }
+      }
+    }
+
+    fetchEvent(); // <-- Correct way to fetch event data
+    ScrollToTop();
+  }, [id]);
 
   const validate = () => {
     const newErrors = {};
@@ -45,9 +94,8 @@ export default function TransactionPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (validate()) {
-      alert("Transaction submitted!");
-    }
+    alert("Transaction submitted!");
+
   };
 
   return (
@@ -57,100 +105,110 @@ export default function TransactionPage() {
         <Navbar toggleSidebar={toggleSidebar} />
       </div>
       <div
-          className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${
-              sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
           }`}
       >
-          <Sidebar/>
+        <Sidebar />
       </div>
       <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
+        <div className="w-full h-[4px] bg-[#891839]"></div>
 
-      <div className="w-full h-[4px] bg-[#891839]"></div>
-      
-      {/* Main Content */}
-      <div className="flex flex-col md:flex-row flex-grow w-full">
-        {/* Left: Event Details */}
-        <div
-          className="w-full md:w-1/2 flex items-center justify-center text-white"
-          style={{
-            backgroundImage: `linear-gradient(rgba(14, 66, 33, 0.85), rgba(14, 66, 33, 0.85)), url(${eventDetails.imageUrl})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            backgroundAttachment: "fixed",
-            minHeight: "calc(100vh - 88px)"
-          }}
-        >
-          <div className="p-8 max-w-md text-center">
-            <h1 className="text-4xl font-bold mb-4">{eventDetails.title}</h1>
-            <p className="text-xl mb-2">{eventDetails.date}</p>
-            <p className="font-semibold mb-4">{eventDetails.category}</p>
-            <p className="text-justify">{eventDetails.description}</p>
+        {/* Main Content */}
+        {isLoading ? (
+          <div className="flex flex-1 justify-center items-center min-h-[calc(100vh-88px)]">
+            <span className="text-[#891839] text-xl font-bold">Loading event...</span>
           </div>
-        </div>
-
-        {/* Right: Transaction Form */}
-        <div
-          className="w-full md:w-1/2 flex justify-center items-center bg-[#891839] py-10"
-          style={{ minHeight: "calc(100vh - 88px)" }}
-        >
-          <form
-            onSubmit={handleSubmit}
-            className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md mx-4"
-          >
-            <h2 className="text-2xl font-bold text-center text-[#891839] mb-6">
-              Transaction Details
-            </h2>
-
-            {["name", "cardNumber", "amount", "expiry", "cvc"].map((field, i) => (
-              <div key={i} className="mb-4">
-                <label className="block text-gray-700 capitalize mb-1">
-                  {field
-                    .replace("cardNumber", "Credit Card Number")
-                    .replace("cvc", "CVC / CVV")
-                    .replace("expiry", "Expiry Date")}
-                </label>
-                <input
-                  name={field}
-                  type={
-                    field === "amount"
-                      ? "number"
-                      : field === "expiry"
-                      ? "date"
-                      : "text"
-                  }
-                  value={form[field]}
-                  onChange={handleChange}
-                  placeholder={field === "cardNumber" ? "XXXX-XXXX-XXXX-XXXX" : ""}
-                  className={`w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#891839] ${
-                    errors[field] ? "border-red-500" : "border-gray-300"
-                  }`}
-                />
-                {errors[field] && (
-                  <p className="text-red-500 text-sm">{errors[field]}</p>
-                )}
-              </div>
-            ))}
-
-            <button
-              type="submit"
-              className="bg-[#891839] hover:bg-[#a43249] transition-colors text-white w-full py-2 rounded-lg font-bold"
+        ) : (
+          <div className="flex flex-col md:flex-row flex-grow w-full">
+            {/* Left: Event Details */}
+            <div
+              className="w-full md:w-1/2 flex items-center justify-center text-white"
+              style={{
+                backgroundImage: `linear-gradient(rgba(14, 66, 33, 0.85), rgba(14, 66, 33, 0.85)), url(${event && event.files && event.files[0] && event.files[0].serverFilename
+                  ? `http://localhost:5050/uploads/${event.files[0].serverFilename}`
+                  : "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1050&q=80"
+                  })`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                backgroundAttachment: "fixed",
+                minHeight: "calc(100vh - 88px)"
+              }}
             >
-              Submit
-            </button>
-
-            <div className="text-center mt-4 text-gray-600">or pay with</div>
-            <div className="flex justify-center space-x-4 mt-4">
-              <button type="button" className="hover:scale-105 transition-transform">
-                <img src={gcash_icon} alt="GCash" className="h-10" />
-              </button>
-              <button type="button" className="hover:scale-105 transition-transform">
-                <img src={paymaya_icon} alt="PayMaya" className="h-10" />
-              </button>
+              <div className="p-8 max-w-md text-center">
+                <h1 className="text-4xl font-bold mb-4">{event.event_name}</h1>
+                <p className="text-xl mb-2">{new Date(event.event_date).toLocaleDateString('en-US', {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}</p>
+                <p className="font-semibold mb-4">Charity</p>
+                <p className="text-justify">{event.event_description}</p>
+              </div>
             </div>
-          </form>
-        </div>
-      </div>
+
+            {/* Right: Transaction Form */}
+            <div
+              className="w-full md:w-1/2 flex justify-center items-center bg-[#891839] py-10"
+              style={{ minHeight: "calc(100vh - 88px)" }}
+            >
+              <form
+                onSubmit={handleSubmit}
+                className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md mx-4"
+              >
+                <h2 className="text-2xl font-bold text-center text-[#891839] mb-6">
+                  Transaction Details
+                </h2>
+
+                {["name", "cardNumber", "amount", "expiry", "cvc"].map((field, i) => (
+                  <div key={i} className="mb-4">
+                    <label className="block text-gray-700 capitalize mb-1">
+                      {field
+                        .replace("cardNumber", "Credit Card Number")
+                        .replace("cvc", "CVC / CVV")
+                        .replace("expiry", "Expiry Date")}
+                    </label>
+                    <input
+                      name={field}
+                      type={
+                        field === "amount"
+                          ? "number"
+                          : field === "expiry"
+                            ? "date"
+                            : "text"
+                      }
+                      value={form[field]}
+                      onChange={handleChange}
+                      placeholder={field === "cardNumber" ? "XXXX-XXXX-XXXX-XXXX" : ""}
+                      className={`w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#891839] ${errors[field] ? "border-red-500" : "border-gray-300"
+                        }`}
+                    />
+                    {errors[field] && (
+                      <p className="text-red-500 text-sm">{errors[field]}</p>
+                    )}
+                  </div>
+                ))}
+
+                <button
+                  type="submit"
+                  className="bg-[#891839] hover:bg-[#a43249] transition-colors text-white w-full py-2 rounded-lg font-bold"
+                >
+                  Submit
+                </button>
+
+                <div className="text-center mt-4 text-gray-600">or pay with</div>
+                <div className="flex justify-center space-x-4 mt-4">
+                  <button type="button" className="hover:scale-105 transition-transform">
+                    <img src={gcash_icon} alt="GCash" className="h-10" />
+                  </button>
+                  <button type="button" className="hover:scale-105 transition-transform">
+                    <img src={paymaya_icon} alt="PayMaya" className="h-10" />
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
       {/* Footer */}
       <Footer />
