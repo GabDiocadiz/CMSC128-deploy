@@ -5,6 +5,8 @@ import { eventController } from "../controllers/modelControllers/eventController
 import upload from '../middleware/fileMiddleware.js'; // Multer middleware
 import { createRSVP, editRSVP, viewRSVP } from "../controllers/RSVPController/rsvpController.js";
 
+import { donationController } from "../controllers/modelControllers/donationController.js";
+
 const router = express.Router();
 
 router.get('/all', validateToken, authorizeRoles(["Admin", "Alumni"]), eventController.read);
@@ -18,5 +20,7 @@ router.get('/:_id/files', validateToken, authorizeRoles(["Admin", "Alumni"]), ev
 
 router.post('/create-rsvp/:eventID', validateToken, authorizeRoles(['Alumni']), createRSVP);
 router.put('/edit-rsvp/:eventID', validateToken, authorizeRoles(['Alumni']), editRSVP);
+
+router.post('/donate/:eventID', validateToken, authorizeRoles(['Alumni']), donationController.create)
 
 export default router
