@@ -106,10 +106,11 @@ export default function ViewEventDetails() {
                 ) : (
                     <div className="min-h-[85vh] bg-cover bg-center text-white flex justify-center items-center px-4 sm:px-8 md:px-16 pb-10 w-full"
                         style={{
-                            backgroundImage: `url(${typeof event?.files?.[0] === 'string' && event.files[0].trim()
-                                ? `http://localhost:5050/uploads/${event.files[0].trim()}`
+                            backgroundImage: `url(${
+                            event?.files?.[0]?.serverFilename
+                                ? `http://localhost:5050/uploads/${event.files[0].serverFilename}`
                                 : default_eventbg
-                                })`
+                            })`,
                         }}
                     >
                         <div className="absolute inset-0 bg-black opacity-60 z-0"></div>

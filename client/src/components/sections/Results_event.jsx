@@ -4,6 +4,7 @@ import { BookmarkIcon } from '@heroicons/react/24/solid';
 import { TbMoodEmpty } from "react-icons/tb";
 import { TbCalendarStar } from "react-icons/tb";
 import { useAuth } from "../../auth/AuthContext";
+import default_eventbg from "../../assets/event_placeholder.png";
 import axios from "axios";
 import Navbar from "../header";
 import Footer from "../footer";
@@ -96,7 +97,7 @@ export const Results_page_events = ( ) => {
                     <div className="container flex flex-col items-start space-y-8 text-black text-left ">
                         <div className="flex flex-col justify-between items-start w-full">
                             <div className="flex items-center space-x-3 pb-12">
-                                <TbCalendarStar className="text-5xl` lg:text-6xl text-[#145C44]" />
+                                <TbCalendarStar className="text-5xl lg:text-6xl text-[#145C44]" />
                                 <h2 className="text-5xl lg:text-6xl text-[#145C44] font-semibold">Events</h2>
                             </div>
 
@@ -121,7 +122,15 @@ export const Results_page_events = ( ) => {
                                         {events.map(event => (
                                             <div key={event._id} className="flex flex-col h-full bg-white rounded-xl shadow-md overflow-hidden">
                                                 <Link to={`/event-details/${event._id}`}>
-                                                    <img src={`http://localhost:5050/uploads/${event.files[0]}`} alt={event.event_name} className="w-full h-48 object-cover" />
+                                                    <img
+                                                        src={
+                                                        event?.files?.[0]?.serverFilename
+                                                            ? `http://localhost:5050/uploads/${event.files[0].serverFilename}`
+                                                            : default_eventbg
+                                                        }
+                                                        alt={event.event_name}
+                                                        className="w-full h-48 object-cover"
+                                                    />
                                                 </Link>
 
                                                 <div className="p-4 flex flex-col h-full">
