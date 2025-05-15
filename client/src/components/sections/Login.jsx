@@ -16,7 +16,6 @@ const Login = () => {
     useEffect(() => {
         if (!isLoading) {
             if (user) {
-                alert("Already logged in. Redirecting...");
                 if (user.user_type === "Admin") {
                     navigate(`/admin_main`);
                 } else {
