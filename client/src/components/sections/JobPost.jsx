@@ -102,6 +102,24 @@ export const Post_Job = () => {
         } catch (err) {
             console.error("Error creating job posting:", err);
             alert("Submission failed.");
+            setLoading(false);
+
+            setFormData({
+                job_title: "",
+                company: "",
+                location: "",
+                job_description: "",
+                requirements: [],
+                application_link: "",
+                start_date: new Date().toISOString().split('T')[0],
+                end_date: new Date().toISOString().split('T')[0],
+            });
+
+            setSelectedRequirements([]);
+            setActualFiles([]);
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
         }
     };
 
@@ -132,7 +150,7 @@ export const Post_Job = () => {
                     </div>
                     <div className="flex items-center text-3xl lg:text-4xl font-bold text-[#145C44] mt-2">
                         <LuPencil className="mr-2 ml-10"/>
-                        Create a job post
+                        Create a job posting
                     </div>
                 </div>
 
@@ -163,6 +181,7 @@ export const Post_Job = () => {
                             <div className="flex-1 w-full">
                                 <CreatableSelect
                                     isMulti
+                                    value={formData.requirements.map(req => ({ value: req, label: req }))}
                                     options={jobRequiremets}
                                     className="text-sm"
                                     styles={{
@@ -264,8 +283,8 @@ export const Post_Job = () => {
                 <div className="flex flex-col sm:flex-row md:flex-row lg:flex-row justify-end w-full gap-4 mt-5 pl-15 pr-15 mb-8">
                     <button
                         type="button"
-                        onClick={handleSubmit}
-                        className="bg-[#891839] text-white font-medium px-6 py-2 rounded-md cursor-pointer focus:!outline-none"
+                        onClick={() => navigate(-1)}
+                        className="bg-[#891839] text-white font-medium px-12 py-2 rounded-md cursor-pointer focus:!outline-none"
                     >
                         Cancel
                     </button>
@@ -274,7 +293,7 @@ export const Post_Job = () => {
                         disabled={loading}
                         className="bg-[#145C44] text-white font-medium px-6 py-2 rounded-md cursor-pointer focus:!outline-none"
                     >
-                        Submit
+                        Submit Job Posting
                     </button>
                 </div>
 
