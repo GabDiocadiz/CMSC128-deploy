@@ -311,7 +311,11 @@ function ProfileSection({ title, fields, editableData, isEditing, handleChange }
                 className="border-2 rounded-xl p-2 text-gray-800 focus:border-[#891839] w-full"
               />
             ) : (
-              <p className="text-gray-700 font-semibold">{editableData[field.name]}</p>
+              (editableData[field.name] != null && editableData[field.name] != '') ? (
+                <p className="text-gray-700 font-semibold">{editableData[field.name]}</p>
+              ) : (
+                <p className="text-gray-400"> No Data </p>
+              )
             )}
           </div>
         ))}
