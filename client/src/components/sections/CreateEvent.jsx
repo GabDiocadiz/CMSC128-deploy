@@ -77,6 +77,27 @@ export const CreateEvent = () => {
         }
     };
 
+    const handleDateChange = (date) => {
+        console.log("Date changed");
+        const now = new Date();
+
+        const normalizedDate = new Date(date);
+        normalizedDate.setHours(0, 0, 0, 0);
+
+        const todayNormalized = new Date(now);
+        todayNormalized.setHours(0, 0, 0, 0);
+
+        console.log(normalizedDate, todayNormalized)
+
+        if (normalizedDate < todayNormalized) {
+            alert("Cannot set event date to a previous date.");
+            setFormData(prev => ({ ...prev, event_date: prev.event_date}));
+            return;
+        }
+
+        setFormData(prev => ({ ...prev, event_date: date }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
@@ -179,7 +200,7 @@ export const CreateEvent = () => {
                                 <label className="w-32 text-sm font-medium text-gray-700 text-left">Event Date</label>
                                 <Datepicker
                                     value={formData.event_date}
-                                    onChange={(date) => setFormData({ ...formData, event_date: date })}
+                                    onChange={handleDateChange}
                                     style={{
                                         backgroundColor: '#f3f4f6',
                                         border: '1px solid #d1d5db',
