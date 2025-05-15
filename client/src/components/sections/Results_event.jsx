@@ -8,6 +8,7 @@ import default_eventbg from "../../assets/event_placeholder.png";
 import axios from "axios";
 import Navbar from "../header";
 import Footer from "../footer";
+import Loading from "../loading";
 import Sidebar from "../Sidebar";
 export const Results_page_events = ( ) => {
     const navigate = useNavigate();
@@ -89,9 +90,7 @@ export const Results_page_events = ( ) => {
             <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
 
             {isLoading ? (
-                <div className="min-w-screen min-h-screen bg-gray-200 flex justify-center items-center">
-                    <div className="w-16 h-16 border-4 border-[#145C44] border-t-transparent rounded-full animate-spin"></div>
-                </div>
+                <Loading />
             ) : (
                 <div className="w-full min-w-screen min-h-screen bg-gray-200 px-15 lg:px-25 pt-30 flex flex-col items-center">
                     <div className="container flex flex-col items-start space-y-8 text-black text-left ">
