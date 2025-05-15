@@ -175,6 +175,15 @@ export const Admin_main = () => {
                 <tbody>
                   {filteredData.map((item, idx) => (
                     <tr key={idx} className="bg-white hover:bg-gray-200 transition-colors duration-200 "
+                        onClick={() => {
+                        if (activeTab === "Events") {
+                          navigate(`/event-details/${item.id}`);
+                        } else if (activeTab === "Jobs") {
+                          navigate(`/job-details/${item.id}`);
+                        } else if (activeTab === "Job Requests") {
+                          navigate(`/job-details/${item.id}`);
+                        }
+                      }}
                     
                     >
                       {activeTab === "Events" && (
