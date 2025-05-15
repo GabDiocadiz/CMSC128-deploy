@@ -5,6 +5,7 @@ import Footer from "../footer";
 import { BookmarkIcon } from '@heroicons/react/24/solid';
 import { LuPencil } from "react-icons/lu";
 import { CgWorkAlt } from "react-icons/cg";
+import job_placeholder from "../../assets/job_placeholder.png"
 import axios from "axios";
 import { useAuth } from "../../auth/AuthContext";
 import Sidebar from "../Sidebar";
@@ -37,7 +38,7 @@ export const Results_page_jobs = () => {
     }
   };
 
-  useEffect(() => {
+useEffect(() => {
     const fetchJobs = async () => {
       setIsLoading(true);
       try {
@@ -85,21 +86,24 @@ export const Results_page_jobs = () => {
   return (
     <>
       <div className="w-screen pb-10">
-        <Navbar toggleSidebar={toggleSidebar} />
+        <Navbar toggleSidebar={toggleSidebar}/>
       </div>
-
-      <div className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
-        <Sidebar />
+      <div
+        className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${
+            sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+          <Sidebar/>
       </div>
 
       <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
-        {isLoading ? (
+      {isLoading ? (
           <div className="min-w-screen min-h-screen bg-gray-200 flex justify-center items-center">
-            <div className="w-16 h-16 border-4 border-[#145C44] border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-16 h-16 border-4 border-[#145C44] border-t-transparent rounded-full animate-spin"></div>
           </div>
-        ) : jobs.length === 0 ? (
-          <div className="min-w-screen min-h-screen bg-gray-200 px-10 py-20 flex flex-col justify-center items-center text-6xl text-emerald-800 font-extrabold">
-            <svg className="w-24 h-24 text-black-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      ) : jobs.length === 0 ? (
+        <div className="min-w-screen min-h-screen bg-gray-200 px-10 py-20 pb-30 flex flex-col justify-center items-center text-6xl text-emerald-800 font-extrabold">
+          <svg className="w-24 h-24 text-black-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 7.75L12 3l9 4.75M4.5 10.25v7.5l7.5 4.25 7.5-4.25v-7.5M4.5 10.25L12 14.5l7.5-4.25" />
             </svg>
             No jobs found.
@@ -109,50 +113,56 @@ export const Results_page_jobs = () => {
             >
               Post a Job
             </button>
-          </div>
-        ) : (
-          <div className="min-w-screen min-h-screen bg-gray-200 px-5 lg:px-20 pt-20 flex flex-col justify-center items-center">
-            <div className="container flex flex-col items-start space-y-8 text-black text-left w-full">
-              <div className="flex justify-between items-center w-full">
+          </div> 
+      ) : (
+        <div className="min-w-screen min-h-screen bg-gray-200 px-15 lg:px-25 pt-19 flex flex-col justify-center items-center"> 
+            <div className="container flex flex-col items-start space-y-8 text-black text-left ">
+              <div className="flex flex-col justify-between items-start w-full">
                 <div className="flex items-center space-x-3 pb-8">
-                  <CgWorkAlt className="text-5xl lg:text-7xl text-[#145C44]" />
-                  <h2 className="text-5xl lg:text-6xl text-[#145C44] font-semibold">Job Listings</h2>
+                    <CgWorkAlt className="text-5xl lg:text-7xl text-[#145C44]" />
+                    <h2 className="text-5xl lg:text-6xl text-[#145C44] font-semibold">Job Listings</h2>
                 </div>
 
-                {jobButton && (
-                  <button
-                    onClick={() => navigate('/post_job')}
-                    className="flex items-center space-x-3 bg-[#891839] text-white rounded-md mr-2 px-6 py-2.5 shadow hover:bg-[#89183aed] focus:!outline-none"
-                  >
-                    <LuPencil />
-                    <span>Post a Job</span>
-                  </button>
-                )}
-              </div>
+                {/* Sort dropdown */}
+                <div className="w-full flex justify-between items-center">
+                  <div className="flex flex-row space-x-4 items-center px-2">
+                    <h2>Sort by:</h2>
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value)}
+                      className="border border-gray-400 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                    >
+                      <option value="">Select</option>
+                      <option value="date">Date</option>
+                      <option value="title">Title</option>
+                    </select>
+                  </div>
 
-              {/* Sort dropdown */}
-              <div className="w-full flex items-center space-x-4 px-2">
-                <label className="text-gray-700">Sort by:</label>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="border border-gray-400 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
-                >
-                  <option value="">Sort</option>
-                  <option value="date_desc">Newest</option>
-                  <option value="date_asc">Oldest</option>
-                  <option value="title_asc">Title A–Z</option>
-                  <option value="title_desc">Title Z–A</option>
-                </select>
-              </div>
+                  {jobButton && (
+                    <div>
+                      <button
+                        onClick={() => navigate('/post_job')}
+                        className="flex items-center space-x-3 bg-[#891839] text-white rounded-md mr-2 px-4 py-2 md:px-6 md:py-2.5 lg:px-6 lg:py-2.5 shadow hover:bg-[#89183aed] cursor-pointer focus:!outline-none"
+                      >
+                        <LuPencil />
+                        <span>Post a Job</span>
+                      </button>
+                    </div>
+                    )}
+                </div>
 
-              {/* Job Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
+              {/* Jobs Display */}
+              <div className="flex justify-center w-full mb-35 mt-5 px-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {jobs.map((job) => (
                   <div key={job._id} className="bg-white rounded-xl shadow-md overflow-hidden">
                     <Link to={`/job-details/${job._id}`}>
                       <img
-                        src={`${import.meta.env.VITE_API_URL}/uploads/${job.files?.[0]?.serverFilename || "placeholder.jpg"}`}
+                        src={
+                          job.files?.[0]?.serverFilename
+                            ? `${import.meta.env.VITE_API_URL}/uploads/${job.files[0].serverFilename}`
+                            : job_placeholder
+                        }
                         alt={job.job_title}
                         className="w-full h-48 object-cover"
                       />
@@ -161,32 +171,41 @@ export const Results_page_jobs = () => {
                       <div className="flex justify-end mb-2">
                         <button
                           onClick={() => toggleBookmark(job._id)}
-                          className="text-gray-500 hover:text-black"
+                          className="text-white-400 hover:text-white-500 focus:outline-none"
                           title={bookmarkedIds.includes(job._id) ? "Remove Bookmark" : "Bookmark"}
                         >
                           <BookmarkIcon className={`w-6 h-6 ${bookmarkedIds.includes(job._id) ? "text-emerald-600" : "opacity-50"}`} />
+                          {/* {bookmarkedIds.includes(job._id) ? (
+                            <BookmarkIcon className="w-6 h-6" />
+                          ) : (
+                            <BookmarkIcon className="w-6 h-6 opacity-50" />
+                          )} */}
                         </button>
                       </div>
+
                       <h2 className="text-xl font-semibold mb-1">{job.job_title}</h2>
                       <h3 className="text-lg text-gray-600 mb-1">{job.company}</h3>
                       <p className="text-sm text-gray-500 mb-2">{job.location}</p>
-                      <p className="text-gray-700 mb-2">{job.job_description}</p>
-                      <p className="text-sm text-right text-gray-500">
+                      <p className="text-gray-700">{job.job_description}</p>
+                      <p className="text-sm text-right text-gray-500 mb-2">
                         {new Date(job.date_posted).toLocaleDateString('en-US', {
                           year: 'numeric',
                           month: 'long',
                           day: 'numeric',
                         })}
-                      </p>
+                        </p>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-          </div>
-        )}
+              </div>
+            </div>
+          </div>	
+      )
+          
+      }
       </div>
-
       <div className="w-full z-50">
         <Footer />
       </div>

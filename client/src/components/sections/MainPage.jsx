@@ -13,7 +13,8 @@ import Error_Message from "../error_message";
 import { useParams } from 'react-router-dom';
 import { useAuth } from "../../auth/AuthContext";
 import Sidebar from "../Sidebar";
-const default_eventbg ="../../assets/event_placeholder.jpg"
+import event_placeholder from "../../assets/event_placeholder.png"
+
 export default function MainPage() {
     const {authAxios, user} = useAuth();
     const {user_id} = useParams(); //Contains the User Id 
@@ -190,11 +191,11 @@ export default function MainPage() {
                         <div className={`${announcements.length === 0 ? 'col-span-1 sm:col-span-3' : 'col-span-1 sm:col-span-2'}
                         bg-cover bg-center text-white flex flex-col justify-center items-start px-8 py-16 sm:px-16 sm:py-32 w-full transition-all duration-1000 relative group`}
                         style={{
-                        backgroundImage: `url(${
-                            events[currentEventIndex]?.files?.[0]
-                            ? `${import.meta.env.VITE_API_URL}/uploads/${events[currentEventIndex].files[0].serverFilename}`
-                            : default_eventbg
-                        })`
+                            backgroundImage: `url(${
+                            events[currentEventIndex]?.files?.[0]?.serverFilename
+                                ? `${import.meta.env.VITE_API_URL}/uploads/${events[currentEventIndex].files[0].serverFilename}`
+                                : event_placeholder
+                            })`,
                         }}
                     >
                         <div className="absolute inset-0 bg-black opacity-60 z-0"></div>
@@ -215,15 +216,27 @@ export default function MainPage() {
 
                         {events.length > 1 && (
                             <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex items-center space-x-4">
-                            <button onClick={handlePrevEvent}>
-                                <IoIosArrowBack size={15} />
-                            </button>
-                            <span className="text-sm font-normal select-none">
-                                {`${currentEventIndex + 1} of ${events.length}`}
-                            </span>
-                            <button onClick={handleNextEvent}>
-                                <IoIosArrowForward size={15} />
-                            </button>
+                                <button
+                                    onClick={handlePrevEvent}
+                                    disabled={currentEventIndex === 0}
+                                    className={`${
+                                        currentEventIndex === 0 ? 'opacity-50' : 'opacity-100 cursor-pointer'
+                                    }`}
+                                >
+                                    <IoIosArrowBack size={15}/>
+                                </button>
+                                <span className="text-sm font-normal select-none">
+                                    {`${currentEventIndex + 1} of ${events.length}`}
+                                </span>
+                                <button
+                                    onClick={handleNextEvent}
+                                    disabled={currentEventIndex === events.length - 1}
+                                    className={`${
+                                        currentEventIndex === events.length - 1 ? 'opacity-50' : 'opacity-100 cursor-pointer'
+                                    }`}
+                                >
+                                    <IoIosArrowForward size={15} />
+                                </button>
                             </div>
                         )}
                         </div>

@@ -7,6 +7,7 @@ import { useAuth } from "../../auth/AuthContext";
 import default_eventbg from "../../assets/event_placeholder.png";
 import Navbar from "../header";
 import Footer from "../footer";
+import Loading from "../loading";
 import axios from "axios";
 
 export default function ViewEventDetails() {
@@ -100,16 +101,15 @@ export default function ViewEventDetails() {
             <div className="w-screen pt-12">
 
                 {isLoading ? (
-                    <div className="min-w-screen min-h-screen bg-gray-200 flex justify-center items-center">
-                        <div className="w-16 h-16 border-4 border-[#145C44] border-t-transparent rounded-full animate-spin"></div>
-                    </div>
+                    <Loading />
                 ) : (
                     <div className="min-h-[85vh] bg-cover bg-center text-white flex justify-center items-center px-4 sm:px-8 md:px-16 pb-10 w-full"
                         style={{
-                            backgroundImage: `url(${typeof event?.files?.[0] === 'string' && event.files[0].trim()
-                                ? `${import.meta.env.VITE_API_URL}/uploads/${event.files[0].trim()}`
+                            backgroundImage: `url(${
+                            event?.files?.[0]?.serverFilename
+                                ? `${import.meta.env.VITE_API_URL}/uploads/${event.files[0].serverFilename}`
                                 : default_eventbg
-                                })`
+                            })`,
                         }}
                     >
                         <div className="absolute inset-0 bg-black opacity-60 z-0"></div>
