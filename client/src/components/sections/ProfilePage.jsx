@@ -27,7 +27,7 @@ export default function ProfilePage() {
   const [error, setError] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false); // Sidebar toggle state
   const [bookmarkedJobs, setBookmarkedJobs] = useState([]);
-  const [jobs, setJobs] = useState([]);
+  const [bookmarkedEvents, setBookmarkedEvents] = useState([]);
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
 
   useEffect(() => {
@@ -57,6 +57,19 @@ export default function ProfilePage() {
         setBookmarkedJobs(jobDetails);
       } else {
         setBookmarkedJobs([]);
+      }
+
+      if (response.data.bookmarked_events.length > 0) {
+        const eventDetails = await Promise.all(
+          response.data.bookmarked_events.map(async (eventRef) => {
+            const eventId = eventRef?.$oid || eventRef?._id || eventRef;
+            const eventRes = await authAxios.get(`/events/find-event/${eventId}`);
+            return eventRes.data;
+          })
+        );
+        setBookmarkedEvents(eventDetails);
+      } else {
+        setBookmarkedEvents([]);
       }
 
       setEditableData({
@@ -264,11 +277,41 @@ export default function ProfilePage() {
               </div>
             </Link>
           ))}
-
           </ul>
         )}
       </section>
 
+            <section className="bg-white rounded-3xl shadow-lg p-8">
+        <h3 className="text-3xl font-bold text-[#891839] mb-6 text-center">Bookmarked Events</h3>
+        {bookmarkedEvents.length === 0 ? (
+          <p className="text-gray-300 text-center">No bookmarked events.</p>
+        ) : (
+          <ul className="space-y-4">
+            {bookmarkedEvents.map((event, index) => (
+            <Link
+              key={index}
+              to={`/event-details/${event._id}`}
+              className="transform transition-transform duration-300 hover:scale-105 block"
+            >
+              <div className="bg-[#891839] p-3 rounded-3xl flex justify-center h-50 w-full shadow-lg hover:shadow-xl">
+                <div className="bg-[#891839] text-white px-10 rounded-3xl border-2 border-white w-full flex flex-col items-start justify-center text-left">
+                  <h3 className="text-4xl font-semibold mb-3 pb-5">{event.event_name || 'No title'}</h3>
+                  <p>Venue: {event.venue || 'No company'}</p>
+                  <p>
+                    Date: {event.date? new Date(event.date).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    }) : 'Unknown date'}
+                  </p>
+                  <p>Location: {event.location || 'No location'}</p>
+                </div>
+              </div>
+            </Link>
+          ))}
+          </ul>
+        )}
+      </section>
 
         <section className="bg-white rounded-3xl shadow-lg p-8 mb-16">
           <h3 className="text-3xl font-bold text-[#891839] mb-6 text-center">Job Postings Application</h3>
