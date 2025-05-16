@@ -95,6 +95,9 @@ export const AuthProvider = ({ children }) => {
         setIsLoading(true);
         try {
             const res = await authAxios.post('/auth/login', {
+                email,
+                password
+            }, {
                 withCredentials: true
             });
 
