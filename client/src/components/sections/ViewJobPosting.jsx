@@ -2,6 +2,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import { FaLocationDot } from "react-icons/fa6";
+import { TiCalendar } from "react-icons/ti";
+import { FaRegCreditCard } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import { ScrollToTop } from "../../utils/helper";
 import { useAuth } from "../../auth/AuthContext";
@@ -88,13 +90,16 @@ export default function ViewJobDetails() {
                                 <FaLocationDot className="text-3xl sm:text-4xl" />
                                 {job.location}
                             </p>
-                            <p className="text-sm sm:text-lg text-white mt-6 ml-2 mb-1 text-left">
-                                Posted on:{" "}
-                                {new Date(job.date_posted).toLocaleDateString("en-US", {
-                                    year: "numeric",
-                                    month: "long",
-                                    day: "numeric",
-                                })}
+                            <p className="text-sm sm:text-lg text-white mt-4 ml-2 mb-1 text-left flex items-center gap-2">
+                                <TiCalendar className="text-2xl" />
+                                <span className="pt-1">
+                                    Posted on:{" "}
+                                    {new Date(job.date_posted).toLocaleDateString("en-US", {
+                                        year: "numeric",
+                                        month: "long",
+                                        day: "numeric",
+                                    })}
+                                </span>
                             </p>
                         </div>
                     </div>
@@ -102,16 +107,28 @@ export default function ViewJobDetails() {
                         <h2 className="text-4xl sm:text-7xl font-bold text-left ml-5 text-[#891839] mb-2">
                             {job.job_title}
                         </h2>
-                        <div className="h-1 bg-[#891839] mb-6 mt-10"></div>
 
-                        <p className="text-[#891839] text-lg sm:text-xl text-left mx-7">
+                        {job.salary && (
+                            <div className="flex items-center gap-2 text-xl sm:text-2xl text-left ml-5 text-gray-800 mb-4 pl-1">
+                                <FaRegCreditCard  className="text-gray-800 text-2xl" />
+                                <span className="text-md sm:text-lg text-left">Salary:</span>
+                                <span className="text-md sm:text-lg">
+                                    ₱{Number(job.salary).toLocaleString()} 
+                                    <span className="text-sm sm:text-md ml-1">per month</span>
+                                </span>
+                            </div>
+                        )}
+
+                        <div className="h-1 bg-[#891839] mb-6 mt-7"></div>
+
+                        <p className="text-gray-800 text-lg sm:text-xl text-left mx-7">
                             {job.job_description}
                         </p>
 
                         {job.requirements?.length > 0 && (
                             <div>
                                 <h3 className="text-3xl sm:text-4xl font-semibold text-[#891839] text-left mb-4 mt-15 mx-7">Requirements:</h3>
-                                <ul className="list-disc list-inside text-[#891839] text-md sm:text-xl text-left mr-7 ml-15">
+                                <ul className="list-disc list-inside text-gray-800 text-md sm:text-xl text-left mr-7 ml-15">
                                     {job.requirements.map((req, i) => (
                                         <li key={i}>{req}</li>
                                     ))}
