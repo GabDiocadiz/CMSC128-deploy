@@ -23,7 +23,7 @@ const __dirname = path.dirname(__filename);
 app.use(cors({
   origin: [
     'http://localhost:5173', // local
-    'https://cmsc-128-deploy-qgpg.vercel.app/' // deployed
+    'https://gab-vercel.vercel.app/' // deployed
   ],
   credentials: true
 }));
