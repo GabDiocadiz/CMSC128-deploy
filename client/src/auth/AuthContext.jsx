@@ -73,32 +73,11 @@ export const AuthProvider = ({ children }) => {
 
 
     const login = async (email, password) => {
-        const existingToken = localStorage.getItem(ACCESS_TOKEN_KEY);
-        if (existingToken) {
-            let message = "Another user is already logged in. Please log out first.";
-            const storedUser = localStorage.getItem(USER_KEY);
-            if (storedUser) {
-                try {
-                    const existingUserData = JSON.parse(storedUser);
-                    if (existingUserData && existingUserData.email) {
-                        message = `User ${existingUserData.email} is already logged in. Please log out first.`;
-                    }
-                } catch (e) { }
-            }
-            console.warn("Login attempt blocked: A user session is already active in this browser.");
-            return {
-                success: false,
-                error: { message }
-            };
-        }
-
         setIsLoading(true);
         try {
-            const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, {
+            const res = await authAxios.post('/auth/login', {
                 email,
                 password
-            }, {
-                withCredentials: true
             });
 
             if (res.data.accessToken && res.data.user) {
@@ -136,9 +115,7 @@ export const AuthProvider = ({ children }) => {
 
     const refreshToken = async () => {
         try {
-            const res = await axios.get(`${import.meta.env.VITE_API_URL}/auth/refresh`, {
-                withCredentials: true
-            });
+            const res = await authAxios.get('/auth/refresh');
 
             if (res.data.accessToken) {
                  // update state
