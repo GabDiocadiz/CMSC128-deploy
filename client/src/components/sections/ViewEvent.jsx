@@ -9,7 +9,7 @@ import Navbar from "../header";
 import Footer from "../footer";
 import Loading from "../loading";
 import axios from "axios";
-
+import Sidebar from "../Sidebar";
 export default function ViewEventDetails() {
     const { id } = useParams();
     const [event, setEvent] = useState(null);
@@ -17,7 +17,8 @@ export default function ViewEventDetails() {
     const { authAxios, user } = useAuth();
     const navigate = useNavigate();
     // console.log(id);
-
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const toggleSidebar = () => setSidebarOpen((prev) => !prev);
 
     useEffect(() => {
         const fetchedEvent = async () => {
@@ -95,11 +96,19 @@ export default function ViewEventDetails() {
     return (
         <>
             <div className="fixed top-0 w-full z-50">
-                <Navbar />
+                <Navbar toggleSidebar={toggleSidebar}/>
             </div>
+            <div
+                className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${
+                sidebarOpen ? "translate-x-0" : "-translate-x-full"
+                }`}
+            >
+                <Sidebar />
+            </div>
+            <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
 
             <div className="w-screen pt-12">
-
+                    
                 {isLoading ? (
                     <Loading />
                 ) : (
@@ -166,7 +175,7 @@ export default function ViewEventDetails() {
                     </div>
                 )}
             </div>
-
+            </div>
             <div className="w-full z-50">
                 <Footer />
             </div>
