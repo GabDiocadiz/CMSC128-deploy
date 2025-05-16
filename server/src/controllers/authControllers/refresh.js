@@ -12,12 +12,17 @@ export const refresh = async (req, res) => {
     try {
         const refreshToken = req.cookies.jwt;
 
+        // Check if refresh token exists
+        if (!refreshToken) {
+            return res.status(401).json({ message: 'Refresh token not found' });
+        }
+
         jwt.verify(
             refreshToken, 
             refreshSecretKey,
             async (err, decoded) => {
                 if (err) {
-                    return res.status(406).json({ message: 'Invalid or expired refresh token' });
+                    return res.status(403).json({ message: 'Invalid or expired refresh token' });
                 }
                 
                 const user = await User.findById(decoded.userId)
@@ -32,9 +37,10 @@ export const refresh = async (req, res) => {
                     { expiresIn: '10m' }
                 );
 
+                // Set content type explicitly
+                res.setHeader('Content-Type', 'application/json');
                 res.status(200).json({ accessToken });
             }
-            
         )
     } catch (e) {
         console.error('Refresh Error: ', e)
