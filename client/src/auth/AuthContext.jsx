@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
             return null;
         }
     });
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     // initial auth check
     useEffect(() => {
@@ -136,9 +136,12 @@ export const AuthProvider = ({ children }) => {
 
     const refreshToken = async () => {
         try {
-            const res = await authAxios.get('/auth/refresh');
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/auth/refresh`, {
+                withCredentials: true
+            });
 
             if (res.data.accessToken) {
+                 // update state
                 setAccessToken(res.data.accessToken);
                 return true;
             }
