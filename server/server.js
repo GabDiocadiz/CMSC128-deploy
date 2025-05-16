@@ -27,7 +27,8 @@ const corsOptions = {
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // allow these methods
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'], // add headers your frontend sends
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'], // add headers your frontend sends
+  exposedHeaders: ['Set-Cookie'], // expose Set-Cookie header
   preflightContinue: false,
   optionsSuccessStatus: 204
 };
@@ -40,6 +41,10 @@ app.options('*', cors(corsOptions));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Credentials', 'true');
+  next();
+});
 
 // routes
 app.use("/alumni", alumniRoutes);
