@@ -27,6 +27,15 @@ app.use(cors({
   ],
   credentials: true
 }));
+
+app.options('*', cors({
+  origin: [
+    'http://localhost:5173',
+    'https://gab-vercel.vercel.app'
+  ],
+  credentials: true
+}));
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
