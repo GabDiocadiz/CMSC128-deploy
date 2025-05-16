@@ -84,13 +84,13 @@ export const Admin_main = () => {
       return [];
     };
     const handleDeleteEvent =({id})=>{
-
+      setreq_modalOpen(true)
     }
     const handleRejectReq =({id})=>{
-
+      setreq_modalOpen(true)
     }
     const handleAcceptReq =({id})=>{
-      
+      setreq_modalOpen(true)
     }
     const filteredData = getCategoryData();
     return(
@@ -194,7 +194,9 @@ export const Admin_main = () => {
                             <td className="px-4 py-4">{item.createdBy}</td>
                             <td className="px-4 py-4 pl-6">
                               <button
-                                onClick={() => handleDeleteEvent(item.id)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDeleteEvent(item.id);}}
                                 className="bg-[#891839] hover:bg-red-600 text-white p-2 rounded-lg transition duration-200 flex items-center justify-center"
                                 aria-label="Delete"
                               >
@@ -205,12 +207,14 @@ export const Admin_main = () => {
                       )}
                       {activeTab === "Jobs" && (
                         <>
-                            <td className="px-4 py-4 font-medium text-gray-900">{item.id}</td>
+                          <td className="px-4 py-4 font-medium text-gray-900">{item.id}</td>
                           <td className="px-4 py-4 font-medium text-gray-900">{item.name}</td>
                           <td className="px-4 py-4">{item.company}</td>
                           <td className="px-4 py-4 pl-6">
                               <button
-                                onClick={() => handleDeleteEvent(item.id)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDeleteEvent(item.id);}}
                                 className="bg-[#891839] hover:bg-red-600 text-white p-2 rounded-lg transition duration-200 flex items-center justify-center"
                                 aria-label="Delete"
                               >
@@ -225,7 +229,12 @@ export const Admin_main = () => {
                           <td className="px-4 py-4">{item.from}</td>
                           <td className="px-4 py-4 flex items-center gap-2">
                             <button
-                              onClick={() => handleAcceptReq(item.id)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setrequestID(item.id);
+                                setmessage_modal(1);
+                                handleAcceptReq(item.id);}}
+
                               className="bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg transition duration-200"
                               aria-label="Approve"
                             >
@@ -233,7 +242,11 @@ export const Admin_main = () => {
                             </button>
 
                             <button
-                              onClick={() => handleRejectReq(item.id)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setrequestID(item.id);
+                                setmessage_modal(0);
+                                handleRejectReq(item.id);}}
                               className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition duration-200"
                               aria-label="Reject"
                             >
