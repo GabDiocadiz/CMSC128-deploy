@@ -19,22 +19,23 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// middleware
-app.use(cors({
+// detailed CORS configuration
+const corsOptions = {
   origin: [
     'http://localhost:5173', // local
     'https://gab-vercel.vercel.app' // deployed
   ],
-  credentials: true
-}));
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // allow these methods
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'], // add headers your frontend sends
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+};
 
-app.options('*', cors({
-  origin: [
-    'http://localhost:5173',
-    'https://gab-vercel.vercel.app'
-  ],
-  credentials: true
-}));
+// middleware
+app.use(cors(corsOptions));
+
+app.options('*', cors(corsOptions));
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
