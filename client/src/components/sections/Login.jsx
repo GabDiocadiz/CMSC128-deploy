@@ -7,7 +7,8 @@ import Loading from "../loading";
 
 const Login = () => {
     const navigate = useNavigate();
-    const { login, user, isLoading } = useAuth();
+    const { login, user } = useAuth();
+    const [ isLoading, setIsLoading ] = useState(false);
 
     const [formData, setFormData] = useState({
         email: "",
