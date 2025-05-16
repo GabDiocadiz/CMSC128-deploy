@@ -23,7 +23,7 @@ const __dirname = path.dirname(__filename);
 app.use(cors({
   origin: [
     'http://localhost:5173', // local
-    'https://gab-vercel.vercel.app/' // deployed
+    'https://gab-vercel.vercel.app' // deployed
   ],
   credentials: true
 }));
@@ -42,11 +42,11 @@ app.use("/announcement", communicationRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Serve frontend files
-app.use(express.static(path.join(__dirname, '../client/dist')));
+// app.use(express.static(path.join(__dirname, '../client/dist')));
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-});
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+// });
 
 // temporary default route -- remove when connecting to frontend
 app.get('/', (req, res) => {
