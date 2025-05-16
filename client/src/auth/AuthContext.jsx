@@ -95,9 +95,6 @@ export const AuthProvider = ({ children }) => {
         setIsLoading(true);
         try {
             const res = await authAxios.post('/auth/login', {
-                email,
-                password
-            }, {
                 withCredentials: true
             });
 
@@ -136,7 +133,9 @@ export const AuthProvider = ({ children }) => {
 
     const refreshToken = async () => {
         try {
-            const res = await authAxios.get('/auth/refresh');
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/auth/refresh`, {
+                withCredentials: true
+            });
 
             if (res.data.accessToken) {
                  // update state
