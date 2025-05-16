@@ -4,13 +4,9 @@ import { useAuth } from "../auth/AuthContext";
 export default function Sidebar(currentPage){
 
     const navigate = useNavigate()
-    const { authAxios, user } = useAuth();
-     const handleLogout=()=>{
-        //Logout
-        const logout=0;
-        //if (logout.success){
-        //}
-        navigate('/')
+    const { authAxios, user, logout } = useAuth();
+    const handleLogout = async (e)=>{
+        await logout();
     }
     const handleNavigate = () => {
   if (user?.user_type === 'Admin') {
