@@ -143,7 +143,6 @@ export const CreateEvent = () => {
 
     return (
         <>  
-            <Speed_Dial_Admin />
             <div className="w-screen">
                 <Navbar_admin toggleSidebar={toggleSidebar}/>
             </div>

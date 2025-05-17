@@ -115,7 +115,7 @@ export const Results_page_events = ( ) => {
             >
                 <Sidebar/>
             </div>
-            <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
+            <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"} bg-gray-200`}>
 
             {isLoading ? (
                 <Loading />
@@ -195,13 +195,21 @@ export const Results_page_events = ( ) => {
                             </div>
                         </div>
                     </div>
+                    
                 </div>
             )}
             </div>
+            {sidebarOpen ?(
+            <div className="ml-64 w-full z-10">
+                <Footer />
+            </div>
             
+            ):(
             <div className="w-full z-50">
                 <Footer />
             </div>
+            )}
+            
         </>
     );
 };

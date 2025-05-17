@@ -1,23 +1,16 @@
 
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from "../auth/AuthContext";
-export default function Sidebar(currentPage){
 
+export default function Sidebar(currentPage){
+    const { logout } = useAuth();
     const navigate = useNavigate()
     const { authAxios, user } = useAuth();
      const handleLogout=()=>{
-        //Logout
-        const logout=0;
-        //if (logout.success){
-        //}
-        navigate('/')
+        logout()
     }
     const handleNavigate = () => {
-  if (user?.user_type === 'Admin') {
-    navigate('/admin_search-alumni');
-  } else {
     navigate('/search-alumni');
-  }
 };
     return(
         <>

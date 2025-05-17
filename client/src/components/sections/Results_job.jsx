@@ -201,14 +201,25 @@ useEffect(() => {
             </div>
               </div>
             </div>
+          
           </div>	
       )
           
       }
+      
       </div>
-      <div className="w-full z-50">
-        <Footer />
+      {sidebarOpen ?(
+        <div className="ml-64 w-full z-10">
+          <Footer />
       </div>
+        
+      ):(
+        <div className="w-full z-50">
+          <Footer />
+      </div>
+      )}
+      
+      
     </>
   );
 };
