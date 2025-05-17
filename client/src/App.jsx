@@ -16,7 +16,7 @@ import { Results_page_accounts} from './components/sections/Results_accounts'
 import { Results_page_accounts_admin} from './components/sections/Results_accounts_admin'
 import { Results_page_jobs } from './components/sections/Results_job'
 import { Unauthorized_jobs_results_page } from './components/sections/Unauthorized_jobs_results'
-
+import Inbox from './components/sections/Inbox'
 import { CreateEvent } from './components/sections/CreateEvent'
 import { Post_Job } from './components/sections/JobPost'
 
@@ -58,6 +58,7 @@ function App() {
               <Route path="/profile" element={<ProfilePage/>} />
               <Route path='/donate/:id' element={<TransactionPage/>}/>
               <Route path='/create_announcement' element={<CreateAnnouncement/>}/>
+              <Route path='/inbox' element={<Inbox/>}/>
             </Route>
 
           </Routes>

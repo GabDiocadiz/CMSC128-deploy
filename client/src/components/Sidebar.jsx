@@ -1,16 +1,30 @@
 
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from "../auth/AuthContext";
-
+import React, { useState } from "react";
 export default function Sidebar(currentPage){
     const { logout } = useAuth();
     const navigate = useNavigate()
     const { authAxios, user } = useAuth();
+     const [ notifications, setNotifications ] = useState([]);
      const handleLogout=()=>{
         logout()
     }
     const handleNavigate = () => {
     navigate('/search-alumni');
+    const fetchNotifications = useCallback(async () => {
+        try {
+          const response = await authAxios.get('/notifications/unread');
+          setNotifications(response.data || []);
+        } catch (err) {
+          console.error("Error fetching notifications:", err);
+          setNotifications([]);
+        }
+      }, [authAxios]);
+    
+      useEffect(() => {
+        fetchNotifications();
+      }, [fetchNotifications]);
 };
     return(
         <>
@@ -64,41 +78,52 @@ export default function Sidebar(currentPage){
                 </div>
                 View Events
                 </div>
-                <div role="button"
-                class="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900">
-                <div class="grid mr-4 place-items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"
-                    class="w-5 h-5">
-                    <path fill-rule="evenodd"
-                        d="M6.912 3a3 3 0 00-2.868 2.118l-2.411 7.838a3 3 0 00-.133.882V18a3 3 0 003 3h15a3 3 0 003-3v-4.162c0-.299-.045-.596-.133-.882l-2.412-7.838A3 3 0 0017.088 3H6.912zm13.823 9.75l-2.213-7.191A1.5 1.5 0 0017.088 4.5H6.912a1.5 1.5 0 00-1.434 1.059L3.265 12.75H6.11a3 3 0 012.684 1.658l.256.513a1.5 1.5 0 001.342.829h3.218a1.5 1.5 0 001.342-.83l.256-.512a3 3 0 012.684-1.658h2.844z"
-                        clip-rule="evenodd"></path>
-                    </svg>
-                </div>
-                Inbox
-                <div class="grid ml-auto place-items-center justify-self-end">
-                    <div
-                    class="relative grid items-center px-2 py-1 font-sans text-xs font-bold uppercase rounded-full select-none whitespace-nowrap bg-blue-gray-500/20 text-blue-gray-900">
-                    <span class="">14</span>
+                {user?.user_type === "Admin" ? (
+                    <div>
                     </div>
-                </div>
-                </div>
+                    ) : (
+                    <div>
+                        <div 
+                        onClick={()=>{
+                            navigate('/inbox')
+                        }}ole="button"
+                        class="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-emerald-900">
+                        <div class="grid mr-4 place-items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"
+                            class="w-5 h-5">
+                            <path fill-rule="evenodd"
+                                d="M6.912 3a3 3 0 00-2.868 2.118l-2.411 7.838a3 3 0 00-.133.882V18a3 3 0 003 3h15a3 3 0 003-3v-4.162c0-.299-.045-.596-.133-.882l-2.412-7.838A3 3 0 0017.088 3H6.912zm13.823 9.75l-2.213-7.191A1.5 1.5 0 0017.088 4.5H6.912a1.5 1.5 0 00-1.434 1.059L3.265 12.75H6.11a3 3 0 012.684 1.658l.256.513a1.5 1.5 0 001.342.829h3.218a1.5 1.5 0 001.342-.83l.256-.512a3 3 0 012.684-1.658h2.844z"
+                                clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        Inbox
+                        <div class="grid ml-auto place-items-center justify-self-end">
+                            <div
+                            class="relative grid items-center px-2 py-1 font-sans text-xs font-bold uppercase rounded-full select-none whitespace-nowrap bg-blue-gray-500/20 text-blue-gray-900">
+                            <span class="">{notifications.length}</span>
+                            </div>
+                        </div>
+                        </div>
+                        
+                        <div 
+                        onClick={()=>{
+                            navigate('/profile')
+                        }}
+                        role="button"
+                        class="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-emerald-900">
+                        <div class="grid mr-4 place-items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"
+                            class="w-5 h-5">
+                            <path fill-rule="evenodd"
+                                d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
+                                clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        Profile
+                        </div>
+                    </div>
+                    )}
                 
-                <div 
-                onClick={()=>{
-                    navigate('/profile')
-                }}
-                role="button"
-                class="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-emerald-900">
-                <div class="grid mr-4 place-items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"
-                    class="w-5 h-5">
-                    <path fill-rule="evenodd"
-                        d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
-                        clip-rule="evenodd"></path>
-                    </svg>
-                </div>
-                Profile
-                </div>
                 <div 
                 onClick={handleNavigate}
                 role="button"
@@ -156,6 +181,20 @@ export default function Sidebar(currentPage){
                             </svg>
                         </div>
                         Request Board
+                        </div>
+                        <div 
+                        onClick={() => navigate('/Admin_main')}
+                        role="button"
+                        className="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-emerald-900"
+                        >
+                        <div className="grid mr-4 place-items-center">
+                           
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 1 1 0-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.461a20.845 20.845 0 0 1-1.44-4.282m3.102.069a18.03 18.03 0 0 1-.59-4.59c0-1.586.205-3.124.59-4.59m0 9.18a23.848 23.848 0 0 1 8.835 2.535M10.34 6.66a23.847 23.847 0 0 0 8.835-2.535m0 0A23.74 23.74 0 0 0 18.795 3m.38 1.125a23.91 23.91 0 0 1 1.014 5.395m-1.014 8.855c-.118.38-.245.754-.38 1.125m.38-1.125a23.91 23.91 0 0 0 1.014-5.395m0-3.46c.495.413.811 1.035.811 1.73 0 .695-.316 1.317-.811 1.73m0-3.46a24.347 24.347 0 0 1 0 3.46" />
+                            </svg>
+
+                        </div>
+                        Make an announcement
                         </div>
                     </div>
                     ) : (

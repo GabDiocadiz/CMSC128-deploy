@@ -200,7 +200,7 @@ export const Landing_page = () => {
         </>
       )}
 
-      <div className="w-screen z-50">
+      <div className="w-full z-50">
           <Footer />
       </div>
     </>
