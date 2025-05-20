@@ -402,16 +402,18 @@ export default function MainPage() {
                         <Link to={`/events`}>
                             <BookEventButton />
                         </Link>
-                        <Link to={user?.user_type === 'Admin' ? '/admin_search-alumni' : '/search-alumni'}>
+                        <Link to={'/search-alumni'}>
                             <SearchAlumniButton />
                         </Link>
                     </div>
+                    <div className="w-full z-50">
+                        <Footer />
+                    </div>
                 </div>
             )}
+           
             </div>
-            <div className="w-full z-50">
-                <Footer />
-            </div>
+            
         </>
     );
 };

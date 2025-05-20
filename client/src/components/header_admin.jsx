@@ -120,7 +120,7 @@ export default function Navbar_admin({toggleSidebar}) {
       )}
         {/* Right - Make an Announcement, Notification & Profile Icons */}
         <div className="absolute top-1 right-4 flex items-center space-x-5">
-          <Link
+          {/* <Link
           to="/create_announcement"
             >
             <button
@@ -132,7 +132,7 @@ export default function Navbar_admin({toggleSidebar}) {
               </div>
               <span className="text-xs font-medium">Make an Announcement</span>
             </button>
-          </Link>
+          </Link> */}
 
             {/* Notification Icon */}   
             <div 
