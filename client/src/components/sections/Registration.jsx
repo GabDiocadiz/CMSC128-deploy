@@ -1,18 +1,57 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import axios from "axios";
 
 import Navbar_landing from "../header_landing";
 import { useNavigate } from 'react-router-dom'
+
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB 
+
+
 const Registration = () => {
     const navigate = useNavigate();
+    const [actualFiles, setActualFiles] = useState([]); // Reintroduced for generic file handling
+    const fileInputRef = useRef(null);
+
     const [formData, setFormData] = useState({
         username: "",
         email: "",
         password: "",
+        user_type: "",
         confirmPassword: "",
         degree: "",
         graduation_year: ""
+        // No 'profile_picture' in formData directly, it's handled by actualFiles
     });
+
+    const handleFileChange = (e) => {
+        const selectedFiles = Array.from(e.target.files);
+        const imageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+
+        const validFiles = [];
+        const errors = [];
+
+        if (selectedFiles.length > 1) {
+            errors.push("Please upload only one image file for your profile picture.");
+        } else if (selectedFiles.length === 1) {
+            const file = selectedFiles[0];
+            if (!imageTypes.includes(file.type)) {
+                errors.push(`${file.name} is not a supported image file.`);
+            } else if (file.size > MAX_FILE_SIZE) {
+                errors.push(`${file.name} exceeds the 10MB size limit.`);
+            } else {
+                validFiles.push(file);
+            }
+        }
+
+        if (errors.length > 0) {
+            alert(errors.join('\n')); 
+            if (fileInputRef.current) fileInputRef.current.value = ""; // Clear the input
+            setActualFiles([]); // Clear any previously selected files
+            return;
+        }
+
+        setActualFiles(validFiles); // Will contain 0 or 1 file
+    };
 
     const handleChange = (e) => {
         setFormData ({ ...formData, [e.target.name]: e.target.value});
@@ -23,22 +62,45 @@ const Registration = () => {
 
         // register API call
         try {
-            const res = await axios.post("http://localhost:5050/auth/register", {
-                user_id: "TEST01",
-                name: formData.username,
-                email: formData.email,
-                password: formData.password,
-                degree: formData.degree,
-                graduation_year: formData.graduation_year,
-                user_type: 'Alumni'
-            });
+            const submissionFormData = new FormData();
 
-            console.log("Form submitted:", formData);
+            // Append all form data fields
+            submissionFormData.append("user_id", "TEST01"); // Important: Ensure your backend generates/assigns a unique ID or expects one. "TEST01" is likely for testing.
+            submissionFormData.append("name", formData.username);
+            submissionFormData.append("email", formData.email);
+            submissionFormData.append("password", formData.password);
+            submissionFormData.append("confirmPassword", formData.confirmPassword);
+            submissionFormData.append("user_type", 'Alumni');
+            submissionFormData.append("degree", formData.degree);
+            submissionFormData.append("graduation_year", formData.graduation_year);
+            
+            // Append the actualFiles (which will contain at most one file)
+            actualFiles.forEach(fileObject => {
+                submissionFormData.append("files[]", fileObject, fileObject.name);
+            });
+            
+            // For debugging FormData, you can iterate it:
+            console.log("FormData contents:");
+            for (let pair of submissionFormData.entries()) {
+                console.log(pair[0]+ ', ' + pair[1]); 
+            }
+            console.log("Local formData state:", formData);
+
+            const res = await axios.post("http://localhost:5050/auth/register", submissionFormData,{});
+            
+            console.log("Registration API Response:", res.data); 
             alert("Registration Successful. Redirecting to home page...");
-            navigate(-1)
+            navigate(-1) 
         } catch (err) {
             console.error("Registration error: ", err);
-            alert("Registration failed. Please try again.");
+            // Handle specific error messages from backend if available
+            const errorMessage = err.response?.data?.message || "Registration failed. Please try again.";
+            alert(errorMessage);
+
+            // Optionally clear the form or parts of it on failure
+            // setFormData({ /* ... initial state ... */ });
+            // setActualFiles([]);
+            // if (fileInputRef.current) fileInputRef.current.value = "";
         }
     };
 
@@ -108,6 +170,7 @@ const Registration = () => {
                                     />
                                 </div>
 
+                                {/* Degree Program */}
                                 <div>
                                     <input
                                         type="text"
@@ -119,6 +182,7 @@ const Registration = () => {
                                         required
                                     />
                                 </div>
+                                {/* Graduation Year */}
                                 <div>
                                     <input
                                         type="text"
@@ -130,10 +194,28 @@ const Registration = () => {
                                         required
                                     />
                                 </div>
+                                {/* Profile Picture Input */}
+                                <div>
+                                    <label htmlFor="profile_picture_input" className="block text-sm font-medium text-gray-700 mb-1">Profile Picture</label>
+                                    <input
+                                        ref={fileInputRef}
+                                        id="profile_picture_input" // Using a more specific ID
+                                        // The 'name' attribute here isn't crucial for FormData.append when using 'files[]'
+                                        // but it's good practice for HTML validation if it were a standard form field.
+                                        accept="image/*"
+                                        onChange={handleFileChange}
+                                        className="block w-full max-w-xs text-sm text-gray-900 border border-gray-300 rounded-md file:bg-[#891839] file:text-white file:border-none file:px-4 file:py-2 cursor-pointer"
+                                        type="file"
+                                    />
+                                    {actualFiles.length > 0 && (
+                                        <p className="text-xs text-gray-500 mt-1">Selected: {actualFiles[0].name}</p>
+                                    )}
+                                </div>
+
                                 <div className="w-full bg-[#3E3939] h-0.5"></div>
                                 {/* Register Button */}
                                 <button
-                                    type="register"
+                                    type="submit"
                                     className="font-semibold w-full bg-[#085740] p-2 rounded-md hover:bg-green-600 transition focus:ring-1 focus:ring-green-600 focus:!outline-none cursor-pointer"
                                     
                                 >
