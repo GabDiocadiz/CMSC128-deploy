@@ -10,8 +10,7 @@ import humanIcon from "../assets/Human Icon.png";
 export default function Navbar({toggleSidebar,}) {
   const  [notification_modal, setnotification_modal] = useState(false)
   const  [profileMenuOpen, setProfileMenuOpen] = useState(false);
-
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
 
   const handleLogout = async (e) => {
     await logout();
@@ -69,7 +68,7 @@ export default function Navbar({toggleSidebar,}) {
               {profileMenuOpen && (
                 <div className="absolute right-0 mt-1 bg-white !shadow-lg rounded-sm w-35 z-50 text-center text-sm border border-gray-400">
                   <Link
-                    to={`/profile`}
+                    to={`/profile/${user?._id}`}
                     className="block w-full px-4 py-2 !text-gray-700 hover:bg-blue-100 focus:!outline-none"
                     onClick={() => setProfileMenuOpen(false)}
                   >

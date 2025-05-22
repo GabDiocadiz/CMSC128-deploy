@@ -55,7 +55,7 @@ function App() {
               <Route path="/search-alumni" element={<Results_page_accounts/>} />
               <Route path="/create_event" element={<CreateEvent/>} />
               <Route path="/post_job" element={<Post_Job/>} />
-              <Route path="/profile" element={<ProfilePage/>} />
+              <Route path="/profile/:id" element={<ProfilePage/>} />
               <Route path='/donate/:id' element={<TransactionPage/>}/>
               <Route path='/create_announcement' element={<CreateAnnouncement/>}/>
               <Route path='/inbox' element={<Inbox/>}/>

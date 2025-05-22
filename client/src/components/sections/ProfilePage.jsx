@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Link} from 'react-router-dom';
+import { useNavigate, Link, useParams} from 'react-router-dom';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import Navbar from '../header';
@@ -13,6 +13,7 @@ import Sidebar from '../Sidebar';
 export default function ProfilePage() {
   const navigate = useNavigate();
   const { authAxios, user } = useAuth();
+  const { id } = useParams();
   const [profileData, setProfileData] = useState(null);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [jobApplications, setJobApplications] = useState([]);
@@ -40,7 +41,7 @@ export default function ProfilePage() {
     setLoading(true);
     setError(null);
     try {
-      const response = await authAxios.get(`/alumni/find-alumni/${user?._id}`);
+      const response = await authAxios.get(`/alumni/find-alumni/${id}`);
 
       setProfileData(response.data);
       setUpcomingEvents(response.data.events_attended);
@@ -110,7 +111,7 @@ export default function ProfilePage() {
     }
 
     try {
-      await authAxios.put(`/alumni/edit-profile/${user?._id}`, editableData);
+      await authAxios.put(`/alumni/edit-profile/${id}`, editableData);
       setIsEditing(false);
       fetchProfileData(); 
     } catch (err) {
