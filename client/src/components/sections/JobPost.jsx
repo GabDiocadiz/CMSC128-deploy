@@ -167,7 +167,7 @@ export const Post_Job = () => {
                     <div className="w-full">
                         <div
                             className="flex items-center gap-2 cursor-pointer text-[#145C44] mb-2 mt-20 ml-10 sm:mt-[5vh] lg:mt-[10vh] sm:pt-10 md:pt-10 lg:pt-0"
-                            onClick={() => navigate('/jobs')}
+                            onClick={() => navigate(-1)}
                         >
                             <IoIosArrowBack className="text-sm text-[#145C44]" />
                             <span className="text-sm font-light">Back</span>
@@ -234,9 +234,28 @@ export const Post_Job = () => {
                                             }),
                                             multiValue: (base) => ({
                                                 ...base,
-                                                backgroundColor: '#2ad69d',
+                                                backgroundColor: '#84E1BC',
                                                 color: '#374151',
+                                                borderRadius: '9999px',
+                                                padding: '0 6px',
+                                                paddingRight: '0.25rem',
                                             }),
+                                            multiValueLabel: (base) => ({
+                                                ...base,
+                                                color: '#046C4E',
+                                            }),
+                                            multiValueRemove: (base) => ({
+                                                ...base,
+                                                borderRadius: '1000px',
+                                                padding: '2px',
+                                                marginLeft: '8px',
+                                                color: '#891839 ',
+                                                cursor: 'pointer',
+                                                '&:hover': {
+                                                backgroundColor: '#84E1BC',
+                                                color: '#E02424',
+                                                },
+                                            }), 
                                         }}
                                         onChange={(newValue) => {
                                             const selected = newValue.map((item) => item.value);

@@ -91,7 +91,7 @@ const Login = () => {
                                 </div>
                             </div>
             
-                            <div className="lg:col-span-2 w-full flex justify-center lg:justify-end px-15 lg:px-4 pt-12 md:pt-12 lg:pr-15 lg:pt-12">
+                            <div className="lg:col-span-2 w-full flex justify-center lg:justify-end px-15 lg:px-4 pt-12 md:pt-12 lg:pr-15 lg:pt-15">
                                 <div className="bg-white/60 p-6 sm:p-8 rounded-3xl shadow-lg w-full max-w-md backdrop-blur-sm flex justify-center">
                                     <form onSubmit={handleSubmit} className="space-y-6 w-full">
                                         <input
@@ -99,7 +99,7 @@ const Login = () => {
                                             name="email"
                                             value={formData.email}
                                             onChange={handleChange}
-                                            className="w-full p-2 border-3 border-[#3E3939] rounded-md outline-none focus:ring-1"
+                                            className="w-full p-2 border-2 border-[#3E3939] rounded-md outline-none focus:ring-1"
                                             placeholder="Email"
                                             required
                                         />
@@ -109,7 +109,7 @@ const Login = () => {
                                                 name="password"
                                                 value={formData.password}
                                                 onChange={handleChange}
-                                                className="w-full p-2 border-3 border-[#3E3939] rounded-md outline-none focus:ring-1 pr-10"
+                                                className="w-full p-2 border-2 border-[#3E3939] rounded-md outline-none focus:ring-1 pr-10"
                                                 placeholder="Password"
                                                 required
                                             />

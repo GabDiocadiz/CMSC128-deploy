@@ -80,7 +80,7 @@ export default function ViewJobDetails() {
                         <div className="relative z-10">
                             <div
                                 className="flex items-center gap-2 cursor-pointer text-white hover:text-gray-300 mb-10"
-                                onClick={() => navigate('/jobs')}
+                                onClick={() => navigate(-1)}
                             >
                                 <IoIosArrowBack className="text-sm" />
                                 <span className="text-sm font-light">Back</span>
