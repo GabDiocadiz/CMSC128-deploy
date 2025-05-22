@@ -78,7 +78,7 @@ export default function Navbar_search({ searchTerm, setSearchTerm, setFilters, t
       )}
       <nav className="bg-white w-full py-1 fixed top-0 left-0 z-60 shadow-md">
         {/* Flexbox for proper alignment */}
-        <div className="container flex justify-between items-center py-1 px-4">
+        <div className="container flex flex-wrap justify-between items-center py-1 px-4">
           {/* Left - Logo */}
            <div className="flex">
               <a
@@ -97,8 +97,8 @@ export default function Navbar_search({ searchTerm, setSearchTerm, setFilters, t
             </div>
 
           {/* Middle - Search Bar */}
-          <div className="flex-1 flex justify-center" style={{ marginLeft: "200px" }}>
-            <form onSubmit={handleSearch} className="relative w-[600px]">
+          <div className="flex-1 flex justify-center sm:ml-[200px] w-full sm:w-auto pr-20">
+            <form onSubmit={handleSearch} className="relative w-full max-w-[120px] sm:max-w-[600px] md:max-w-[600px] lg:max-w-[600px]">
               <input
                 type="text"
                 value={searchTerm}
@@ -161,17 +161,17 @@ export default function Navbar_search({ searchTerm, setSearchTerm, setFilters, t
 
       {/* Filter Popup */}
       {filterMenuOpen && (
-        <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-md p-6 z-30 w-[700px]">
+       <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-md p-6 z-30 w-[90%] sm:w-[700px]">
           <h3 className="text-xl font-semibold mb-6 text-gray-800 text-left">Filter</h3>
 
           {/* Graduation Year and Skills */}
-          <div className="flex gap-6 mb-6 text-left">
+          <div className="flex flex-col sm:flex-row gap-6 mb-6 text-left">
             <div className="w-1/2">
               <label className="block text-lg font-medium mb-4 text-gray-700">Graduation Year Range</label>
 
-              <div className="flex gap-4">
+              <div className="flex flex-row flex-nowrap gap-2 w-full">
                 {/* Start Year Dropdown */}
-                <div className="flex flex-col w-1/2">
+                <div className="flex flex-col w-1/2 min-w-[120px]">
                   <label className="text-sm text-gray-600 mb-1">Start Year</label>
                   <select
                     value={localFilters.startYear}
@@ -190,7 +190,7 @@ export default function Navbar_search({ searchTerm, setSearchTerm, setFilters, t
                 </div>
 
                 {/* End Year Dropdown */}
-                <div className="flex text-gray-600 flex-col w-1/2">
+                <div className="flex flex-col w-1/2 min-w-[120px]">
                   <label className="text-sm text-gray-600 mb-1">End Year (optional)</label>
                   <select
                     value={localFilters.endYear}
@@ -201,7 +201,7 @@ export default function Navbar_search({ searchTerm, setSearchTerm, setFilters, t
                         endYear: value ? Number(value) : GRADUATION_YEAR_MAX,
                       });
                     }}
-                    className="border rounded-md px-2 py-1"
+                    className="border text-gray-600 rounded-md px-2 py-1"
                   >
                     <option value="">(Default: {GRADUATION_YEAR_MAX})</option>
                     {Array.from({ length: GRADUATION_YEAR_MAX - GRADUATION_YEAR_MIN + 1 }, (_, i) => {
@@ -237,7 +237,7 @@ export default function Navbar_search({ searchTerm, setSearchTerm, setFilters, t
                     setSkillInput("");
                   }
                 }}
-                placeholder="Add more skills"
+                placeholder="Add skills"
                 className="w-full border border-gray-400 rounded-md px-2 py-1"
               />
               {localFilters.skills.length > 0 && (
@@ -267,7 +267,7 @@ export default function Navbar_search({ searchTerm, setSearchTerm, setFilters, t
           </div>
 
           {/* Dropdowns */}
-          <div className="grid grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
             <div>
               <label className="block text-lg font-medium mb-2 text-gray-700 text-left">Location</label>
               <select

@@ -4,10 +4,14 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import Navbar from '../header';
 import Footer from '../footer';
+import CreatableSelect from "react-select/creatable";
+import { jobRequiremets } from "../../utils/models";
 import { ScrollToTop } from '../../utils/helper';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../auth/AuthContext';
 import { BsPersonFill } from "react-icons/bs";
+import { FaCamera } from "react-icons/fa6";
+import { HiMinusSm } from "react-icons/hi";
 import './ProfilePage.css';
 import Sidebar from '../Sidebar';
 
@@ -29,6 +33,8 @@ export default function ProfilePage() {
   const [sidebarOpen, setSidebarOpen] = useState(false); // Sidebar toggle state
   const [bookmarkedJobs, setBookmarkedJobs] = useState([]);
   const [bookmarkedEvents, setBookmarkedEvents] = useState([]);
+  const [newProfilePic, setNewProfilePic] = useState(null);
+  const [profilePicPreview, setProfilePicPreview] = useState(null);
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
 
   useEffect(() => {
@@ -79,7 +85,7 @@ export default function ProfilePage() {
         current_job_title: response.data?.current_job_title || '',
         company: response.data?.company || '',
         industry: response.data?.industry || '',
-        skills: response.data?.skills || '',
+        skills: response.data?.skills || [],
       });
     } catch (err) {
       console.error('Error fetching profile data:', err);
@@ -119,6 +125,11 @@ export default function ProfilePage() {
     }
   };
 
+  const handleRemoveProfilePic = () => {
+    setNewProfilePic(null);
+    setProfilePicPreview(null);
+  };
+
   const filteredJobs = jobApplications.filter(job => job.status?.toLowerCase() === activeTab);
 
   return (
@@ -143,17 +154,61 @@ export default function ProfilePage() {
       >
         <section className="bg-white rounded-3xl shadow-lg p-8 flex flex-col gap-8">
           <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-            <div className="w-28 h-28 rounded-full border-4 border-[#891839] flex items-center justify-center bg-gray-100 overflow-hidden">
-              {profileData?.profile_picture ? (
+          <div className="relative w-28 h-28">
+            {/* Profile picture */}
+            <div className="w-full h-full rounded-full border-4 border-[#891839] flex items-center justify-center bg-gray-100 overflow-hidden relative">
+              {(profilePicPreview || profileData?.profile_picture) ? (
                 <img
-                  src={profileData.profile_picture}
+                  src={profilePicPreview || profileData.profile_picture}
                   alt="Profile"
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <BsPersonFill className="text-6xl text-[#891839]" />
+                <BsPersonFill className="text-9xl text-[#891839] mt-7" />
+              )}
+
+              {isEditing && (
+                <>
+                  <label
+                    htmlFor="profilePicture"
+                    className="absolute inset-0 bg-black/30 flex items-center justify-center cursor-pointer hover:bg-black/40 transition duration-200"
+                    title={
+                      profilePicPreview || profileData?.profile_picture
+                        ? "Change Profile Picture"
+                        : "Add Profile Picture"
+                    }
+                  >
+                    <FaCamera className="text-white text-3xl" />
+                  </label>
+                  <input
+                    type="file"
+                    id="profilePicture"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        setNewProfilePic(file);
+                        setProfilePicPreview(URL.createObjectURL(file));
+                      }
+                    }}
+                  />
+                </>
               )}
             </div>
+
+            {isEditing && (profilePicPreview || profileData?.profile_picture) && (
+              <button
+                type="button"
+                onClick={handleRemoveProfilePic}
+                className="absolute bottom-0 right-0 text-white bg-[#891839] rounded-full shadow-md cursor-pointer"
+                title="Remove Profile Picture"
+              >
+                <HiMinusSm className="text-3xl" />
+              </button>
+            )}
+          </div>
+
             <div className="text-center md:text-left">
               <h2 className="text-3xl font-bold text-[#891839]">{profileData?.name}</h2>
               <p className="text-gray-600">{profileData?.email}</p>
@@ -173,9 +228,100 @@ export default function ProfilePage() {
               { label: "Industry", name: "industry" }
             ]} editableData={editableData} isEditing={isEditing} handleChange={handleChange} />
 
-            <ProfileSection title="Skills" fields={[
-              { label: "Skills", name: "skills" }
-            ]} editableData={editableData} isEditing={isEditing} handleChange={handleChange} />
+            <div className="col-span-full md:col-span-1">
+              <h4 className="text-xl font-semibold text-[#891839] mb-2">Skills</h4>
+              <span className="text-gray-500 font-medium uppercase tracking-wide text-xs mb-1 mt-4 block">
+                Skills
+              </span>
+
+              {isEditing ? (
+                <>
+                  <CreatableSelect
+                    isMulti
+                    options={jobRequiremets}
+                    onChange={(selectedOptions) =>
+                      setEditableData(prev => ({
+                        ...prev,
+                        skills: selectedOptions.map(option => option.value)
+                      }))
+                    }
+                    value={editableData.skills.map(skill => ({ label: skill, value: skill }))}
+                    className="mb-4"
+                    classNamePrefix="select"
+                    onCreateOption={() => { /* Do nothing to disable creation */ }}
+                    styles={{
+                      control: (base) => ({
+                        ...base,
+                        borderWidth: '2px', 
+                        borderRadius: '0.75rem',
+                        borderColor: '#1F2937',
+                        padding: '0.25rem',
+                        boxShadow: 'none',
+                        '&:hover': {
+                          borderWidth: '1px',
+                          borderColor: '#1F2937',
+                        },
+                      }),
+                      dropdownIndicator: (base) => ({
+                          ...base,
+                          color: '#9ca3af',
+                      }),
+                      clearIndicator: (base) => ({
+                          ...base,
+                          color: '#9ca3af',
+                      }),
+                      option: (base) => ({
+                          ...base,
+                          backgroundColor: '#ffffff',
+                          color: '#374151',
+                          '&:hover': {
+                              backgroundColor: '#ebf8ff',
+                          },
+                      }),
+                      multiValue: (base) => ({
+                          ...base,
+                          backgroundColor: '#def7ec',
+                          color: '#374151',
+                          borderRadius: '9999px',
+                          padding: '0 6px',
+                          paddingRight: '0.25rem',
+                      }),
+                      multiValueLabel: (base) => ({
+                        ...base,
+                        color: '#046C4E',
+                      }),
+                      multiValueRemove: (base) => ({
+                        ...base,
+                        borderRadius: '1000px',
+                        padding: '2px',
+                        marginLeft: '8px',
+                        color: '#891839 ',
+                        cursor: 'pointer',
+                        '&:hover': {
+                          backgroundColor: '#def7ec',
+                          color: '#E02424',
+                        },
+                      }),                      
+                    }}
+                  />
+                </>
+                ) : (
+                  <div className="border rounded h-40 overflow-y-auto pt-2 custom-scrollbar">
+                    {profileData?.skills?.length > 0 ? (
+                      profileData.skills.map((skill, idx) => (
+                        <div
+                          key={idx}
+                          className="text-gray-700 font-semibold break-words"
+                        >
+                          {skill}
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-gray-400">No Data</p>
+                    )}
+                  </div>
+                )}
+            </div>
           </div>
 
           <div className="mt-6 flex justify-center">
