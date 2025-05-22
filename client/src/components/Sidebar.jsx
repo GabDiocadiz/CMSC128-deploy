@@ -183,7 +183,7 @@ export default function Sidebar(currentPage){
                         Request Board
                         </div>
                         <div 
-                        onClick={() => navigate('/Admin_main')}
+                        onClick={() => navigate('/create_announcement')}
                         role="button"
                         className="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-emerald-900"
                         >
