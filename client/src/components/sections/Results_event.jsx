@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { BookmarkIcon } from '@heroicons/react/24/solid';
 import { TbMoodEmpty } from "react-icons/tb";
 import { TbCalendarStar } from "react-icons/tb";
+import { FaLocationDot } from "react-icons/fa6";
 import { useAuth } from "../../auth/AuthContext";
 import default_eventbg from "../../assets/event_placeholder.png";
 import axios from "axios";
@@ -165,15 +166,18 @@ export const Results_page_events = ( ) => {
                                                     <div className="flex justify-end mb-2">
                                                         <button
                                                             onClick={() => toggleBookmark(event._id)}
-                                                            className="text-white-400 hover:text-white-500 focus:outline-none"
                                                             title={bookmarkedIds.includes(event._id) ? "Remove Bookmark" : "Bookmark"}
+                                                            className="p-2 rounded-full transition duration-300 hover:bg-emerald-100 hover:text-emerald-600 cursor-pointer"
                                                         >
-                                                            <BookmarkIcon className={`w-6 h-6 ${bookmarkedIds.includes(event._id) ? "text-emerald-600" : "opacity-50"}`} />           
+                                                            <BookmarkIcon className={`w-6 h-6 ${bookmarkedIds.includes(event._id) ? "text-emerald-600" : "opacity-50"}`} /> 
                                                         </button>
                                                     </div>
                                                     <h2 className="text-xl font-semibold mb-1">{event.event_name}</h2>
-                                                    <p className="text-sm text-gray-500 mb-2">{event.venue}</p>
-                                                    <p className="text-gray-700 flex-grow">{event.event_description}</p>
+                                                    <p className="text-sm text-gray-500 mb-2 flex items-center space-x-1">
+                                                        <FaLocationDot className="text-gray-500" />
+                                                        <span>{event.venue}</span>
+                                                    </p>
+                                                    <p className="text-gray-700 flex-grow mb-3 line-clamp-2">{event.event_description}</p>
                                                     <p className="text-sm text-right text-gray-500">
                                                         {new Date(event.event_date).toLocaleDateString('en-US', {
                                                             year: 'numeric',

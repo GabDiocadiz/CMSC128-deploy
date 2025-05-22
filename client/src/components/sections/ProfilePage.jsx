@@ -245,10 +245,10 @@ export default function ProfilePage() {
                         skills: selectedOptions.map(option => option.value)
                       }))
                     }
-                    value={editableData.skills.map(skill => ({ label: skill, value: skill }))}
+                    value={(editableData.skills || []).map(skill => ({ label: skill, value: skill }))}
                     className="mb-4"
                     classNamePrefix="select"
-                    onCreateOption={() => { /* Do nothing to disable creation */ }}
+                    onCreateOption={() => {}}
                     styles={{
                       control: (base) => ({
                         ...base,
