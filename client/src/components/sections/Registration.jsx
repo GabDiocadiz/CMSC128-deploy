@@ -54,47 +54,52 @@ const Registration = () => {
         setFormData ({ ...formData, [e.target.name]: e.target.value});
     };
 
-     const handleSubmit = async () => {
-        try {
-          const fileFormData = new FormData();
-          actualFiles.forEach(file => fileFormData.append("files[]", file));
-            for (const [key, value] of fileFormData.entries()) {
-            console.log(key, value);
-            }
-          const file_res = await axios.post(`http://localhost:5050/auth/register/upload`, fileFormData, {
+    const handleSubmit = async () => {
+    try {
+        let uploadedFiles = [];
+
+        if (actualFiles.length > 0) {
+        const fileFormData = new FormData();
+        actualFiles.forEach(file => fileFormData.append("files[]", file));
+
+        const file_res = await axios.post(`http://localhost:5050/auth/register/upload`, fileFormData, {
             headers: { "Content-Type": "multipart/form-data" },
-          });
-          const uploadedFiles = file_res.data.files.map(file => ({
+        });
+
+        uploadedFiles = file_res.data.files.map(file => ({
             originalFilename: file.originalname,
             serverFilename: file.serverFilename,
-            }));
-          const userRegData = {
-            user_id: "TEST01",
-            name: formData.username,
-            email: formData.email,
-            password: formData.password,
-            confirmPassword: formData.confirmPassword,
-            user_type: "Alumni",
-            degree: formData.degree,
-            graduation_year: formData.graduation_year,
-            files: uploadedFiles,
-          };
-            const res = await axios.post("http://localhost:5050/auth/register", userRegData, {});
-            console.log("Registration API Response:", res.data); 
-            alert("Registration Successful. Redirecting to home page...");
-            navigate(-1) 
-        } catch (err) {
-            console.error("Registration error: ", err);
-            // Handle specific error messages from backend if available
-            const errorMessage = err.response?.data?.message || "Registration failed. Please try again.";
-            alert(errorMessage);
-
-            // Optionally clear the form or parts of it on failure
-            // setFormData({ /* ... initial state ... */ });
-            // setActualFiles([]);
-            // if (fileInputRef.current) fileInputRef.current.value = "";
+        }));
+        } else {
+        // Use a default image reference if none uploaded
+        uploadedFiles = [{
+            originalFilename: "default_avatar.png",
+            serverFilename: "default_avatar.png"
+        }];
         }
-     };
+
+        const userRegData = {
+        user_id: "TEST01",
+        name: formData.username,
+        email: formData.email,
+        password: formData.password,
+        confirmPassword: formData.confirmPassword,
+        user_type: "Alumni",
+        degree: formData.degree,
+        graduation_year: formData.graduation_year,
+        files: uploadedFiles,
+        };
+
+        const res = await axios.post("http://localhost:5050/auth/register", userRegData);
+        alert("Registration Successful. Redirecting to home page...");
+        navigate(-1);
+    } catch (err) {
+        console.error("Registration error:", err);
+        const errorMessage = err.response?.data?.message || "Registration failed. Please try again.";
+        alert(errorMessage);
+    }
+    };
+
     // const handleSubmit = async (e) => {
     //     e.preventDefault();
 

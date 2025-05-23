@@ -7,4 +7,7 @@ import { communicationController } from "../controllers/modelControllers/communi
 const router = express.Router();
 
 router.post("/create", communicationController.create);
+router.post("/read-announcements", communicationController.create);
+
+
 export default router

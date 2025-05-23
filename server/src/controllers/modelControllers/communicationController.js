@@ -1,32 +1,30 @@
 import Communication from '../../models/Communication.js';
 import { createCRUDController } from '../middlewareControllers/createCRUDController/index.js';
-import {
-    uploadFilesForModel,
-    getFilesForModel,
-    deleteFileFromModel,
-    downloadFile
-} from "../fileController/fileController.js";
+
 
 export const communicationController = {
     ...createCRUDController(Communication),
 
-    async uploadProfilePicture (req, res){
-        req.params.modelName = "User";
-        req.params.id = req.params.event_id;
-        return uploadFilesForModel(req, res);
-    },
-        
-    
-    async getProfilePicture(req, res) {
-        req.params.modelName = "User";
-        req.params.id = req.params.event_id; 
-        return getFilesForModel(req, res);
+
+    async getAnnouncements(){
+    try {
+        const announcements = await Communication.find({ type: "announcement" })
+                                                .sort({ date_published: -1 }); // Optional: sort by most recent
+        return announcements;
+    } catch (error) {
+        console.error("Error fetching announcements:", error);
+        throw new Error("Failed to fetch announcements from the database.");
+    }
     },
 
-    async deleteProfilePicture(req, res) {
-        req.params.modelName = "User";
-        req.params.id = req.params.event_id; 
-        return deleteFileFromModel(req, res);
+    async getAnnouncementById (id){
+    try {
+        const announcement = await Communication.findOne({ _id: id, type: "announcement" });
+        return announcement;
+    } catch (error) {
+        console.error(`Error fetching announcement with ID ${id}:`, error);
+        throw new Error("Failed to fetch the announcement from the database.");
     }
+    },
 
 }

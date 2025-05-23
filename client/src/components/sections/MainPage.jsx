@@ -58,6 +58,10 @@ export default function MainPage() {
                 const eventsResponse = await authAxios.get('/events/all');
                 console.log("Events data:", eventsResponse.data);
                 
+                const announcementsResponse = await authAxios.get('/announcements/read-announcements');
+                console.log("Announcements data:", announcementsResponse.data);
+                setAnnouncements(announcementsResponse.data);
+
                 if (Array.isArray(eventsResponse.data) && eventsResponse.data.length > 0) {
                     setEvents(eventsResponse.data);
                     
