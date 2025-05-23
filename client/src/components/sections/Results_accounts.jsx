@@ -87,7 +87,7 @@ export const Results_page_accounts = () => {
                     className="bg-white rounded-3xl shadow-md p-4 flex items-center border border-transparent hover:border-blue-400 transition duration-300"
                   >
                     <img
-                      src={account.imageUrl || `https://i.pravatar.cc/100?img=${index + 1}`}
+                      src={account.imageUrl || (account?.files?.[0]?.serverFilename && `http://localhost:5050/uploads/${account?.files[0].serverFilename}`) || `https://i.pravatar.cc/100?img=${index + 1}`}
                       alt={account.name}
                       className="w-16 h-16 rounded-full object-cover mr-4"
                     />

@@ -144,7 +144,7 @@ export default function ProfilePage() {
         <section className="bg-white rounded-3xl shadow-lg p-8 flex flex-col gap-8">
           <div className="flex flex-col md:flex-row items-center justify-center gap-6">
             <img 
-              src={profileData?.profile_picture} 
+              src={`http://localhost:5050/uploads/${profileData?.files[0].serverFilename}`} 
               alt="Profile" 
               className="w-28 h-28 rounded-full object-cover border-4 border-[#891839]" 
             />

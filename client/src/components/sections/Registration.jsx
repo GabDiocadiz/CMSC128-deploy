@@ -23,71 +23,63 @@ const Registration = () => {
         // No 'profile_picture' in formData directly, it's handled by actualFiles
     });
 
-    const handleFileChange = (e) => {
+ const handleFileChange = (e) => {
         const selectedFiles = Array.from(e.target.files);
         const imageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
-
+      
         const validFiles = [];
         const errors = [];
-
-        if (selectedFiles.length > 1) {
-            errors.push("Please upload only one image file for your profile picture.");
-        } else if (selectedFiles.length === 1) {
-            const file = selectedFiles[0];
-            if (!imageTypes.includes(file.type)) {
-                errors.push(`${file.name} is not a supported image file.`);
-            } else if (file.size > MAX_FILE_SIZE) {
-                errors.push(`${file.name} exceeds the 10MB size limit.`);
-            } else {
-                validFiles.push(file);
-            }
-        }
-
+      
+        selectedFiles.forEach(file => {
+          if (!imageTypes.includes(file.type)) {
+            errors.push(`${file.name} is not a supported image file.`);
+          } else if (file.size > MAX_FILE_SIZE) {
+            errors.push(`${file.name} exceeds the 10MB size limit.`);
+          } else {
+            validFiles.push(file);
+          }
+        });
+      
         if (errors.length > 0) {
-            alert(errors.join('\n')); 
-            if (fileInputRef.current) fileInputRef.current.value = ""; // Clear the input
-            setActualFiles([]); // Clear any previously selected files
-            return;
+          alert(errors.join('\n')); // Or use a toast/modal/etc.
+          if (fileInputRef.current) fileInputRef.current.value = "";
+          return;
         }
-
-        setActualFiles(validFiles); // Will contain 0 or 1 file
+      
+        setActualFiles(validFiles);
+        console.log(actualFiles);
     };
 
     const handleChange = (e) => {
         setFormData ({ ...formData, [e.target.name]: e.target.value});
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        // register API call
+     const handleSubmit = async () => {
         try {
-            const submissionFormData = new FormData();
-
-            // Append all form data fields
-            submissionFormData.append("user_id", "TEST01"); // Important: Ensure your backend generates/assigns a unique ID or expects one. "TEST01" is likely for testing.
-            submissionFormData.append("name", formData.username);
-            submissionFormData.append("email", formData.email);
-            submissionFormData.append("password", formData.password);
-            submissionFormData.append("confirmPassword", formData.confirmPassword);
-            submissionFormData.append("user_type", 'Alumni');
-            submissionFormData.append("degree", formData.degree);
-            submissionFormData.append("graduation_year", formData.graduation_year);
-            
-            // Append the actualFiles (which will contain at most one file)
-            actualFiles.forEach(fileObject => {
-                submissionFormData.append("files[]", fileObject, fileObject.name);
-            });
-            
-            // For debugging FormData, you can iterate it:
-            console.log("FormData contents:");
-            for (let pair of submissionFormData.entries()) {
-                console.log(pair[0]+ ', ' + pair[1]); 
+          const fileFormData = new FormData();
+          actualFiles.forEach(file => fileFormData.append("files[]", file));
+            for (const [key, value] of fileFormData.entries()) {
+            console.log(key, value);
             }
-            console.log("Local formData state:", formData);
-
-            const res = await axios.post("http://localhost:5050/auth/register", submissionFormData,{});
-            
+          const file_res = await axios.post(`http://localhost:5050/auth/register/upload`, fileFormData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+          const uploadedFiles = file_res.data.files.map(file => ({
+            originalFilename: file.originalname,
+            serverFilename: file.serverFilename,
+            }));
+          const userRegData = {
+            user_id: "TEST01",
+            name: formData.username,
+            email: formData.email,
+            password: formData.password,
+            confirmPassword: formData.confirmPassword,
+            user_type: "Alumni",
+            degree: formData.degree,
+            graduation_year: formData.graduation_year,
+            files: uploadedFiles,
+          };
+            const res = await axios.post("http://localhost:5050/auth/register", userRegData, {});
             console.log("Registration API Response:", res.data); 
             alert("Registration Successful. Redirecting to home page...");
             navigate(-1) 
@@ -102,7 +94,53 @@ const Registration = () => {
             // setActualFiles([]);
             // if (fileInputRef.current) fileInputRef.current.value = "";
         }
-    };
+     };
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+
+    //     // register API call
+    //     try {
+    //         const submissionFormData = new FormData();
+
+    //         // Append all form data fields
+    //         submissionFormData.append("user_id", "TEST01"); // Important: Ensure your backend generates/assigns a unique ID or expects one. "TEST01" is likely for testing.
+    //         submissionFormData.append("name", formData.username);
+    //         submissionFormData.append("email", formData.email);
+    //         submissionFormData.append("password", formData.password);
+    //         submissionFormData.append("confirmPassword", formData.confirmPassword);
+    //         submissionFormData.append("user_type", 'Alumni');
+    //         submissionFormData.append("degree", formData.degree);
+    //         submissionFormData.append("graduation_year", formData.graduation_year);
+            
+    //         // Append the actualFiles (which will contain at most one file)
+    //         actualFiles.forEach(fileObject => {
+    //             submissionFormData.append("files[]", fileObject, fileObject.name);
+    //         });
+            
+    //         // For debugging FormData, you can iterate it:
+    //         console.log("FormData contents:");
+    //         for (let pair of submissionFormData.entries()) {
+    //             console.log(pair[0]+ ', ' + pair[1]); 
+    //         }
+    //         console.log("Local formData state:", formData);
+
+    //         const res = await axios.post("http://localhost:5050/auth/register", submissionFormData,{});
+            
+    //         console.log("Registration API Response:", res.data); 
+    //         alert("Registration Successful. Redirecting to home page...");
+    //         navigate(-1) 
+    //     } catch (err) {
+    //         console.error("Registration error: ", err);
+    //         // Handle specific error messages from backend if available
+    //         const errorMessage = err.response?.data?.message || "Registration failed. Please try again.";
+    //         alert(errorMessage);
+
+    //         // Optionally clear the form or parts of it on failure
+    //         // setFormData({ /* ... initial state ... */ });
+    //         // setActualFiles([]);
+    //         // if (fileInputRef.current) fileInputRef.current.value = "";
+    //     }
+    // };
 
     return (
         <>
@@ -216,6 +254,7 @@ const Registration = () => {
                                 {/* Register Button */}
                                 <button
                                     type="submit"
+                                    onClick={handleSubmit}
                                     className="font-semibold w-full bg-[#085740] p-2 rounded-md hover:bg-green-600 transition focus:ring-1 focus:ring-green-600 focus:!outline-none cursor-pointer"
                                     
                                 >
