@@ -4,9 +4,14 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import Navbar from '../header';
 import Footer from '../footer';
+import CreatableSelect from "react-select/creatable";
+import { jobRequiremets } from "../../utils/models";
 import { ScrollToTop } from '../../utils/helper';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../auth/AuthContext';
+import { BsPersonFill } from "react-icons/bs";
+import { FaCamera } from "react-icons/fa6";
+import { HiMinusSm } from "react-icons/hi";
 import './ProfilePage.css'; // Make sure this CSS exists and is correctly styled
 import Sidebar from '../Sidebar';
 import axios from 'axios'; // Import axios for FormData (though authAxios should also work)
@@ -46,7 +51,8 @@ export default function ProfilePage() {
     const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 });
     const [isHoveringTile, setIsHoveringTile] = useState(false);
     const [isHoveringPopup, setIsHoveringPopup] = useState(false);
-
+    const [newProfilePic, setNewProfilePic] = useState(null);
+    const [profilePicPreview, setProfilePicPreview] = useState(null);
     // Initial data fetch on component mount or user change
     useEffect(() => {
         document.documentElement.classList.remove('dark');
@@ -111,25 +117,21 @@ export default function ProfilePage() {
                 setBookmarkedEvents([]);
             }
 
-            // Initialize editableData for the form
-            setEditableData({
-                contact_number: response.data?.contact_number || '',
-                address: response.data?.address || '',
-                current_job_title: response.data?.current_job_title || '',
-                company: response.data?.company || '',
-                industry: response.data?.industry || '',
-                skills: response.data?.skills || '',
-                // Note: files are not directly set in editableData, but handled separately
-                // The 'files' array in profileData contains server filenames, not File objects
-            });
-
-        } catch (err) {
-            console.error('Error fetching profile data:', err);
-            setError('Failed to load profile information.');
-        } finally {
-            setLoading(false);
-        }
-    };
+      setEditableData({
+        contact_number: response.data?.contact_number || '',
+        address: response.data?.address || '',
+        current_job_title: response.data?.current_job_title || '',
+        company: response.data?.company || '',
+        industry: response.data?.industry || '',
+        skills: response.data?.skills || [],
+      });
+    } catch (err) {
+      console.error('Error fetching profile data:', err);
+      setError('Failed to load profile information.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
     const handleEditToggle = () => setIsEditing(!isEditing);
 
@@ -275,46 +277,77 @@ export default function ProfilePage() {
             </div>
             <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
 
-                <motion.main
-                    className="pt-24 px-4 md:px-6 lg:px-8 w-full max-w-5xl mx-auto space-y-12"
-                    initial={{ opacity: 0, y: 50 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7, ease: "easeOut" }}
-                >
-                    <section className="bg-white rounded-3xl shadow-lg p-8 flex flex-col gap-8">
-                        <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-                            <img
-                                src={imagePreviewUrl || "/src/assets/default_avatar.png"} // Use the new state for image source
-                                alt="Profile"
-                                className="w-28 h-28 rounded-full object-cover border-4 border-[#891839]"
-                            />
-                            <div className="text-center md:text-left">
-                                <h2 className="text-3xl font-bold text-[#891839]">{profileData?.name}</h2>
-                                <p className="text-gray-600">{profileData?.email}</p>
-                                <p className="text-gray-600">Batch Graduated: {profileData?.graduation_year}</p>
+      <motion.main
+        className="pt-24 px-4 md:px-6 lg:px-8 w-full max-w-5xl mx-auto space-y-12"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
+      >
+        <section className="bg-white rounded-3xl shadow-lg p-8 flex flex-col gap-8">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+          <div className="relative w-28 h-28">
+            {/* Profile picture */}
+            <div className="w-full h-full rounded-full border-4 border-[#891839] flex items-center justify-center bg-gray-100 overflow-hidden relative">
+              {imagePreviewUrl ? ( // Check if imagePreviewUrl has a value
+                    <img
+                        src={imagePreviewUrl}
+                        alt="Profile"
+                        className="w-full h-full object-cover"
+                    />
+                ) : (
+                    // Fallback if imagePreviewUrl is somehow empty (shouldn't happen with the useEffect)
+                    <BsPersonFill className="text-9xl text-[#891839] mt-7" />
+                )}
 
-                                {/* File Input (Hidden) */}
-                                {isEditing && ( // Only show file input and button when in editing mode
-                                    <>
-                                        <input
-                                            type="file"
-                                            id="file"
-                                            name="file"
-                                            ref={fileInputRef}
-                                            onChange={handleProfileFileChange} // Use dedicated handler
-                                            className="hidden"
-                                            accept="image/jpeg,image/png,image/jpg,image/webp"
-                                        />
-                                        <button
-                                            onClick={() => fileInputRef.current.click()}
-                                            className="mt-2 px-4 py-2 bg-[#891839] text-white rounded hover:bg-[#6c122e]"
-                                        >
-                                            Change Profile Picture
-                                        </button>
-                                    </>
-                                )}
-                            </div>
-                        </div>
+
+              {isEditing && (
+                <>
+                  <label
+                    htmlFor="profilePicture"
+                    className="absolute inset-0 bg-black/30 flex items-center justify-center cursor-pointer hover:bg-black/40 transition duration-200"
+                    title={
+                      profilePicPreview || profileData?.profile_picture
+                        ? "Change Profile Picture"
+                        : "Add Profile Picture"
+                    }
+                  >
+                    <FaCamera className="text-white text-3xl" />
+                  </label>
+                  <input
+                    type="file"
+                    id="profilePicture"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        handleProfileFileChange(e);
+                        setNewProfilePic(file);
+                      }
+                    }}
+                  />
+                </>
+              )}
+            </div>
+
+            {isEditing && (profilePicPreview || profileData?.profile_picture) && (
+              <button
+                type="button"
+                onClick={handleRemoveProfilePic}
+                className="absolute bottom-0 right-0 text-white bg-[#891839] rounded-full shadow-md cursor-pointer"
+                title="Remove Profile Picture"
+              >
+                <HiMinusSm className="text-3xl" />
+              </button>
+            )}
+          </div>
+
+            <div className="text-center md:text-left">
+              <h2 className="text-3xl font-bold text-[#891839]">{profileData?.name}</h2>
+              <p className="text-gray-600">{profileData?.email}</p>
+              <p className="text-gray-600">Batch Graduated: {profileData?.graduation_year}</p>
+            </div>
+          </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-6">
                             <ProfileSection title="Contact Info" fields={[
@@ -328,17 +361,115 @@ export default function ProfilePage() {
                                 { label: "Industry", name: "industry" }
                             ]} editableData={editableData} isEditing={isEditing} handleChange={handleChange} />
 
-                            <ProfileSection title="Skills" fields={[
-                                { label: "Skills", name: "skills" }
-                            ]} editableData={editableData} isEditing={isEditing} handleChange={handleChange} />
+            <div className="col-span-full md:col-span-1">
+              <h4 className="text-xl font-semibold text-[#891839] mb-2">Skills</h4>
+              <span className="text-gray-500 font-medium uppercase tracking-wide text-xs mb-1 mt-4 block">
+                Skills
+              </span>
+
+              {isEditing ? (
+                <>
+                  <CreatableSelect
+                    isMulti
+                    options={jobRequiremets}
+                    onChange={(selectedOptions) =>
+                      setEditableData(prev => ({
+                        ...prev,
+                        skills: selectedOptions.map(option => option.value)
+                      }))
+                    }
+                    value={(editableData.skills || []).map(skill => ({ label: skill, value: skill }))}
+                    className="mb-4"
+                    classNamePrefix="select"
+                    onCreateOption={() => {}}
+                    styles={{
+                      control: (base) => ({
+                        ...base,
+                        borderWidth: '2px', 
+                        borderRadius: '0.75rem',
+                        borderColor: '#1F2937',
+                        padding: '0.25rem',
+                        boxShadow: 'none',
+                        '&:hover': {
+                          borderWidth: '1px',
+                          borderColor: '#1F2937',
+                        },
+                      }),
+                      dropdownIndicator: (base) => ({
+                          ...base,
+                          color: '#9ca3af',
+                      }),
+                      clearIndicator: (base) => ({
+                          ...base,
+                          color: '#9ca3af',
+                      }),
+                      option: (base) => ({
+                          ...base,
+                          backgroundColor: '#ffffff',
+                          color: '#374151',
+                          '&:hover': {
+                              backgroundColor: '#ebf8ff',
+                          },
+                      }),
+                      multiValue: (base) => ({
+                          ...base,
+                          backgroundColor: '#def7ec',
+                          color: '#374151',
+                          borderRadius: '9999px',
+                          padding: '0 6px',
+                          paddingRight: '0.25rem',
+                      }),
+                      multiValueLabel: (base) => ({
+                        ...base,
+                        color: '#046C4E',
+                      }),
+                      multiValueRemove: (base) => ({
+                        ...base,
+                        borderRadius: '1000px',
+                        padding: '2px',
+                        marginLeft: '8px',
+                        color: '#891839 ',
+                        cursor: 'pointer',
+                        '&:hover': {
+                          backgroundColor: '#def7ec',
+                          color: '#E02424',
+                        },
+                      }),                      
+                    }}
+                  />
+                </>
+                ) : (
+                  <div className="border rounded h-40 overflow-y-auto pt-2 custom-scrollbar">
+                    {profileData?.skills?.length > 0 ? (
+                      profileData.skills.map((skill, idx) => (
+                        <div
+                          key={idx}
+                          className="text-gray-700 font-semibold break-words"
+                        >
+                          {skill}
                         </div>
+                      ))
+                    ) : (
+                      <p className="text-gray-400">No Data</p>
+                    )}
+                  </div>
+                )}
+            </div>
+          </div>
 
                         <div className="mt-6 flex justify-center">
-                            {isEditing ? (
-                                <button className="save-button" onClick={handleSave}>Save</button>
+                            {user._id === id ? (
+                                <>
+                                    {isEditing ? (
+                                        <button className="save-button" onClick={handleSave}>Save</button>
+                                    ) : (
+                                        <button className="force-button" onClick={handleEditToggle}>Edit Profile</button>
+                                    )}
+                                </>
                             ) : (
-                                <button className="force-button" onClick={handleEditToggle}>Edit Profile</button>
+                                null
                             )}
+                            
                         </div>
                     </section>
 

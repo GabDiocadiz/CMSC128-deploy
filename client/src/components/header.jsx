@@ -62,7 +62,9 @@ export default function Navbar({toggleSidebar,}) {
                 onClick={() => setProfileMenuOpen(!profileMenuOpen)}
                 className="w-10 h-10 bg-none flex items-center justify-center rounded-full cursor-pointer"
               >
-                <img src={humanIcon} className="w-10 h-10" draggable="false" alt="Profile" />
+                {/* In case you may want to display the profile picture on the header */}
+                {/* <img src={`http://localhost:5050/uploads/${user.files[0].serverFilename}` || humanIcon} className="w-10 h-10" draggable="false" alt="Profile" /> */}
+                 <img src={humanIcon} className="w-10 h-10" draggable="false" alt="Profile" />
               </div>
 
               {profileMenuOpen && (

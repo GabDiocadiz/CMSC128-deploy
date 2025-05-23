@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import axios from "axios";
 
 import Navbar_landing from "../header_landing";
@@ -12,6 +13,8 @@ const Registration = () => {
     const [actualFiles, setActualFiles] = useState([]); // Reintroduced for generic file handling
     const fileInputRef = useRef(null);
 
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [formData, setFormData] = useState({
         username: "",
         email: "",
@@ -157,7 +160,7 @@ const Registration = () => {
                 <div className="grid grid-cols-1 gap-y-5 pt-16">
                     <h1 className=" !text-7xl font-bold text-white ">ARTEMIS</h1>       
                     <div className="flex justify-center">
-                        <div className="bg-white/50 py-8 px-6 rounded-2xl shadow-lg w-96 backdrop-blur-sm">
+                        <div className="bg-white/60 py-8 px-6 rounded-2xl shadow-lg w-96 backdrop-blur-sm">
                             <p className="text-xl text-center text-[#00110C] font-light pb-4">Alumni Registration Form</p>
                             <form onSubmit={handleSubmit} className="space-y-4">
 
@@ -168,7 +171,7 @@ const Registration = () => {
                                         name="username"
                                         value={formData.username}
                                         onChange={handleChange}
-                                        className="w-full p-2 border-3 border-[#3E3939] bg-white-700 rounded-md outline-none focus:ring-1 "
+                                        className="w-full p-2 border-2 border-[#3E3939] bg-white-700 rounded-md outline-none focus:ring-1 "
                                         placeholder="Name"
                                         required
                                     />
@@ -181,36 +184,50 @@ const Registration = () => {
                                         name="email"
                                         value={formData.email}
                                         onChange={handleChange}
-                                        className="w-full p-2 border-3 border-[#3E3939] bg-white-700 rounded-md outline-none focus:ring-1"
+                                        className="w-full p-2 border-2 border-[#3E3939] bg-white-700 rounded-md outline-none focus:ring-1"
                                         placeholder="Email"
                                         required
                                     />
                                 </div>
 
                                 {/* Password */}
-                                <div>
+                                <div className="relative">
                                     <input
-                                        type="password"
+                                        type={showPassword ? "text" : "password"}
                                         name="password"
                                         value={formData.password}
                                         onChange={handleChange}
-                                        className="w-full p-2 border-3 border-[#3E3939] bg-white-700 rounded-md outline-none focus:ring-1"
+                                        className="w-full p-2 border-2 border-[#3E3939] rounded-md outline-none focus:ring-1 pr-10"
                                         placeholder="Password"
                                         required
                                     />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-gray-700 focus:outline-none"
+                                    >
+                                        {showPassword ? <IoEyeOffOutline size={20} /> : <IoEyeOutline size={20} />}
+                                    </button>
                                 </div>
 
                                 {/* Confirm Password */}
-                                <div>
+                                <div className="relative">
                                     <input
-                                        type="password"
+                                        type={showConfirmPassword ? "text" : "password"}
                                         name="confirmPassword"
                                         value={formData.confirmPassword}
                                         onChange={handleChange}
-                                        className="w-full p-2 border-3 border-[#3E3939] bg-white-700 rounded-md outline-none focus:ring-1"
+                                        className="w-full p-2 border-2 border-[#3E3939] rounded-md outline-none focus:ring-1 pr-10"
                                         placeholder="Re-enter password"
                                         required
                                     />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-gray-700 focus:outline-none"
+                                    >
+                                        {showConfirmPassword ? <IoEyeOffOutline size={20} /> : <IoEyeOutline size={20} />}
+                                    </button>
                                 </div>
 
                                 {/* Degree Program */}
@@ -220,7 +237,7 @@ const Registration = () => {
                                         name="degree"
                                         value={formData.degree}
                                         onChange={handleChange}
-                                        className="w-full p-2 border-3 border-[#3E3939] bg-white-700 rounded-md outline-none focus:ring-1"
+                                        className="w-full p-2 border-2 border-[#3E3939] bg-white-700 rounded-md outline-none focus:ring-1"
                                         placeholder="Degree Program"
                                         required
                                     />
@@ -232,7 +249,7 @@ const Registration = () => {
                                         name="graduation_year"
                                         value={formData.graduation_year}
                                         onChange={handleChange}
-                                        className="w-full p-2 border-3 border-[#3E3939] bg-white-700 rounded-md outline-none focus:ring-1"
+                                        className="w-full p-2 border-2 border-[#3E3939] bg-white-700 rounded-md outline-none focus:ring-1"
                                         placeholder="Year Graduated"
                                         required
                                     />
@@ -258,12 +275,20 @@ const Registration = () => {
                                 <div className="w-full bg-[#3E3939] h-0.5"></div>
                                 {/* Register Button */}
                                 <button
-                                    type="submit"
+                                    type="button"
                                     onClick={handleSubmit}
                                     className="font-semibold w-full bg-[#085740] p-2 rounded-md hover:bg-green-600 transition focus:ring-1 focus:ring-green-600 focus:!outline-none cursor-pointer"
                                     
                                 >
                                     Register
+                                </button>
+                                <hr className="border-t border-[#085740]" />
+                                <button
+                                    type="submit"
+                                    onClick={() => navigate('/login')}
+                                    className="w-full bg-[#891839] text-white font-bold p-2 rounded-md hover:bg-red-700 transition focus:!outline-none cursor-pointer"
+                                >
+                                    Login
                                 </button>
                             </form>
                         </div>

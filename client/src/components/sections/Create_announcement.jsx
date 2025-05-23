@@ -20,8 +20,9 @@ export const CreateAnnouncement = () => {
   const [actualFiles, setActualFiles] = useState([]);
   const [formData, setFormData] = useState({
     title: "",
-    body: "",
-    created_by: user?._id || "",
+    content: "",
+    type: "announcement",
+    posted_by: user?._id || "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -70,8 +71,8 @@ export const CreateAnnouncement = () => {
       setError("Title is required.");
       return;
     }
-    if (!formData.body.trim()) {
-      setError("Body is required.");
+    if (!formData.content.trim()) {
+      setError("content is required.");
       return;
     }
 
@@ -138,18 +139,18 @@ export const CreateAnnouncement = () => {
                 />
               </div>
 
-              {/* Body */}
+              {/* content */}
               <div className="flex flex-col">
-                <label htmlFor="body" className="text-gray-700 font-semibold mb-1">
-                  Body
+                <label htmlFor="content" className="text-gray-700 font-semibold mb-1">
+                  content
                 </label>
                 <textarea
-                  id="body"
-                  name="body"
+                  id="content"
+                  name="content"
                   rows={8}
                   required
                   placeholder="Write your announcement here..."
-                  value={formData.body}
+                  value={formData.content}
                   onChange={handleInputChange}
                   className="p-3 border border-gray-300 rounded-md resize-y text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#891839]"
                 />

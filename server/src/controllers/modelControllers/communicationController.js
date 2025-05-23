@@ -66,4 +66,16 @@ export const communicationController = {
         }
     },
 
+    async uploadCommunicationFiles (req, res){
+        req.params.modelName = "Communication";
+        req.params.id = req.params._id;
+        return uploadFilesForModel(req, res);
+    },
+        
+    
+    async getCommunicationFiles(req, res) {
+        req.params.modelName = "Communication";
+        return getFilesForModel(req, res);
+    },
+
 }
