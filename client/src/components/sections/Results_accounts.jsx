@@ -4,6 +4,7 @@ import Navbar from "../header";
 import Footer from "../footer";
 import { useAuth } from "../../auth/AuthContext";
 import Sidebar from "../Sidebar";
+import Loading from "../loading";
 export const Results_page_accounts = () => {
   const {authAxios, user} = useAuth();
 
@@ -69,10 +70,10 @@ export const Results_page_accounts = () => {
       </div>
       <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
 
-        <div className="w-screen min-h-screen bg-gray-200 pt-13">
-          <div className="w-full h-full px-6 py-8">
+        <div className="w-screen min-h-screen bg-gray-200">
+          <div className="w-full h-full pb-20 pt-25 pl-15 sm:px-15 md:px-15 lg:pl-35 lg:pr-25">
             {loading ? (
-              <p className="text-center text-gray-500">Loading...</p>
+              <Loading />
             ) : error ? (
               <p className="text-center text-red-500">{error}</p>
             ) : accounts.length > 0 ? (
@@ -84,18 +85,19 @@ export const Results_page_accounts = () => {
                       window.location.href = `/profile/${account._id}`;
                       // console.log(account?._id);
                     }}
-                    className="bg-white rounded-3xl shadow-md p-4 flex items-center border border-transparent hover:border-blue-400 transition duration-300"
+                    className="bg-white max-w-sm w-full rounded-3xl shadow-md p-4 flex items-center border border-transparent hover:border-blue-400 transition duration-300"
+                    key={account.id || index}
                   >
                     <img
                       src={account.imageUrl || (account?.files?.[0]?.serverFilename && `http://localhost:5050/uploads/${account?.files[0].serverFilename}`) || `https://i.pravatar.cc/100?img=${index + 1}`}
                       alt={account.name}
                       className="w-16 h-16 rounded-full object-cover mr-4"
                     />
-                    <div>
+                    <div className="text-left w-0 flex-1 min-w-0">
                       {/* Name and Email of the account */}
-                      <h2 className="text-md text-gray-800 font-semibold">{account.name}</h2>
-                      <p className="text-sm text-gray-600">{account.email}</p>
-                      
+                      <h2 className="text-md text-gray-800 font-semibold break-words">{account.name}</h2>
+                      <p className="text-sm text-gray-600 break-words">{account.email}</p>
+        
                       {/* For skills of the account */}
                       <div className="flex flex-wrap gap-2 mt-2">
                         {(account.skills || [])

@@ -4,10 +4,15 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import Navbar from '../header';
 import Footer from '../footer';
+import CreatableSelect from "react-select/creatable";
+import { jobRequiremets } from "../../utils/models";
 import { ScrollToTop } from '../../utils/helper';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../auth/AuthContext';
-import './ProfilePage.css'; // Make sure this CSS exists and is correctly styled
+import { BsPersonFill } from "react-icons/bs";
+import { FaCamera } from "react-icons/fa6";
+import { HiMinusSm } from "react-icons/hi";
+import './ProfilePage.css';
 import Sidebar from '../Sidebar';
 import axios from 'axios'; // Import axios for FormData (though authAxios should also work)
 
@@ -270,6 +275,296 @@ export default function ProfilePage() {
                 className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${
                     sidebarOpen ? "translate-x-0" : "-translate-x-full"
                 }`}
+  };
+
+  const handleRemoveProfilePic = () => {
+    setNewProfilePic(null);
+    setProfilePicPreview(null);
+  };
+
+  const filteredJobs = jobApplications.filter(job => job.status?.toLowerCase() === activeTab);
+
+  return (
+    <div className="fixed inset-0 overflow-y-auto bg-[#891839]">
+      <div className="fixed top-0 w-full z-50">
+        <Navbar toggleSidebar={toggleSidebar} />
+      </div>
+      <div
+          className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+      }`}
+      >
+          <Sidebar/>
+      </div>
+      <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
+
+      <motion.main
+        className="pt-24 px-4 md:px-6 lg:px-8 w-full max-w-5xl mx-auto space-y-12"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
+      >
+        <section className="bg-white rounded-3xl shadow-lg p-8 flex flex-col gap-8">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+          <div className="relative w-28 h-28">
+            {/* Profile picture */}
+            <div className="w-full h-full rounded-full border-4 border-[#891839] flex items-center justify-center bg-gray-100 overflow-hidden relative">
+              {(profilePicPreview || profileData?.profile_picture) ? (
+                <img
+                  src={profilePicPreview || profileData.profile_picture}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <BsPersonFill className="text-9xl text-[#891839] mt-7" />
+              )}
+
+              {isEditing && (
+                <>
+                  <label
+                    htmlFor="profilePicture"
+                    className="absolute inset-0 bg-black/30 flex items-center justify-center cursor-pointer hover:bg-black/40 transition duration-200"
+                    title={
+                      profilePicPreview || profileData?.profile_picture
+                        ? "Change Profile Picture"
+                        : "Add Profile Picture"
+                    }
+                  >
+                    <FaCamera className="text-white text-3xl" />
+                  </label>
+                  <input
+                    type="file"
+                    id="profilePicture"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        setNewProfilePic(file);
+                        setProfilePicPreview(URL.createObjectURL(file));
+                      }
+                    }}
+                  />
+                </>
+              )}
+            </div>
+
+            {isEditing && (profilePicPreview || profileData?.profile_picture) && (
+              <button
+                type="button"
+                onClick={handleRemoveProfilePic}
+                className="absolute bottom-0 right-0 text-white bg-[#891839] rounded-full shadow-md cursor-pointer"
+                title="Remove Profile Picture"
+              >
+                <HiMinusSm className="text-3xl" />
+              </button>
+            )}
+          </div>
+
+            <div className="text-center md:text-left">
+              <h2 className="text-3xl font-bold text-[#891839]">{profileData?.name}</h2>
+              <p className="text-gray-600">{profileData?.email}</p>
+              <p className="text-gray-600">Batch Graduated: {profileData?.graduation_year}</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-6">
+            <ProfileSection title="Contact Info" fields={[
+              { label: "Phone", name: "contact_number" },
+              { label: "Address", name: "address" }
+            ]} editableData={editableData} isEditing={isEditing} handleChange={handleChange} />
+
+            <ProfileSection title="Professional Info" fields={[
+              { label: "Current Job Title", name: "current_job_title" },
+              { label: "Company", name: "company" },
+              { label: "Industry", name: "industry" }
+            ]} editableData={editableData} isEditing={isEditing} handleChange={handleChange} />
+
+            <div className="col-span-full md:col-span-1">
+              <h4 className="text-xl font-semibold text-[#891839] mb-2">Skills</h4>
+              <span className="text-gray-500 font-medium uppercase tracking-wide text-xs mb-1 mt-4 block">
+                Skills
+              </span>
+
+              {isEditing ? (
+                <>
+                  <CreatableSelect
+                    isMulti
+                    options={jobRequiremets}
+                    onChange={(selectedOptions) =>
+                      setEditableData(prev => ({
+                        ...prev,
+                        skills: selectedOptions.map(option => option.value)
+                      }))
+                    }
+                    value={(editableData.skills || []).map(skill => ({ label: skill, value: skill }))}
+                    className="mb-4"
+                    classNamePrefix="select"
+                    onCreateOption={() => {}}
+                    styles={{
+                      control: (base) => ({
+                        ...base,
+                        borderWidth: '2px', 
+                        borderRadius: '0.75rem',
+                        borderColor: '#1F2937',
+                        padding: '0.25rem',
+                        boxShadow: 'none',
+                        '&:hover': {
+                          borderWidth: '1px',
+                          borderColor: '#1F2937',
+                        },
+                      }),
+                      dropdownIndicator: (base) => ({
+                          ...base,
+                          color: '#9ca3af',
+                      }),
+                      clearIndicator: (base) => ({
+                          ...base,
+                          color: '#9ca3af',
+                      }),
+                      option: (base) => ({
+                          ...base,
+                          backgroundColor: '#ffffff',
+                          color: '#374151',
+                          '&:hover': {
+                              backgroundColor: '#ebf8ff',
+                          },
+                      }),
+                      multiValue: (base) => ({
+                          ...base,
+                          backgroundColor: '#def7ec',
+                          color: '#374151',
+                          borderRadius: '9999px',
+                          padding: '0 6px',
+                          paddingRight: '0.25rem',
+                      }),
+                      multiValueLabel: (base) => ({
+                        ...base,
+                        color: '#046C4E',
+                      }),
+                      multiValueRemove: (base) => ({
+                        ...base,
+                        borderRadius: '1000px',
+                        padding: '2px',
+                        marginLeft: '8px',
+                        color: '#891839 ',
+                        cursor: 'pointer',
+                        '&:hover': {
+                          backgroundColor: '#def7ec',
+                          color: '#E02424',
+                        },
+                      }),                      
+                    }}
+                  />
+                </>
+                ) : (
+                  <div className="border rounded h-40 overflow-y-auto pt-2 custom-scrollbar">
+                    {profileData?.skills?.length > 0 ? (
+                      profileData.skills.map((skill, idx) => (
+                        <div
+                          key={idx}
+                          className="text-gray-700 font-semibold break-words"
+                        >
+                          {skill}
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-gray-400">No Data</p>
+                    )}
+                  </div>
+                )}
+            </div>
+          </div>
+
+          <div className="mt-6 flex justify-center">
+            {isEditing ? (
+              <button className="save-button" onClick={handleSave}>Save</button>
+            ) : (
+              <button className="force-button" onClick={handleEditToggle}>Edit Profile</button>
+            )}
+          </div>
+        </section>
+
+        <section className="bg-white rounded-3xl shadow-lg p-8 relative">
+          <h3 className="text-3xl font-bold text-[#891839] mb-6">Upcoming Events</h3>
+          <div className="custom-calendar-wrapper">
+            <Calendar
+              tileContent={({ date }) => {
+                const eventsToday = upcomingEvents.filter(e => new Date(e.event_date).toDateString() === date.toDateString());
+                return (
+                  <div
+                    className={`relative w-full h-full flex flex-col items-center justify-center rounded-md ${
+                      eventsToday.length > 0 ? 'bg-[#0E4221] text-white' : ''
+                    }`}
+                    onMouseEnter={(e) => {
+                      if (eventsToday.length > 0) {
+                        setHoveredEvent(eventsToday);
+                        setHoverPosition({ x: e.clientX, y: e.clientY });
+                        setIsHoveringTile(true);
+                      }
+                    }}
+                    onMouseLeave={() => setIsHoveringTile(false)}
+                  >
+                    {eventsToday.length > 0 && (
+                      <div className="flex justify-center items-center gap-1 mt-1">
+                        {eventsToday.map((_, idx) => (
+                          <div key={idx} className="w-1.5 h-1.5 rounded-full bg-white"></div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              }}
+              className="custom-calendar"
+            />
+
+            {(hoveredEvent && (isHoveringTile || isHoveringPopup)) && (
+              <div
+                className="popup-events"
+                onMouseEnter={() => setIsHoveringPopup(true)}
+                onMouseLeave={() => {
+                  setIsHoveringPopup(false);
+                  setHoveredEvent(null);
+                }}
+                style={{
+                  position: 'fixed',
+                  top: hoverPosition.y + 10,
+                  left: hoverPosition.x + 10,
+                  background: 'white',
+                  padding: '8px',
+                  borderRadius: '8px',
+                  boxShadow: '0px 2px 10px rgba(0,0,0,0.15)',
+                  zIndex: 1000,
+                }}
+              >
+                {hoveredEvent.map((event) => (
+                  <div
+                    key={event.event_id}
+                    className="popup-event-item cursor-pointer"
+                    onClick={() => {
+                      navigate(`/events/${event.event_id}`);
+                      setHoveredEvent(null);
+                    }}
+                  >
+                    {event.event_name}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+
+      <section className="bg-white rounded-3xl shadow-lg p-8">
+        <h3 className="text-3xl font-bold text-[#891839] mb-6 text-center">Bookmarked Jobs</h3>
+        {bookmarkedJobs.length === 0 ? (
+          <p className="text-gray-300 text-center">No bookmarked jobs.</p>
+        ) : (
+          <ul className="space-y-4">
+            {bookmarkedJobs.map((job, index) => (
+            <Link
+              key={index}
+              to={`/job-details/${job._id}`}
+              className="transform transition-transform duration-300 hover:scale-105 block"
             >
                 <Sidebar />
             </div>
