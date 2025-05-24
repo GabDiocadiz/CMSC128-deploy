@@ -9,7 +9,7 @@ export const jobRequiremets  =[
   { value: 'CSS', label: 'CSS', },
   { value: 'Rust', label: 'Rust', },
   { value: 'C++', label: 'C++', },
-  { value: 'OOP', label: 'OOp', },
+  { value: 'OOP', label: 'OOP', },
 ];
 export const jobList = [
   

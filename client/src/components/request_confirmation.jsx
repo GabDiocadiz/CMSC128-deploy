@@ -9,8 +9,11 @@ export default function Request_Confirmation({request_response, setVisible,id,re
   const handleHeader=()=>{
     if (request_response === 1){
       setResponse("ACCEPT");
-    }else{
+    }else if (request_response === 0){
       setResponse("REJECT")
+    }
+    else{
+      setResponse("Delete")
     }
   }
   const handleDeleteRequest=async ()=>{

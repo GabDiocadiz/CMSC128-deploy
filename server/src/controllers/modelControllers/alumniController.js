@@ -37,7 +37,7 @@ export const alumniController = {
         }
         
         try {
-            const { contact_number, address, current_job_title, company, industry, skills } = req.body;
+            const { contact_number, address, current_job_title, company, industry, skills, files } = req.body;
         
             const updatedUser = await Alumni.findByIdAndUpdate(
             req.params.id,
@@ -48,6 +48,7 @@ export const alumniController = {
                 company,
                 industry,
                 skills,
+                files,
             },
             { new: true, runValidators: true }
             ).select('-password');

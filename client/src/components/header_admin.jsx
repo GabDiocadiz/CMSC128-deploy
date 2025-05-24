@@ -120,7 +120,7 @@ export default function Navbar_admin({toggleSidebar}) {
       )}
         {/* Right - Make an Announcement, Notification & Profile Icons */}
         <div className="absolute top-1 right-4 flex items-center space-x-5">
-          <Link
+          {/* <Link
           to="/create_announcement"
             >
             <button
@@ -132,7 +132,7 @@ export default function Navbar_admin({toggleSidebar}) {
               </div>
               <span className="text-xs font-medium">Make an Announcement</span>
             </button>
-          </Link>
+          </Link> */}
 
             {/* Notification Icon */}   
             <div 
@@ -156,7 +156,7 @@ export default function Navbar_admin({toggleSidebar}) {
               {profileMenuOpen && (
                 <div className="absolute right-0 mt-1 bg-white !shadow-lg rounded-sm w-35 z-50 text-center text-sm border border-gray-400">
                   <Link
-                    to={"/profile"}
+                    to={`/profile/${user?._id}`}
                     className="block w-full px-4 py-2 !text-gray-700 hover:bg-blue-100 focus:!outline-none"
                     onClick={() => setProfileMenuOpen(false)}
                   >

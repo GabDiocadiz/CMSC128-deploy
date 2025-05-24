@@ -20,8 +20,9 @@ export const CreateAnnouncement = () => {
   const [actualFiles, setActualFiles] = useState([]);
   const [formData, setFormData] = useState({
     title: "",
-    body: "",
-    created_by: user?._id || "",
+    content: "",
+    type: "announcement",
+    posted_by: user?._id || "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -70,14 +71,36 @@ export const CreateAnnouncement = () => {
       setError("Title is required.");
       return;
     }
-    if (!formData.body.trim()) {
-      setError("Body is required.");
+    if (!formData.content.trim()) {
+      setError("content is required.");
       return;
     }
+    let uploadedFiles = [];
+
+    const fileFormData = new FormData();
+    actualFiles.forEach(file => fileFormData.append("files[]", file));
+
+    const file_res = await axios.post(`http://localhost:5050/announcement/upload`, fileFormData, {
+        headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    uploadedFiles = file_res.data.files.map(file => ({
+        originalFilename: file.originalname,
+        serverFilename: file.serverFilename,
+    }));
+
+    
+    const announcementData = {
+      title: formData.title,
+      content: formData.content,
+      type: formData.type,
+      posted_by: formData.posted_by,
+      files: uploadedFiles,
+    };
 
     setIsSubmitting(true);
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/announcement/create`, formData);
+      await axios.post(`${import.meta.env.VITE_API_URL}/announcement/create`, announcementData);
       console.log("Successfully sent to all users");
     } catch (err) {
       console.error("Error creating announcement", err);
@@ -138,18 +161,18 @@ export const CreateAnnouncement = () => {
                 />
               </div>
 
-              {/* Body */}
+              {/* content */}
               <div className="flex flex-col">
-                <label htmlFor="body" className="text-gray-700 font-semibold mb-1">
-                  Body
+                <label htmlFor="content" className="text-gray-700 font-semibold mb-1">
+                  content
                 </label>
                 <textarea
-                  id="body"
-                  name="body"
+                  id="content"
+                  name="content"
                   rows={8}
                   required
                   placeholder="Write your announcement here..."
-                  value={formData.body}
+                  value={formData.content}
                   onChange={handleInputChange}
                   className="p-3 border border-gray-300 rounded-md resize-y text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#891839]"
                 />
