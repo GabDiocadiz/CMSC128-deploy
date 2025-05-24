@@ -116,7 +116,7 @@ export default function Sidebar(currentPage){
                         
                         <div 
                         onClick={()=>{
-                            navigate('/profile')
+                            navigate(`/profile/${user?._id}`)
                         }}
                         role="button"
                         class="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-emerald-900">
