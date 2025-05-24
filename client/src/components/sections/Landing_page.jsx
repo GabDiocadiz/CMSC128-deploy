@@ -1,15 +1,62 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import { PiCalendarDotsFill } from "react-icons/pi";
 import { announcementList } from "../../utils/models";    //test case
 import Navbar_landing from "../header_landing";
 import Footer from "../footer";
 import Loading from "../loading";
+import { useAuth } from "../../auth/AuthContext";
 
 export const Landing_page = () => {
   const navigate = useNavigate()
   const [announcements, setAnnouncements] = useState(announcementList);
   const [isLoading, setIsLoading] = useState(true);
+  const { authAxios } = useAuth();
+
+  // Effect to fetch data on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const announcementsResponse = await authAxios.get('/announcement/read-announcements');
+        console.log("Announcements data from API:", announcementsResponse.data); // This will show the data received
+        setAnnouncements(announcementsResponse.data);
+      } catch (error) {
+        console.error("Error fetching announcements:", error);
+        // Handle error, e.g., set an error state or show a message
+      }
+    };
+    fetchData();
+  }, [authAxios]); // Dependency array includes authAxios to refetch if it changes (though unlikely for a landing page)
+
+  // Effect to log announcements state *after* it has been updated
+  useEffect(() => {
+    console.log("Announcements state after update:", announcements);
+    // You could also set isLoading to false here if the loading state depends directly on data
+    // if (announcements.length > 0) {
+    //   setIsLoading(false);
+    // }
+  }, [announcements]); // This effect runs whenever 'announcements' state changes
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []); // This runs once on mount to simulate initial loading
+
+  const announcementsPerPage = 3;
+  const totalPages = Math.ceil(announcements.length / announcementsPerPage);
+  const startIndex = (currentPage - 1) * announcementsPerPage;
+  const currentAnnouncements = announcements.slice(startIndex, startIndex + announcementsPerPage);
+
+  const handlePrev = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
   
   const sortedAnnouncements = [...announcements].sort((a, b) => 
     new Date(b.date_posted) - new Date(a.date_posted)
@@ -37,16 +84,16 @@ export const Landing_page = () => {
           <div className="bg-[url('src/assets/Building.png')] bg-cover bg-center w-full min-h-screen h-175 flex flex-col justify-between">
             <div className="flex justify-between items-center h-full text-white text-left pl-8 pt-15 sm:pl-20">
               <div className="flex flex-col">
-              <p className="text-5xl md:text-5xl lg:text-7xl font-bold pb-2">
-                Welcome to Artemis
-              </p>
-              <p className="text-xl md:text-2xl lg:text-4xl font-medium pb-3">
-                Alumni Relations, Tracking, and <br />
-                Engagement Management Integrated System
-              </p>
-              <p className="text-md md:text-lg lg:text-xl font-light">
-                "Guiding Alumni Connections, Every Step of the Way"
-              </p>
+                <p className="text-5xl md:text-5xl lg:text-7xl font-bold pb-2">
+                  Welcome to Artemis
+                </p>
+                <p className="text-xl md:text-2xl lg:text-4xl font-medium pb-3">
+                  Alumni Relations, Tracking, and <br />
+                  Engagement Management Integrated System
+                </p>
+                <p className="text-md md:text-lg lg:text-xl font-light">
+                  "Guiding Alumni Connections, Every Step of the Way"
+                </p>
               </div>
             </div>
             <div className="flex justify-end pb-15 pr-25">
@@ -319,7 +366,7 @@ export const Landing_page = () => {
       )}
 
       <div className="w-full z-50">
-          <Footer />
+        <Footer />
       </div>
     </>
   );
