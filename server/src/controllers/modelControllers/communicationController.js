@@ -1,6 +1,11 @@
 import Communication from '../../models/Communication.js';
 import { createCRUDController } from '../middlewareControllers/createCRUDController/index.js';
-
+import {
+    uploadFilesForModel,
+    getFilesForModel,
+    deleteFileFromModel,
+    downloadFile
+  } from "../fileController/fileController.js";
 
 export const communicationController = {
     ...createCRUDController(Communication),

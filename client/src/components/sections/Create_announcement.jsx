@@ -75,10 +75,32 @@ export const CreateAnnouncement = () => {
       setError("content is required.");
       return;
     }
+    let uploadedFiles = [];
+
+    const fileFormData = new FormData();
+    actualFiles.forEach(file => fileFormData.append("files[]", file));
+
+    const file_res = await axios.post(`http://localhost:5050/announcement/upload`, fileFormData, {
+        headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    uploadedFiles = file_res.data.files.map(file => ({
+        originalFilename: file.originalname,
+        serverFilename: file.serverFilename,
+    }));
+
+    
+    const announcementData = {
+      title: formData.title,
+      content: formData.content,
+      type: formData.type,
+      posted_by: formData.posted_by,
+      files: uploadedFiles,
+    };
 
     setIsSubmitting(true);
     try {
-      await axios.post("http://localhost:5050/announcement/create", formData);
+      await axios.post("http://localhost:5050/announcement/create", announcementData);
       console.log("Successfully sent to all users");
     } catch (err) {
       console.error("Error creating announcement", err);
