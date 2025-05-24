@@ -1,4 +1,3 @@
-
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from "../auth/AuthContext";
 import { HiOutlineHome } from "react-icons/hi2";
@@ -8,10 +7,11 @@ import { IoIosListBox } from "react-icons/io";
 import { IoPersonCircle } from "react-icons/io5";
 import { PiCalendarDotsFill } from "react-icons/pi";
 import { LuSearch } from "react-icons/lu";
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 export default function Sidebar(currentPage){
     const navigate = useNavigate()
     const { authAxios, user, logout } = useAuth();
+    const [notifications, setNotifications] = useState([]);
     const handleLogout = async (e)=>{
         await logout();
     }
