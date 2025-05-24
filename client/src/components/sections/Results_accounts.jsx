@@ -70,8 +70,8 @@ export const Results_page_accounts = () => {
       </div>
       <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
 
-        <div className="w-screen min-h-screen bg-gray-200">
-          <div className="w-full h-full pb-20 pt-25 pl-15 sm:px-15 md:px-15 lg:pl-35 lg:pr-25">
+        <div className="w-screen min-h-screen bg-gray-100">
+          <div className="w-full h-full pb-20 pt-25 pl-15 pr-17 sm:px-15 md:px-15 lg:pl-35 lg:pr-35">
             {loading ? (
               <Loading />
             ) : error ? (

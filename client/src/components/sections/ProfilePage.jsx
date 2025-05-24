@@ -14,6 +14,7 @@ import { FaCamera } from "react-icons/fa6";
 import { HiMinusSm } from "react-icons/hi";
 import './ProfilePage.css'; // Make sure this CSS exists and is correctly styled
 import Sidebar from '../Sidebar';
+import Loading from "../loading";
 import axios from 'axios'; // Import axios for FormData (though authAxios should also work)
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
@@ -41,7 +42,7 @@ export default function ProfilePage() {
 
     // State for UI/loading
     const [activeTab, setActiveTab] = useState('pending');
-    const [loading, setLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const toggleSidebar = () => setSidebarOpen((prev) => !prev);
@@ -79,7 +80,7 @@ export default function ProfilePage() {
     }, [selectedFile, profileData]); // Dependency on selectedFile and profileData
 
     const fetchProfileData = async () => {
-        setLoading(true);
+        setIsLoading(true);
         setError(null);
         try {
             const response = await authAxios.get(`/alumni/find-alumni/${id}`);
@@ -129,7 +130,7 @@ export default function ProfilePage() {
       console.error('Error fetching profile data:', err);
       setError('Failed to load profile information.');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -247,11 +248,9 @@ export default function ProfilePage() {
 
     const filteredJobs = jobApplications.filter(job => job.status?.toLowerCase() === activeTab);
 
-    if (loading) {
+    if (isLoading) {
         return (
-            <div className="flex items-center justify-center min-h-screen bg-[#FDF0D5]">
-                <p className="text-2xl text-[#891839]">Loading profile...</p>
-            </div>
+            <Loading />
         );
     }
 

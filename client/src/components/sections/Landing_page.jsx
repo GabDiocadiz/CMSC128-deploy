@@ -42,34 +42,13 @@ export const Landing_page = () => {
       setIsLoading(false);
     }, 1000);
     return () => clearTimeout(timer);
-  }, []); // This runs once on mount to simulate initial loading
-
-  const announcementsPerPage = 3;
-  const totalPages = Math.ceil(announcements.length / announcementsPerPage);
-  const startIndex = (currentPage - 1) * announcementsPerPage;
-  const currentAnnouncements = announcements.slice(startIndex, startIndex + announcementsPerPage);
-
-  const handlePrev = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
-  };
-
-  const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-  };
-
+  }, []);
   
   const sortedAnnouncements = [...announcements].sort((a, b) => 
     new Date(b.date_posted) - new Date(a.date_posted)
   );
   
   const latestAnnouncements = sortedAnnouncements.slice(0, 4);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, []);
    
   return (
     <>
