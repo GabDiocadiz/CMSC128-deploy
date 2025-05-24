@@ -16,7 +16,11 @@ export default function Sidebar(currentPage){
         await logout();
     }
     const handleNavigate = () => {
-    navigate('/search-alumni');
+    if(user?.user_type == "Admin"){
+        navigate('/admin_search-alumni');
+    } else {
+        navigate('/search-alumni');
+    }
     const fetchNotifications = useCallback(async () => {
         try {
           const response = await authAxios.get('/notifications/unread');

@@ -1,15 +1,21 @@
 import { useState, useEffect } from "react";
 import Navbar_search from "../Navbar_Search";
 import axios from "axios";
+import Sidebar from "../Sidebar";
 import Navbar from "../header";
 import Footer from "../footer";
+import { useAuth } from "../../auth/AuthContext";
 
 export const Results_page_accounts_admin = () => {
+  const {authAxios, user} = useAuth();
+
   const [searchTerm, setSearchTerm] = useState(""); // State for search term
   const [filters, setFilters] = useState({}); // State for filters from Navbar_search
   const [accounts, setAccounts] = useState([]); // State for accounts data
   const [loading, setLoading] = useState(false); // State for loading indicator
   const [error, setError] = useState(null); // State for error handling
+  const [sidebarOpen, setSidebarOpen] = useState(false); // Sidebar toggle state
+  const toggleSidebar = () => setSidebarOpen((prev) => !prev);
 
   // Fetch accounts data from the backend
   const fetchAccounts = async () => {
@@ -28,7 +34,7 @@ export const Results_page_accounts_admin = () => {
 
       console.log("Query Parameters:", queryParams); // Debug query parameters
 
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/alumni/search`, { params: queryParams });
+      const response = await authAxios.get("/alumni/search", { params: queryParams });
 
       console.log("API Response:", response.data); // Debug API response
 
@@ -57,8 +63,17 @@ export const Results_page_accounts_admin = () => {
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         setFilters={setFilters} // Pass setFilters to update filters
+        toggleSidebar={toggleSidebar}
         user_id={1}
       />
+
+      <div
+          className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+      }`}
+      >
+          <Sidebar/>
+      </div>
 
       <div className="w-screen min-h-screen bg-gray-200 pt-20">
         {/* Header Row */}
