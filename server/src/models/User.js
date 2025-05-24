@@ -6,6 +6,13 @@ const typeOfUser = {
     ADMIN: 'Admin'
 };
 
+const fileObjectSchema = new mongoose.Schema({
+    name: { type: String },
+    size: { type: Number },
+    type: { type: String },
+    serverFilename: { type: String }
+}, { _id: false });
+
 // User model
 const userSchema = new Schema({
     user_id: { type: String, required: true },
@@ -19,6 +26,10 @@ const userSchema = new Schema({
         enum: [typeOfUser.ALUMNI, typeOfUser.ADMIN],
         default: typeOfUser.ALUMNI,
         required: true
+    },
+    files: {
+        type: [fileObjectSchema],
+        default: []
     },
 });
 userSchema.index({ user_type: 1 });
@@ -38,6 +49,7 @@ const alumniSchema = new Schema({
     events_attended: [{ type: Schema.Types.ObjectId, ref: 'Event' }],
     bookmarked_jobs: [{ type: Schema.Types.ObjectId, ref: 'JobPosting' }],
     bookmarked_events: [{ type: Schema.Types.ObjectId, ref: 'Event' }]
+
 });
 
 alumniSchema.index({ graduation_year: 1, current_job_title: 1, degree: 1 }); 

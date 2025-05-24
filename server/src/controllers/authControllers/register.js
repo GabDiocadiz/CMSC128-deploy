@@ -4,6 +4,12 @@ import { adminController } from '../modelControllers/adminController.js';
 import bcrypt from 'bcrypt';
 import dotenv from "dotenv";
 dotenv.config({path: "../server/.env"})
+import {
+    uploadFilesForModel,
+    getFilesForModel,
+    deleteFileFromModel,
+    downloadFile
+} from "../fileController/fileController.js";
 
 export const register = async (req, res) => {
     try {
@@ -32,4 +38,23 @@ export const register = async (req, res) => {
         console.log(error)
         res.status(500).json({ error: 'Registration failed' });
     }
+};
+
+export const uploadProfilePicture = async (req, res) => {
+    req.params.modelName = "User";
+    req.params.id = req.params.event_id;
+    return uploadFilesForModel(req, res);
+};
+        
+    
+export const getProfilePicture = async (req, res) => {
+    req.params.modelName = "User";
+    req.params.id = req.params.event_id; 
+    return getFilesForModel(req, res);
+};
+
+export const deleteProfilePicture = async (req, res)  => {
+    req.params.modelName = "User";
+    req.params.id = req.params.event_id; 
+    return deleteFileFromModel(req, res);
 };
