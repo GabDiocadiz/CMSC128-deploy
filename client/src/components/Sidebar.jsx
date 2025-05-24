@@ -12,10 +12,9 @@ import React, { useState } from "react";
 export default function Sidebar(currentPage){
     const { logout } = useAuth();
     const navigate = useNavigate()
-    const { authAxios, user } = useAuth();
-     const [ notifications, setNotifications ] = useState([]);
-     const handleLogout=()=>{
-        logout()
+    const { authAxios, user, logout } = useAuth();
+    const handleLogout = async (e)=>{
+        await logout();
     }
     const handleNavigate = () => {
     navigate('/search-alumni');
