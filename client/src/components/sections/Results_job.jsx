@@ -260,15 +260,15 @@ export const Results_page_jobs = ( ) => {
                   </button>
                 </div> 
             ) : (
-                <>
+                <div className="pt-1">
                     <div
-                        className="relative bg-cover bg-center text-white flex flex-col justify-center items-start px-8 sm:px-16 py-14 w-full h-[35vh]"
+                        className="relative bg-cover bg-center text-white flex flex-col justify-center items-start px-8 sm:px-16 py-14 pt-15 w-full h-[35vh]"
                         style={{
                             backgroundImage: `url(${motherboard})`,
                             backgroundPosition: "top",
                         }}
                     >
-                        <div className="absolute inset-0 bg-blue-950 opacity-70 z-0"></div>
+                        <div className="absolute inset-0 bg-gray-800 opacity-60 z-0"></div>
                         <div className="relative z-10 w-full flex items-center justify-between">
                             <div className="mt-12">
                                 <h2 className="text-4xl lg:text-5xl text-white font-semibold pl-10">
@@ -587,7 +587,7 @@ export const Results_page_jobs = ( ) => {
                             )}
                         </div>
                     </div>
-                </>
+                </div>
             )}
             </div>
             {sidebarOpen ? (

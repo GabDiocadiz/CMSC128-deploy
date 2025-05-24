@@ -11,7 +11,7 @@ import { TbZoomQuestion } from "react-icons/tb";
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useAuth } from "../../auth/AuthContext";
 import default_eventbg from "../../assets/event_placeholder.png";
-import eventgrad from "../../assets/eventgrad1.jpg";
+import eventHeader from "../../assets/eventHeader.png";
 import axios from "axios";
 import Navbar from "../header";
 import Footer from "../footer";
@@ -310,15 +310,15 @@ export const Results_page_events = () => {
                     No events found.
                 </div> 
             ) : (
-                <>
+                <div className="pt-1">
                     <div
-                        className="relative bg-cover bg-center text-white flex flex-col justify-center items-start px-8 sm:px-16 py-14 w-full h-[35vh]"
+                        className="relative bg-cover bg-center text-white flex flex-col justify-center items-start px-8 sm:px-16 py-14 pt-15 w-full h-[35vh]"
                         style={{
-                            backgroundImage: `url(${eventgrad})`,
-                            backgroundPosition: "top",
+                            backgroundImage: `url(${eventHeader})`,
+                            backgroundPosition: "center 20%",
                         }}
                     >
-                        <div className="absolute inset-0 bg-[#145C44] opacity-50 z-0"></div>
+                        <div className="absolute inset-0 bg-gray-900 opacity-60 z-0"></div>
                         {/* <div className="absolute inset-0 bg-gray-500 opacity-30 z-0"></div> */}
                         <div className="relative z-10 w-full flex items-center justify-between">
                             <div className="mt-12">
@@ -470,7 +470,7 @@ export const Results_page_events = () => {
                                                                                     type="checkbox"
                                                                                     checked={isSelected}
                                                                                     onChange={() => handleMonthToggle(month.value)}
-                                                                                   className="peer hidden"
+                                                                                    className="peer hidden"
                                                                                 />
                                                                                 <div
                                                                                     className={`w-4 h-4 flex items-center justify-center border rounded ${
@@ -610,7 +610,7 @@ export const Results_page_events = () => {
                             )}
                         </div>
                     </div>
-                </>
+                </div>
             )}
             </div>
             {sidebarOpen ? (

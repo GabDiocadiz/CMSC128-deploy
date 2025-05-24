@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../header";
 import Footer from "../footer";
 import gcash_icon from "../../assets/GCash-Logo.png"
@@ -9,6 +9,7 @@ import { useAuth } from "../../auth/AuthContext";
 import { ScrollToTop } from "../../utils/helper";
 export default function TransactionPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { authAxios, user } = useAuth();
   const [event, setEvent] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -88,6 +89,10 @@ export default function TransactionPage() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
+  };
+
+  const handleCancel = () => {
+    navigate(-1);
   };
 
   const handleSubmit = async (e) => {
@@ -213,12 +218,21 @@ export default function TransactionPage() {
                   </div>
                 ))}
 
-                <button
-                  type="submit"
-                  className="bg-[#891839] hover:bg-[#a43249] transition-colors text-white w-full py-2 rounded-lg font-bold"
-                >
-                  Submit
-                </button>
+                <div className="flex space-x-4">
+                  <button
+                    type="button"
+                    onClick={handleCancel}
+                    className="bg-[#145C44] transition-colors text-white flex-1 py-2 rounded-lg font-bold cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="bg-[#891839] transition-colors text-white flex-1 py-2 rounded-lg font-bold cursor-pointer"
+                  >
+                    Submit
+                  </button>
+                </div>
 
                 <div className="text-center mt-4 text-gray-600">or pay with</div>
                 <div className="flex justify-center space-x-4 mt-4">
