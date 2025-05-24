@@ -65,7 +65,7 @@ const Registration = () => {
         const fileFormData = new FormData();
         actualFiles.forEach(file => fileFormData.append("files[]", file));
 
-        const file_res = await axios.post(`http://localhost:5050/auth/register/upload`, fileFormData, {
+        const file_res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/register/upload`, fileFormData, {
             headers: { "Content-Type": "multipart/form-data" },
         });
 
@@ -93,7 +93,7 @@ const Registration = () => {
         files: uploadedFiles,
         };
 
-        const res = await axios.post("http://localhost:5050/auth/register", userRegData);
+        const res = await axios.post("${import.meta.env.VITE_API_BASE_URL}/auth/register", userRegData);
         alert("Registration Successful. Redirecting to home page...");
         navigate(-1);
     } catch (err) {

@@ -2,7 +2,7 @@
 
 import needle from 'needle';
 
-const BASE_URL = 'http://localhost:5050/alumni';
+const BASE_URL = 'https://gab-vercel.vercel.app/alumni';
 
 const testCases = [
     { description: 'Show all alumni (no filters)', endpoint: `${BASE_URL}/alumni` },
