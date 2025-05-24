@@ -4,11 +4,14 @@ import express from 'express';
 import {
   notificationController,
   getMyUnread,
-  markAsRead
+  markAsRead,
+  getMyNotifications
 } from '../controllers/modelControllers/notificationController.js';
 import { validateToken } from '../middleware/validate-token.js';
 
 const router = express.Router();
+
+router.get('/all', validateToken, getMyNotifications);
 
 router.get('/unread', validateToken, getMyUnread);
 
