@@ -80,7 +80,7 @@ export const CreateAnnouncement = () => {
     const fileFormData = new FormData();
     actualFiles.forEach(file => fileFormData.append("files[]", file));
 
-    const file_res = await axios.post(`http://localhost:5050/announcement/upload`, fileFormData, {
+    const file_res = await axios.post(`${import.meta.env.VITE_API_URL}/announcement/upload`, fileFormData, {
         headers: { "Content-Type": "multipart/form-data" },
     });
 
