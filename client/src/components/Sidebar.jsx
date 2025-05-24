@@ -10,7 +10,6 @@ import { PiCalendarDotsFill } from "react-icons/pi";
 import { LuSearch } from "react-icons/lu";
 import React, { useState } from "react";
 export default function Sidebar(currentPage){
-    const { logout } = useAuth();
     const navigate = useNavigate()
     const { authAxios, user, logout } = useAuth();
     const handleLogout = async (e)=>{
