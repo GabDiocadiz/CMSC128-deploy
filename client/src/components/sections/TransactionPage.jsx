@@ -10,7 +10,6 @@ import { ScrollToTop } from "../../utils/helper";
 
 export default function TransactionPage() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const { authAxios, user } = useAuth();
   const navigate = useNavigate();
   const [event, setEvent] = useState(null);
