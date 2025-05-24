@@ -1,20 +1,18 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import speakerIcon from '../assets/Speaker_Icon.svg';
 import Notification from "./notification";
 import { useNavigate } from 'react-router-dom'
 import uplbLogo from "../assets/uplblogo.png";
 import notifications from "../assets/notifications.png";
 import humanIcon from "../assets/Human Icon.png";
 import { useAuth } from "../auth/AuthContext";
-import { MegaphoneIcon } from '@heroicons/react/24/solid';
 import axios from "axios";
+
 export default function Navbar_admin({toggleSidebar}) {
   const { authAxios, user, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate()
   const  [notification_modal, setnotification_modal] = useState(false)
-  const [announcementModal, setAnnouncementModal] = useState(false);
   const [formData, setFormData] = useState({
     type:"announcement",
     title:"",
@@ -35,8 +33,6 @@ export default function Navbar_admin({toggleSidebar}) {
       alert("Submission failed.");
     }
     
-
-    // setIsOpen(false); Remove after implementing the proper backend stuff
   }
   const handleLogout= async (e)=>{
     await logout();

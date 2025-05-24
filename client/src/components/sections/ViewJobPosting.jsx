@@ -1,5 +1,4 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import { FaLocationDot } from "react-icons/fa6";
 import { TiCalendar } from "react-icons/ti";
@@ -12,7 +11,6 @@ import Navbar from "../header";
 import Footer from "../footer";
 import Loading from "../loading";
 import Sidebar from "../Sidebar";
-import axios from "axios";
 
 export default function ViewJobDetails() {
     const { id } = useParams();

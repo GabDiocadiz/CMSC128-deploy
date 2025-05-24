@@ -10,6 +10,7 @@ import Footer from "../footer";
 import Loading from "../loading";
 import axios from "axios";
 import Sidebar from "../Sidebar";
+
 export default function ViewEventDetails() {
     const { id } = useParams();
     const [event, setEvent] = useState(null);

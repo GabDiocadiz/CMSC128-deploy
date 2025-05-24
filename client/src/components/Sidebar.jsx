@@ -1,14 +1,13 @@
 
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from "../auth/AuthContext";
-import { HiOutlineHome } from "react-icons/hi2";
-import { CiViewList } from "react-icons/ci";
 import { GoHomeFill } from "react-icons/go";
 import { IoIosListBox } from "react-icons/io";
 import { IoPersonCircle } from "react-icons/io5";
 import { PiCalendarDotsFill } from "react-icons/pi";
 import { LuSearch } from "react-icons/lu";
-import React, { useState } from "react";
+import { useState } from "react";
+
 export default function Sidebar(currentPage){
     const navigate = useNavigate()
     const { authAxios, user, logout } = useAuth();

@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { announcementList } from "../../utils/models"; //test case
 import Navbar_landing from "../header_landing";
 import Footer from "../footer";
 import Loading from "../loading";

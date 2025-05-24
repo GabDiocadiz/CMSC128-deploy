@@ -7,6 +7,7 @@ import paymaya_icon from "../../assets/1200px-PayMaya_Logo.png"
 import Sidebar from "../Sidebar";
 import { useAuth } from "../../auth/AuthContext";
 import { ScrollToTop } from "../../utils/helper";
+
 export default function TransactionPage() {
   const { id } = useParams();
   const { authAxios, user } = useAuth();
