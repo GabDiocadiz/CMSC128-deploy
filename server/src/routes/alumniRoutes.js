@@ -18,6 +18,6 @@ router.delete('/email/:email', alumniController.deleteByEmail);
 router.get('alumni/view-all-rsvp', validateToken, authorizeRoles(['Alumni']), viewRSVP);
 
 // alumni-search
-router.get('/search', validateToken, authorizeRoles(['Alumni'], ['Admin']), alumniSearch);
+router.get('/search', validateToken, authorizeRoles(['Alumni', 'Admin']), alumniSearch);
 
 export default router;

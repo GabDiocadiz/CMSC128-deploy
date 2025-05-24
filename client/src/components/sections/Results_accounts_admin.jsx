@@ -3,8 +3,11 @@ import Navbar_search from "../Navbar_Search";
 import axios from "axios";
 import Navbar from "../header";
 import Footer from "../footer";
+import { useAuth } from "../../auth/AuthContext";
 
 export const Results_page_accounts_admin = () => {
+  const {authAxios, user} = useAuth();
+
   const [searchTerm, setSearchTerm] = useState(""); // State for search term
   const [filters, setFilters] = useState({}); // State for filters from Navbar_search
   const [accounts, setAccounts] = useState([]); // State for accounts data
@@ -28,7 +31,7 @@ export const Results_page_accounts_admin = () => {
 
       console.log("Query Parameters:", queryParams); // Debug query parameters
 
-      const response = await axios.get("http://localhost:5050/alumni/search", { params: queryParams });
+      const response = await authAxios.get("/alumni/search", { params: queryParams });
 
       console.log("API Response:", response.data); // Debug API response
 
