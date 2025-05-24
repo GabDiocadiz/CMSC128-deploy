@@ -7,10 +7,12 @@ import paymaya_icon from "../../assets/1200px-PayMaya_Logo.png"
 import Sidebar from "../Sidebar";
 import { useAuth } from "../../auth/AuthContext";
 import { ScrollToTop } from "../../utils/helper";
+
 export default function TransactionPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { authAxios, user } = useAuth();
+  const navigate = useNavigate();
   const [event, setEvent] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -31,7 +33,7 @@ export default function TransactionPage() {
     const fetchEvent = async () => {
       try {
         setIsLoading(true);
-        const response = await authAxios.get(`http://localhost:5050/events/find-event/${id}`);
+        const response = await authAxios.get(`/events/find-event/${id}`);
 
         setEvent(response.data);
         console.log("Fetched Event:", response.data);
@@ -41,14 +43,14 @@ export default function TransactionPage() {
           console.log("Token invalid/expired. Attempting refresh...");
 
           try {
-            const refreshResponse = await axios.get("http://localhost:5050/auth/refresh", { withCredentials: true });
+            const refreshResponse = await axios.get("/auth/refresh", { withCredentials: true });
 
             if (refreshResponse.data.accessToken) {
               const newToken = refreshResponse.data.accessToken;
               localStorage.setItem("accessToken", newToken);
 
               console.log("Retrying event fetch with new token...");
-              const retryResponse = await axios.get(`http://localhost:5050/events/find-event/${id}`, {
+              const retryResponse = await axios.get(`/events/find-event/${id}`, {
                 headers: { Authorization: `Bearer ${newToken}` },
                 withCredentials: true
               });
@@ -116,11 +118,14 @@ export default function TransactionPage() {
 
 
       const response = await authAxios.post(
-        `http://localhost:5050/events/donate/${id}`,
+        `/events/donate/${id}`,
         payload,
         { headers: { "Content-Type": "application/json" } }
       );
       console.log("Transaction response:", response.data);
+      alert("Transaction successful!");
+      navigate(`/event-details/${id}`);
+      navigate
     } catch (e) {
       console.error("Transaction error:", e?.response?.data || e);
       alert("Transaction failed. Please check your input and try again.");

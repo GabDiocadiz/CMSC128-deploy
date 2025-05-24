@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { eventList, announcementList, jobList } from "../../utils/models";
 import { ScrollToTop } from "../../utils/helper";
 import Navbar from "../header";
 import Footer from "../footer";
@@ -9,7 +8,6 @@ import BookEventButton from "../buttons/BookEvent";
 import SearchAlumniButton from "../buttons/SearchAlumni";
 import notice1 from "../../assets/notice1.png"  // default bg for announcement
 import notice2 from "../../assets/notice2.png"  // default bg for announcement
-import Error_Message from "../error_message";
 import { useParams } from 'react-router-dom';
 import { useAuth } from "../../auth/AuthContext";
 import Sidebar from "../Sidebar";
@@ -17,7 +15,6 @@ import event_placeholder from "../../assets/event_placeholder.png"
 
 export default function MainPage() {
     const {authAxios, user} = useAuth();
-    const {user_id} = useParams(); //Contains the User Id 
 
     const [jobs, setJobs] = useState([]);
     const [events, setEvents] = useState([]);

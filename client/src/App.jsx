@@ -38,7 +38,7 @@ function App() {
             <Route path="/" element={<Landing_page/>} /> 
             <Route path="/reg" element={<Registration/>} />
             <Route path="/login" element={<Login/>} />
-            <Route path="/unauthorized_jobs" element={<Unauthorized_jobs_results_page/>} />
+            <Route path="/guest_jobs" element={<Unauthorized_jobs_results_page/>} />
 
             <Route element={<RoleRoute allowedRoles={['Admin']}/>}>
               <Route path="/admin_main" element={<Admin_main/>} />

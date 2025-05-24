@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 export default function Notification_View({notification_info, setNotification_view}){
     if (!notification_info) {

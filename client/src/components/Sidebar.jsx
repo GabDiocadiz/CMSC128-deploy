@@ -1,24 +1,26 @@
 
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from "../auth/AuthContext";
-import { HiOutlineHome } from "react-icons/hi2";
-import { CiViewList } from "react-icons/ci";
 import { GoHomeFill } from "react-icons/go";
 import { IoIosListBox } from "react-icons/io";
 import { IoPersonCircle } from "react-icons/io5";
 import { PiCalendarDotsFill } from "react-icons/pi";
 import { LuSearch } from "react-icons/lu";
-import React, { useState } from "react";
+import { useState } from "react";
+
 export default function Sidebar(currentPage){
-    const { logout } = useAuth();
     const navigate = useNavigate()
-    const { authAxios, user } = useAuth();
+    const { authAxios, user, logout } = useAuth();
      const [ notifications, setNotifications ] = useState([]);
      const handleLogout=()=>{
         logout()
     }
     const handleNavigate = () => {
-    navigate('/search-alumni');
+    if(user?.user_type == "Admin"){
+        navigate('/admin_search-alumni');
+    } else {
+        navigate('/search-alumni');
+    }
     const fetchNotifications = useCallback(async () => {
         try {
           const response = await authAxios.get('/notifications/unread');
@@ -117,8 +119,8 @@ export default function Sidebar(currentPage){
                         </div>
                         
                         <div 
-                        onClick={()=>{   
-                            navigate(`/profile/${user._id}`);
+                        onClick={()=>{
+                            navigate(`/profile/${user?._id}`)
                         }}
                         role="button"
                         class="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-emerald-900">

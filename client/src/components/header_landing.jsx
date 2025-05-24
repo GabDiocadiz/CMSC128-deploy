@@ -1,5 +1,3 @@
-import { useState } from "react";
-import Notification from "./notification";
 export default function Navbar_landing() {
   return (
     

@@ -81,7 +81,8 @@ export const Landing_page = () => {
                   onClick={()=> navigate('/login')}>
                   Log In
                 </button>
-                <button className="text-base sm:text-lg lg:text-xl text-white h-[50px] sm:h-[60px] w-[170px] sm:w-[190px] font-bold px-4 py-2 border-2 border-white rounded-4xl hover:bg-white hover:text-[#085740] cursor-pointer">
+                <button className="text-base sm:text-lg lg:text-xl text-white h-[50px] sm:h-[60px] w-[170px] sm:w-[190px] font-bold px-4 py-2 border-2 border-white rounded-4xl hover:bg-white hover:text-[#085740] cursor-pointer"
+                  onClick={() => navigate('/guest_jobs')}>
                   View Job Listing
                 </button>
               </div>

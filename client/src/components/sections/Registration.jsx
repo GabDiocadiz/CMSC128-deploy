@@ -82,7 +82,6 @@ const Registration = () => {
         }
 
         const userRegData = {
-        user_id: "TEST01",
         name: formData.username,
         email: formData.email,
         password: formData.password,
@@ -102,54 +101,7 @@ const Registration = () => {
         alert(errorMessage);
     }
     };
-
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-
-    //     // register API call
-    //     try {
-    //         const submissionFormData = new FormData();
-
-    //         // Append all form data fields
-    //         submissionFormData.append("user_id", "TEST01"); // Important: Ensure your backend generates/assigns a unique ID or expects one. "TEST01" is likely for testing.
-    //         submissionFormData.append("name", formData.username);
-    //         submissionFormData.append("email", formData.email);
-    //         submissionFormData.append("password", formData.password);
-    //         submissionFormData.append("confirmPassword", formData.confirmPassword);
-    //         submissionFormData.append("user_type", 'Alumni');
-    //         submissionFormData.append("degree", formData.degree);
-    //         submissionFormData.append("graduation_year", formData.graduation_year);
-            
-    //         // Append the actualFiles (which will contain at most one file)
-    //         actualFiles.forEach(fileObject => {
-    //             submissionFormData.append("files[]", fileObject, fileObject.name);
-    //         });
-            
-    //         // For debugging FormData, you can iterate it:
-    //         console.log("FormData contents:");
-    //         for (let pair of submissionFormData.entries()) {
-    //             console.log(pair[0]+ ', ' + pair[1]); 
-    //         }
-    //         console.log("Local formData state:", formData);
-
-    //         const res = await axios.post("http://localhost:5050/auth/register", submissionFormData,{});
-            
-    //         console.log("Registration API Response:", res.data); 
-    //         alert("Registration Successful. Redirecting to home page...");
-    //         navigate(-1) 
-    //     } catch (err) {
-    //         console.error("Registration error: ", err);
-    //         // Handle specific error messages from backend if available
-    //         const errorMessage = err.response?.data?.message || "Registration failed. Please try again.";
-    //         alert(errorMessage);
-
-    //         // Optionally clear the form or parts of it on failure
-    //         // setFormData({ /* ... initial state ... */ });
-    //         // setActualFiles([]);
-    //         // if (fileInputRef.current) fileInputRef.current.value = "";
-    //     }
-    // };
-
+    
     return (
         <>
             <div className="w-screen">
