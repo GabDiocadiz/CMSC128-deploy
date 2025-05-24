@@ -15,6 +15,7 @@ import { HiMinusSm } from "react-icons/hi";
 import './ProfilePage.css'; // Make sure this CSS exists and is correctly styled
 import Sidebar from '../Sidebar';
 import axios from 'axios'; // Import axios for FormData (though authAxios should also work)
+import Loading from '../loading';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
@@ -248,11 +249,7 @@ export default function ProfilePage() {
     const filteredJobs = jobApplications.filter(job => job.status?.toLowerCase() === activeTab);
 
     if (loading) {
-        return (
-            <div className="flex items-center justify-center min-h-screen bg-[#FDF0D5]">
-                <p className="text-2xl text-[#891839]">Loading profile...</p>
-            </div>
-        );
+        return <Loading />;
     }
 
     if (error) {
