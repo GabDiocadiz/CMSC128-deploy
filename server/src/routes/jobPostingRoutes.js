@@ -10,7 +10,7 @@ const router = express.Router();
 router.get("/all", validateToken, authorizeRoles(["Admin", "Alumni"], jobPostingController.read));
 router.get("/admin-page-jobs", validateToken, authorizeRoles(["Admin"]), jobPostingController.adminPageJobs);
 router.get("/admin-page-job-requests", validateToken, authorizeRoles(["Admin"]), jobPostingController.adminPageJobRequests);
-router.get("/job-results", validateToken, authorizeRoles(["Admin", "Alumni"]), jobPostingController.jobResults);
+router.get("/job-results", jobPostingController.jobResults);
 
 router.put("/:_id/approve", jobPostingController.approveJob);
 router.put("/:_id/reject", jobPostingController.disapproveJob);
