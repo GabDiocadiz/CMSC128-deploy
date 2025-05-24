@@ -250,9 +250,9 @@ export default function ProfilePage() {
 
     if (loading || error) {
         return (
-            <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#891839]/80">
-                <Loading />
-                <p className="mt-6 text-2xl text-white font-bold animate-pulse drop-shadow-lg">
+            <div className="min-w-screen min-h-screen bg-gray-200 flex flex-col justify-center items-center">
+                <div className="w-16 h-16 border-4 border-[#145C44] border-t-transparent rounded-full animate-spin"></div>
+                <p className="mt-6 text-2xl text-[#891839] font-bold animate-pulse drop-shadow-lg">
                     {loading ? "Loading your profile..." : error}
                 </p>
             </div>
