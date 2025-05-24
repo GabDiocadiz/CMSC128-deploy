@@ -248,14 +248,13 @@ export default function ProfilePage() {
 
     const filteredJobs = jobApplications.filter(job => job.status?.toLowerCase() === activeTab);
 
-    if (loading) {
-        return <Loading />;
-    }
-
-    if (error) {
+    if (loading || error) {
         return (
-            <div className="flex items-center justify-center min-h-screen bg-[#FDF0D5]">
-                <p className="text-2xl text-red-600">{error}</p>
+            <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#891839]/80">
+                <Loading />
+                <p className="mt-6 text-2xl text-white font-bold animate-pulse drop-shadow-lg">
+                    {loading ? "Loading your profile..." : error}
+                </p>
             </div>
         );
     }
