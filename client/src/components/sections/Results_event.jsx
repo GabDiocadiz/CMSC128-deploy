@@ -51,14 +51,14 @@ export const Results_page_events = ( ) => {
                     console.log("Token invalid/expired. Attempting refresh...");
 
                     try {
-                        const refreshResponse = await axios.get(`${import.meta.env.VITE_API_URL}/auth/refresh`, { withCredentials: true });
+                        const refreshResponse = await axios.get(`/auth/refresh`, { withCredentials: true });
 
                         if (refreshResponse.data.accessToken) {
                             const newToken = refreshResponse.data.accessToken;
                             localStorage.setItem("accessToken", newToken);
 
                             console.log("Retrying event fetch with new token...");
-                            const retryResponse = await axios.get(`${import.meta.env.VITE_API_URL}/events?sortBy=${sortBy}`, {
+                            const retryResponse = await axios.get(`/events?sortBy=${sortBy}`, {
                                 headers: { Authorization: `Bearer ${newToken}` },
                                 withCredentials: true
                             });
