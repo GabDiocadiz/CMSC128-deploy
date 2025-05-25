@@ -11,7 +11,7 @@ router.get("/all", validateToken, authorizeRoles(["Admin", "Alumni"], jobPosting
 router.get("/admin-page-jobs", validateToken, authorizeRoles(["Admin"]), jobPostingController.adminPageJobs);
 router.get("/admin-page-job-requests", validateToken, authorizeRoles(["Admin"]), jobPostingController.adminPageJobRequests);
 router.get("/job-results", jobPostingController.jobResults);
-
+router.get("/job-results/posted_by/:_id", jobPostingController.getJobsPostedBy);
 router.put("/:_id/approve", jobPostingController.approveJob);
 router.put("/:_id/reject", jobPostingController.disapproveJob);
 

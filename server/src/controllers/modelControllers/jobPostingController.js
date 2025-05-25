@@ -307,4 +307,33 @@ export const jobPostingController = {
             res.status(500).json({ message: e.message });
         }
     },
+
+    async getJobsPostedBy(req, res) {
+        try {
+            const { _id } = req.params; // Assuming the user ID will come from the URL parameter
+            // Alternatively, if from query: const { userId } = req.query;
+            console.log(_id);
+            if (!_id) {
+                return res.status(400).json({ message: "User ID is required." });
+            }
+
+            // Find all job postings where 'posted_by' matches the userId
+            // You might want to populate 'posted_by' or other fields if needed for the frontend
+            const jobs = await JobPosting.find({ posted_by: _id })
+                                         .sort({ date_posted: -1 }); // Sort by newest first, for example
+
+            if (jobs.length === 0) {
+                return res.status(404).json({ message: "No job postings found for this user." });
+            }
+
+            res.status(200).json(jobs);
+        } catch (error) {
+            console.error("Error fetching jobs by posted_by user:", error);
+            // Handle CastError if the userId is an invalid ObjectId format
+            if (error.name === 'CastError' && error.kind === 'ObjectId') {
+                return res.status(400).json({ message: "Invalid User ID format." });
+            }
+            res.status(500).json({ message: "Internal server error while fetching jobs by user." });
+        }
+    },
 }

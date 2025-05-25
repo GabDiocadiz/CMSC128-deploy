@@ -85,9 +85,10 @@ export default function ProfilePage() {
         setError(null);
         
         try {
-            let response;
+            let response, jobresponse;
             if(user.__t === "Alumni"){
                 response = await authAxios.get(`/alumni/find-alumni/${id}`);
+                jobresponse = await authAxios.get(`/jobs/job-results/posted_by/${id}`);
             }
             else if(user.__t === "Admin"){
                 response = await authAxios.get(`/admin/find-admin/${id}`);
@@ -96,7 +97,8 @@ export default function ProfilePage() {
             
             setProfileData(response.data);
             setUpcomingEvents(response.data.events_attended);
-            setJobApplications(response.data.job_postings);
+            setJobApplications(jobresponse.data);
+            console.log(jobresponse.data);
 
             // Fetch bookmarked jobs
             if (response.data.bookmarked_jobs && response.data.bookmarked_jobs.length > 0) {
@@ -264,7 +266,7 @@ export default function ProfilePage() {
         setIsEditing(false);
     };
 
-
+    
     const filteredJobs = jobApplications.filter(job => job.status?.toLowerCase() === activeTab);
 
     if (isLoading) {
@@ -686,6 +688,7 @@ function ProfileSection({ title, fields, editableData, isEditing, handleChange }
 }
 
 function JobList({ jobs }) {
+    console.log("Jobs in JobList:", jobs); // Debugging
     if (jobs.length === 0) return <p className="text-gray-300 text-center">No jobs found.</p>;
 
     return (
