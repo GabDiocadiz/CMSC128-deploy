@@ -302,7 +302,7 @@ export const Admin_main = () => {
                         <th className="px-4 py-3">Event Name</th>
                         <th className="px-4 py-3">Event Date</th>
                         <th className="px-4 py-3">Created By</th>
-                        <th className="px-4 py-3 ">Action</th>
+                        
                       </>
                     )}
                     {activeTab === "Jobs" && (
@@ -310,14 +310,14 @@ export const Admin_main = () => {
                         <th className="px-4 py-3">ID</th>
                         <th className="px-4 py-3">Job Title</th>
                         <th className="px-4 py-3">Company</th>
-                        <th className="px-4 py-3 ">Action</th>
+                    
                       </>
                     )}
                     {activeTab === "Job Requests" && (
                       <>
                         <th className="px-4 py-3">Job Title</th>
                         <th className="px-4 py-3">Requested By</th>
-                        <th className="px-4 py-3">Action</th>
+                 
                       </>
                     )}
                     {activeTab === "Users" && (
@@ -351,17 +351,7 @@ export const Admin_main = () => {
                             <td className="px-4 py-4 font-medium text-gray-900">{item.name}</td>
                             <td className="px-4 py-4">{item.date}</td>
                             <td className="px-4 py-4">{item.createdBy}</td>
-                            <td className="px-4 py-4 pl-6">
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleDeleteEvent(item.id);}}
-                                className="bg-[#891839] hover:bg-red-600 text-white p-2 rounded-lg transition duration-200 flex items-center justify-center"
-                                aria-label="Delete"
-                              >
-                                <TrashIcon className="h-5 w-5" />
-                              </button>
-                            </td>
+                            
                           </>
                       )}
                       {activeTab === "Jobs" && (
@@ -369,17 +359,7 @@ export const Admin_main = () => {
                           <td className="px-4 py-4 font-medium text-gray-900">{item.id}</td>
                           <td className="px-4 py-4 font-medium text-gray-900">{item.name}</td>
                           <td className="px-4 py-4">{item.company}</td>
-                          <td className="px-4 py-4 pl-6">
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleDeleteEvent(item.id);}}
-                                className="bg-[#891839] hover:bg-red-600 text-white p-2 rounded-lg transition duration-200 flex items-center justify-center"
-                                aria-label="Delete"
-                              >
-                                <TrashIcon className="h-5 w-5" />
-                              </button>
-                            </td>
+                        
                         </>
                       )}
                       {activeTab === "Job Requests" && (
