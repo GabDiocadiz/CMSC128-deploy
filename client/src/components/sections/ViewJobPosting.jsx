@@ -58,7 +58,7 @@ export default function ViewJobDetails() {
         </div>
         <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
 
-        <div className="w-screen pt-12">
+        <div className="min-w-screen w-full min-h-screen h-full pt-12">
 
             {isLoading ? (
                 <Loading />
@@ -150,10 +150,9 @@ export default function ViewJobDetails() {
                     </div>
                 </>
             )}
-        </div>
-        
         <div className="w-screen z-50">
             <Footer />
+        </div>
         </div>
         </div>
         </>

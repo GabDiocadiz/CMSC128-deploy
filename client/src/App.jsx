@@ -10,6 +10,7 @@ import MainPage from './components/sections/MainPage'
 import ViewEventDetails from './components/sections/ViewEvent'
 import ViewJobDetails from './components/sections/ViewJobPosting'
 import ViewAnnouncementDetails from './components/sections/ViewAnnouncement'
+import GuestViewJobDetails from './components/sections/Unauthorized_ViewJobPosting'
 import { BrowserRouter,Routes, Route } from 'react-router-dom'
 import { Admin_main } from './components/sections/Admin_main'
 import { Results_page_accounts} from './components/sections/Results_accounts'
@@ -39,6 +40,7 @@ function App() {
             <Route path="/reg" element={<Registration/>} />
             <Route path="/login" element={<Login/>} />
             <Route path="/guest_jobs" element={<Unauthorized_jobs_results_page/>} />
+            <Route path="/guest_jobs-details" element={<GuestViewJobDetails />} />
 
             <Route element={<RoleRoute allowedRoles={['Admin']}/>}>
               <Route path="/admin_main" element={<Admin_main/>} />

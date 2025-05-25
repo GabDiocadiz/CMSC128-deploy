@@ -10,6 +10,7 @@ import eventRoutes from './src/routes/eventRoutes.js';
 import jobPostingRoutes from './src/routes/jobPostingRoutes.js'
 import notificationRoutes from './src/routes/notificationRoutes.js';
 import communicationRoutes from './src/routes/communicationRoutes.js';
+import adminRoutes from './src/routes/adminRoutes.js';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
@@ -47,6 +48,7 @@ app.use((req, res, next) => {
 });
 
 // routes
+app.use("/admin", adminRoutes);
 app.use("/alumni", alumniRoutes);
 app.use("/jobs", jobPostingRoutes);
 app.use("/auth", authRoutes);

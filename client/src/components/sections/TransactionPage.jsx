@@ -115,6 +115,10 @@ export default function TransactionPage() {
     setForm({ ...form, [name]: value });
   };
 
+  const handleCancel = () => {
+    navigate(-1);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
@@ -193,19 +197,21 @@ export default function TransactionPage() {
                   </div>
                 ))}
 
-                <div className="mb-4">
-                  <label className="block text-gray-700 mb-1">Expiry Date (MM/YYYY)</label>
-                  <input
-                    ref={calendarRef}
-                    className="w-full p-2 border rounded-lg"
-                    defaultValue={form.expiry}
-                  />
-                  {errors.expiry && <p className="text-red-500 text-sm">{errors.expiry}</p>}
+                <div className="flex space-x-4">
+                  <button
+                    type="button"
+                    onClick={handleCancel}
+                    className="bg-[#145C44] transition-colors text-white flex-1 py-2 rounded-lg font-bold cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="bg-[#891839] transition-colors text-white flex-1 py-2 rounded-lg font-bold cursor-pointer"
+                  >
+                    Submit
+                  </button>
                 </div>
-
-                <button type="submit" className="bg-[#891839] hover:bg-[#a43249] transition-colors text-white w-full py-2 rounded-lg font-bold">
-                  Submit
-                </button>
 
                 <div className="text-center mt-4 text-gray-600">or pay with</div>
                 <div className="flex justify-center space-x-4 mt-4">

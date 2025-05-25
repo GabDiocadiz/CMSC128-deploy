@@ -81,12 +81,20 @@ export default function ProfilePage() {
         setLoading(true);
         setError(null);
         try {
-            const response = await authAxios.get(`/alumni/find-alumni/${id}`);
-            console.log("Profile data fetched:", response.data); // Debugging
-
+            let response, jobresponse;
+            if(user.__t === "Alumni"){
+                response = await authAxios.get(`/alumni/find-alumni/${id}`);
+                jobresponse = await authAxios.get(`/jobs/job-results/posted_by/${id}`);
+            }
+            else if(user.__t === "Admin"){
+                response = await authAxios.get(`/admin/find-admin/${id}`);
+            }
+            
+            
             setProfileData(response.data);
             setUpcomingEvents(response.data.events_attended);
-            setJobApplications(response.data.job_postings);
+            setJobApplications(jobresponse.data);
+            console.log(jobresponse.data);
 
             // Fetch bookmarked jobs
             if (response.data.bookmarked_jobs && response.data.bookmarked_jobs.length > 0) {
@@ -244,6 +252,14 @@ export default function ProfilePage() {
         }
     };
 
+    const handleCancel = () => {
+        setEditableData(originalData);
+        setSelectedFile(null);
+        if (fileInputRef.current) fileInputRef.current.value = "";
+        setIsEditing(false);
+    };
+
+    
     const filteredJobs = jobApplications.filter(job => job.status?.toLowerCase() === activeTab);
 
     if (loading || error) {
@@ -467,7 +483,7 @@ export default function ProfilePage() {
                         </div>
                     </section>
 
-                    <section className="bg-white rounded-3xl shadow-lg p-8 relative">
+                    {/* <section className="bg-white rounded-3xl shadow-lg p-8 relative">
                         <h3 className="text-3xl font-bold text-[#891839] mb-6">Upcoming Events</h3>
                         <div className="custom-calendar-wrapper">
                             <Calendar
@@ -534,7 +550,7 @@ export default function ProfilePage() {
                                 </div>
                             )}
                         </div>
-                    </section>
+                    </section> */}
 
                     <section className="bg-white rounded-3xl shadow-lg p-8">
                         <h3 className="text-3xl font-bold text-[#891839] mb-6 text-center">Bookmarked Jobs</h3>
@@ -613,7 +629,9 @@ export default function ProfilePage() {
                                 </button>
                             ))}
                         </div>
-                        <JobList jobs={filteredJobs} /> {/* Ensure JobList is correctly implemented below */}
+                        <JobList jobs={filteredJobs} /> {
+                        
+                        /* Ensure JobList is correctly implemented below */}
                     </section>
                 </motion.main>
             </div>
@@ -656,6 +674,7 @@ function ProfileSection({ title, fields, editableData, isEditing, handleChange }
 }
 
 function JobList({ jobs }) {
+    console.log("Jobs in JobList:", jobs); // Debugging
     if (jobs.length === 0) return <p className="text-gray-300 text-center">No jobs found.</p>;
 
     return (

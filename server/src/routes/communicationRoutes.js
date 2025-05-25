@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.post("/create", communicationController.create);
 router.get("/read-announcements", communicationController.getAnnouncements);
+router.get("/read-announcements/:_id", communicationController.getAnnouncementById);
 router.post("/upload",  upload.array('files[]'), communicationController.uploadCommunicationFiles);
 router.get("/:_id/files", communicationController.getCommunicationFiles);
 
