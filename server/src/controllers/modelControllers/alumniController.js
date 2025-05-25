@@ -1,5 +1,6 @@
 import { Alumni, AlumniCollection } from '../../models/User.js';
 import { createCRUDController } from '../middlewareControllers/createCRUDController/index.js';
+import mongoose from 'mongoose';
 
 export const alumniController = {
     ...createCRUDController(Alumni),
@@ -68,6 +69,22 @@ export const alumniController = {
             return res.status(400).json({ message: 'Validation error', errors });
             }
             res.status(500).json({ message: 'Server error' });
+        }
+    },
+
+    async create(req, res) {
+        try {
+            // Ensure user_id is generated if not provided
+            if (!req.body.user_id) {
+                req.body.user_id = new mongoose.Types.ObjectId().toString();
+            }
+
+            const item = new Alumni(req.body);
+            await item.save();
+            res.status(201).json(item);
+        } catch (error) {
+            console.error("Error creating alumni:", error);
+            res.status(500).json({ error: error.message });
         }
     }
 }
