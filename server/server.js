@@ -11,6 +11,7 @@ import jobPostingRoutes from './src/routes/jobPostingRoutes.js'
 import notificationRoutes from './src/routes/notificationRoutes.js';
 import communicationRoutes from './src/routes/communicationRoutes.js';
 import adminRoutes from './src/routes/adminRoutes.js';
+import donationRoutes from './src/routes/donationRoutes.js';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
@@ -41,6 +42,7 @@ app.use("/file", fileRoutes);
 app.use("/events", eventRoutes);
 app.use("/notifications", notificationRoutes);
 app.use("/announcement", communicationRoutes);
+app.use("/donations", donationRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
 // temporary default route -- remove when connecting to frontend
