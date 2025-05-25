@@ -27,58 +27,58 @@ const Registration = () => {
         // No 'profile_picture' in formData directly, it's handled by actualFiles
     });
 
- const handleFileChange = (e) => {
+    const handleFileChange = (e) => {
         const selectedFiles = Array.from(e.target.files);
         const imageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
-      
+
         const validFiles = [];
         const errors = [];
-      
+
         selectedFiles.forEach(file => {
-          if (!imageTypes.includes(file.type)) {
-            errors.push(`${file.name} is not a supported image file.`);
-          } else if (file.size > MAX_FILE_SIZE) {
-            errors.push(`${file.name} exceeds the 10MB size limit.`);
-          } else {
-            validFiles.push(file);
-          }
+            if (!imageTypes.includes(file.type)) {
+                errors.push(`${file.name} is not a supported image file.`);
+            } else if (file.size > MAX_FILE_SIZE) {
+                errors.push(`${file.name} exceeds the 10MB size limit.`);
+            } else {
+                validFiles.push(file);
+            }
         });
-      
+
         if (errors.length > 0) {
-          alert(errors.join('\n')); // Or use a toast/modal/etc.
-          if (fileInputRef.current) fileInputRef.current.value = "";
-          return;
+            alert(errors.join('\n')); // Or use a toast/modal/etc.
+            if (fileInputRef.current) fileInputRef.current.value = "";
+            return;
         }
-      
+
         setActualFiles(validFiles);
         console.log(actualFiles);
     };
 
     const handleChange = (e) => {
-        setFormData ({ ...formData, [e.target.name]: e.target.value});
+        setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         // Check if any required field is empty
         if (!formData.username.trim() || !formData.email.trim() || !formData.password.trim() || !formData.confirmPassword.trim() || !formData.degree.trim() || !formData.graduation_year.trim()) {
             alert("Please fill out all required fields.");
             return;
         }
-    
+
         // Proceed with the existing submission logic
         try {
             let uploadedFiles = [];
-    
+
             if (actualFiles.length > 0) {
                 const fileFormData = new FormData();
                 actualFiles.forEach(file => fileFormData.append("files[]", file));
-    
-                const file_res = await axios.post(`/auth/register/upload`, fileFormData, {
+
+                const file_res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/register/upload`, fileFormData, {
                     headers: { "Content-Type": "multipart/form-data" },
                 });
-    
+
                 uploadedFiles = file_res.data.files.map(file => ({
                     originalFilename: file.originalname,
                     serverFilename: file.serverFilename,
@@ -90,7 +90,7 @@ const Registration = () => {
                     serverFilename: "default_avatar.png"
                 }];
             }
-    
+
             const userRegData = {
                 name: formData.username,
                 email: formData.email,
@@ -101,9 +101,9 @@ const Registration = () => {
                 graduation_year: formData.graduation_year,
                 files: uploadedFiles,
             };
-    
+
             // Submit the registration data
-            await axios.post(`/auth/register`, userRegData);
+            await axios.post(`${import.meta.env.VITE_API_URL}/auth/register`, userRegData);
             alert("Registration successful!");
             navigate("/login");
         } catch (error) {
@@ -111,17 +111,17 @@ const Registration = () => {
             alert("Registration failed. Please try again.");
         }
     };
-    
+
     return (
         <>
             <div className="w-screen">
                 <Navbar_landing></Navbar_landing>
-            </div> 
-            
+            </div>
+
             <div className="bg-cover bg-center w-full h-full flex flex-col justify-between pb-20 pt-10"
                 style={{ backgroundImage: `url(${buildingImg})` }}>
                 <div className="grid grid-cols-1 gap-y-5 pt-16">
-                    <h1 className=" !text-7xl font-bold text-white ">ARTEMIS</h1>       
+                    <h1 className=" !text-7xl font-bold text-white ">ARTEMIS</h1>
                     <div className="flex justify-center">
                         <div className="bg-white/60 py-8 px-6 rounded-2xl shadow-lg w-96 backdrop-blur-sm">
                             <p className="text-xl text-center text-[#00110C] font-light pb-4">Alumni Registration Form</p>
@@ -139,10 +139,10 @@ const Registration = () => {
                                         required
                                     />
                                 </div>
-                            
+
                                 {/* Email */}
                                 <div>
-                                    <input 
+                                    <input
                                         type="email"
                                         name="email"
                                         value={formData.email}
@@ -241,7 +241,7 @@ const Registration = () => {
                                     type="button"
                                     onClick={handleSubmit}
                                     className="font-semibold w-full bg-[#085740] p-2 rounded-md hover:bg-green-600 transition focus:ring-1 focus:ring-green-600 focus:!outline-none cursor-pointer"
-                                    
+
                                 >
                                     Register
                                 </button>
@@ -257,12 +257,12 @@ const Registration = () => {
                             </form>
                         </div>
                     </div>
-                    </div>
+                </div>
             </div>
-            
-            
+
+
         </>
-        
+
     )
 
 };
