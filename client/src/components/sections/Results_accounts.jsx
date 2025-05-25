@@ -36,17 +36,11 @@ export const Results_page_accounts = () => {
   const [appliedGradYearRange, setAppliedGradYearRange] = useState({ start: "", end: "" });
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [appliedSkills, setAppliedSkills] = useState([]);
-  const [selectedLocation, setSelectedLocation] = useState("");
-  const [appliedLocation, setAppliedLocation] = useState("");
   const [selectedJobTitle, setSelectedJobTitle] = useState("");
   const [appliedJobTitle, setAppliedJobTitle] = useState("");
-  const [selectedDegree, setSelectedDegree] = useState("");
-  const [appliedDegree, setAppliedDegree] = useState("");
 
   const [availableSkills, setAvailableSkills] = useState([]);
-  const [availableLocations, setAvailableLocations] = useState([]);
   const [availableJobTitles, setAvailableJobTitles] = useState([]);
-  const [availableDegrees, setAvailableDegrees] = useState([]);
 
   const sortOptions = [
     { value: "relevance", label: "Relevance" },
@@ -65,9 +59,7 @@ export const Results_page_accounts = () => {
     if (!isFilterOpen) {
       setSelectedGradYearRange({ ...appliedGradYearRange });
       setSelectedSkills([...appliedSkills]);
-      setSelectedLocation(appliedLocation);
       setSelectedJobTitle(appliedJobTitle);
-      setSelectedDegree(appliedDegree);
     }
     setIsFilterOpen((prev) => !prev);
   };
@@ -75,17 +67,13 @@ export const Results_page_accounts = () => {
   const clearFilters = () => {
     setSelectedGradYearRange({ start: "", end: "" });
     setSelectedSkills([]);
-    setSelectedLocation("");
     setSelectedJobTitle("");
-    setSelectedDegree("");
   };
 
   const applyFilters = () => {
     setAppliedGradYearRange({ ...selectedGradYearRange });
     setAppliedSkills([...selectedSkills]);
-    setAppliedLocation(selectedLocation);
     setAppliedJobTitle(selectedJobTitle);
-    setAppliedDegree(selectedDegree);
     setIsFilterOpen(false);
   };
 
@@ -125,21 +113,9 @@ export const Results_page_accounts = () => {
       );
     }
     
-    if (selectedLocation) {
-      filteredAccounts = filteredAccounts.filter(account =>
-        account.address?.toLowerCase().includes(selectedLocation.toLowerCase())
-      );
-    }
-    
     if (selectedJobTitle) {
       filteredAccounts = filteredAccounts.filter(account =>
         account.current_job_title?.toLowerCase().includes(selectedJobTitle.toLowerCase())
-      );
-    }
-    
-    if (selectedDegree) {
-      filteredAccounts = filteredAccounts.filter(account =>
-        account.degree?.toLowerCase().includes(selectedDegree.toLowerCase())
       );
     }
     
@@ -150,9 +126,7 @@ export const Results_page_accounts = () => {
     let count = 0;
     if (appliedGradYearRange.start || appliedGradYearRange.end) count += 1;
     if (appliedSkills.length > 0) count += appliedSkills.length;
-    if (appliedLocation) count += 1;
     if (appliedJobTitle) count += 1;
-    if (appliedDegree) count += 1;
     return count;
   };
 
@@ -182,31 +156,20 @@ export const Results_page_accounts = () => {
 
     // skills filter
     if (appliedSkills.length > 0) {
-      processedAccounts = processedAccounts.filter(account =>
-        appliedSkills.some(skill => 
-          account.skills?.some(s => s.toLowerCase().includes(skill.toLowerCase()))
-        )
-      );
-    }
-
-    // location filter
-    if (appliedLocation) {
-      processedAccounts = processedAccounts.filter(account =>
-        account.address?.toLowerCase().includes(appliedLocation.toLowerCase())
-      );
+      processedAccounts = processedAccounts.filter(account => {
+        return appliedSkills.some(selectedSkill => {
+          return account.skills?.some(accountSkill => {
+            return accountSkill === selectedSkill || 
+                  accountSkill.toLowerCase() === selectedSkill.toLowerCase();
+          });
+        });
+      });
     }
 
     // job title filter
     if (appliedJobTitle) {
       processedAccounts = processedAccounts.filter(account =>
         account.current_job_title?.toLowerCase().includes(appliedJobTitle.toLowerCase())
-      );
-    }
-
-    // degree filter
-    if (appliedDegree) {
-      processedAccounts = processedAccounts.filter(account =>
-        account.degree?.toLowerCase().includes(appliedDegree.toLowerCase())
       );
     }
 
@@ -220,6 +183,31 @@ export const Results_page_accounts = () => {
     return processedAccounts;
   };
 
+  const getSkillCount = (skill) => {
+    let filteredAccounts = [...allAccounts];
+    
+    if (selectedGradYearRange.start || selectedGradYearRange.end) {
+      filteredAccounts = filteredAccounts.filter(account => {
+        const gradYear = account.graduationYear || new Date(account.endYear).getFullYear();
+        const start = selectedGradYearRange.start ? parseInt(selectedGradYearRange.start) : 0;
+        const end = selectedGradYearRange.end ? parseInt(selectedGradYearRange.end) : 9999;
+        return gradYear >= start && gradYear <= end;
+      });
+    }
+    
+    if (selectedJobTitle) {
+      filteredAccounts = filteredAccounts.filter(account =>
+        account.current_job_title?.toLowerCase().includes(selectedJobTitle.toLowerCase())
+      );
+    }
+    
+    return filteredAccounts.filter(account =>
+      account.skills?.some(accountSkill => 
+        accountSkill === skill || accountSkill.toLowerCase() === skill.toLowerCase()
+      )
+    ).length;
+  };
+
   const fetchAlumni = async () => {
     setLoading(true);
     setError(null);
@@ -231,15 +219,27 @@ export const Results_page_accounts = () => {
       const accountsData = Array.isArray(response.data) ? response.data : [];
       setAllAccounts(accountsData);
       
-      const skills = [...new Set(accountsData.flatMap(acc => acc.skills || []))];
-      const locations = [...new Set(accountsData.map(acc => acc.address).filter(Boolean))];
+      const skillsMap = new Map();
+      accountsData.flatMap(acc => acc.skills || []).forEach(skill => {
+        const lowerSkill = skill.toLowerCase();
+        if (!skillsMap.has(lowerSkill)) {
+          skillsMap.set(lowerSkill, skill);
+        } else {
+          const existing = skillsMap.get(lowerSkill);
+          if (skill.length === existing.length) {
+            const skillCaps = (skill.match(/[A-Z]/g) || []).length;
+            const existingCaps = (existing.match(/[A-Z]/g) || []).length;
+            if (skillCaps > existingCaps) {
+              skillsMap.set(lowerSkill, skill);
+            }
+          }
+        }
+      });
+      const skills = [...skillsMap.values()].sort();
       const jobTitles = [...new Set(accountsData.map(acc => acc.current_job_title).filter(Boolean))];
-      const degrees = [...new Set(accountsData.map(acc => acc.degree).filter(Boolean))];
-      
+
       setAvailableSkills(skills);
-      setAvailableLocations(locations);
       setAvailableJobTitles(jobTitles);
-      setAvailableDegrees(degrees);
 
       const processedAccounts = applySortingFilteringAndSearching(accountsData);
       setAccounts(processedAccounts);
@@ -265,7 +265,7 @@ export const Results_page_accounts = () => {
       setAccounts(processedAccounts);
       setAccountCount(processedAccounts.length);
     }
-  }, [sortBy, appliedGradYearRange, appliedSkills, appliedLocation, appliedJobTitle, appliedDegree, searchQuery, allAccounts]);
+  }, [sortBy, appliedGradYearRange, appliedSkills, appliedJobTitle, searchQuery, allAccounts]);
 
   const scrollbarStyle = {
     maxHeight: '24rem',
@@ -437,21 +437,6 @@ export const Results_page_accounts = () => {
                               </div>
                             </div>
 
-                            {/* Degree */}
-                            <div className="mb-4 sm:mb-6">
-                              <label className="block text-sm font-medium text-gray-700 mb-2 sm:mb-3">Degree</label>
-                              <select
-                                value={selectedDegree}
-                                onChange={(e) => setSelectedDegree(e.target.value)}
-                                className="w-full p-2 sm:p-3 border border-gray-300 rounded-md text-sm bg-white text-gray-700 focus:outline-none focus:ring-1 focus:ring-[#891839] focus:border-transparent cursor-pointer"
-                              >
-                                <option value="">All Degrees</option>
-                                {availableDegrees.map((degree) => (
-                                  <option key={degree} value={degree}>{degree}</option>
-                                ))}
-                              </select>
-                            </div>
-
                             {/* Job Title */}
                             <div className="mb-4 sm:mb-6">
                               <label className="block text-sm font-medium text-gray-700 mb-2 sm:mb-3">Current Job Title</label>
@@ -467,21 +452,6 @@ export const Results_page_accounts = () => {
                               </select>
                             </div>
 
-                            {/* Location */}
-                            <div className="mb-4 sm:mb-6">
-                              <label className="block text-sm font-medium text-gray-700 mb-2 sm:mb-3">Location</label>
-                              <select
-                                value={selectedLocation}
-                                onChange={(e) => setSelectedLocation(e.target.value)}
-                                className="w-full p-2 sm:p-3 border border-gray-300 rounded-md text-sm bg-white text-gray-700 focus:outline-none focus:ring-1 focus:ring-[#891839] focus:border-transparent cursor-pointer"
-                              >
-                                <option value="">All Locations</option>
-                                {availableLocations.map((address) => (
-                                  <option key={address} value={address}>{address}</option>
-                                ))}
-                              </select>
-                            </div>
-
                             {/* Skills */}
                             <div className="mb-4 sm:mb-6">
                               <label className="block text-sm font-medium text-gray-700 mb-2 sm:mb-3">Skills</label>
@@ -492,34 +462,39 @@ export const Results_page_accounts = () => {
                                     return (
                                       <label
                                         key={skill}
-                                        className="flex items-center space-x-2 sm:space-x-3 p-1 sm:p-2 rounded hover:bg-gray-50 cursor-pointer"
+                                        className="flex items-center justify-between p-1 sm:p-2 rounded hover:bg-gray-50 cursor-pointer"
                                       >
-                                        <input
-                                          type="checkbox"
-                                          checked={selectedSkills.includes(skill)}
-                                          onChange={() => handleSkillToggle(skill)}
-                                          className="peer hidden"
-                                        />
-                                        <div
-                                          className={`w-4 h-4 flex items-center justify-center border rounded ${
-                                            isSelected
-                                              ? 'bg-[#891839] border-[#891839]'
-                                              : 'bg-gray-100 border-gray-300'
-                                          }`}
-                                        >
-                                          {isSelected && (
-                                            <svg
-                                              className="w-3 h-3 text-white"
-                                              fill="none"
-                                              stroke="currentColor"
-                                              strokeWidth="2"
-                                              viewBox="0 0 24 24"
-                                            >
-                                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                            </svg>
-                                          )}
+                                        <div className="flex items-center space-x-2 sm:space-x-3 flex-1 min-w-0">
+                                          <input
+                                            type="checkbox"
+                                            checked={selectedSkills.includes(skill)}
+                                            onChange={() => handleSkillToggle(skill)}
+                                            className="peer hidden"
+                                          />
+                                          <div
+                                            className={`w-4 h-4 flex items-center justify-center border rounded flex-shrink-0 ${
+                                              isSelected
+                                                ? 'bg-[#891839] border-[#891839]'
+                                                : 'bg-gray-100 border-gray-300'
+                                            }`}
+                                          >
+                                            {isSelected && (
+                                              <svg
+                                                className="w-3 h-3 text-white"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                viewBox="0 0 24 24"
+                                              >
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                              </svg>
+                                            )}
+                                          </div>
+                                          <span className="text-sm text-gray-700 flex-1 break-words truncate">{skill}</span>
                                         </div>
-                                        <span className="text-sm text-gray-700 flex-1 break-words">{skill}</span>
+                                        <span className="text-gray-500 text-sm font-medium flex-shrink-0 ml-2">
+                                          {getSkillCount(skill)}
+                                        </span>
                                       </label>
                                     );
                                   })}
@@ -635,7 +610,7 @@ export const Results_page_accounts = () => {
 
                               <div className="flex flex-wrap gap-1 mt-auto">
                                 {(account.skills || [])
-                                  .slice(0, 2)
+                                  .slice(0, 3)
                                   .map((skill, i) => (
                                     <span
                                       key={`skill-${i}`}
@@ -644,9 +619,9 @@ export const Results_page_accounts = () => {
                                       {skill}
                                     </span>
                                   ))}
-                                {(account.skills || []).length > 2 && (
+                                {(account.skills || []).length > 3 && (
                                   <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full flex-shrink-0">
-                                    +{(account.skills || []).length - 2}
+                                    +{(account.skills || []).length - 3}
                                   </span>
                                 )}
                               </div>
