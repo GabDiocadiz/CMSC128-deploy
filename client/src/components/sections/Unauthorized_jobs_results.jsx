@@ -5,6 +5,9 @@ import { LuPencil } from "react-icons/lu";
 import axios from "axios";
 import { useAuth } from "../../auth/AuthContext";
 import Sidebar from "../Sidebar";
+import Navbar from "../header";
+import Footer from "../footer";
+import Loading from "../loading";
 
 export const Unauthorized_jobs_results_page = () => {
   const navigate = useNavigate();
@@ -62,17 +65,15 @@ export const Unauthorized_jobs_results_page = () => {
   return (
     <>
       <div
-        className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         <Sidebar />
       </div>
       <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
+        <Navbar />
         {isLoading ? (
-          <div className="min-w-screen min-h-screen bg-gray-200 flex justify-center items-center">
-            <div className="w-16 h-16 border-4 border-[#145C44] border-t-transparent rounded-full animate-spin"></div>
-          </div>
+          <Loading />
         ) : jobs.length === 0 ? (
           <div className="min-w-screen min-h-screen bg-gray-200 px-10 py-20 pb-30 flex flex-col justify-center items-center text-6xl text-emerald-800 font-extrabold">
             <svg
@@ -90,7 +91,7 @@ export const Unauthorized_jobs_results_page = () => {
         ) : (
           <div className="min-w-screen min-h-screen bg-gray-200 px-10 py-20 pb-30 flex flex-col justify-center items-center">
             <div className="container flex flex-col items-start space-y-8 text-black text-left ">
-              
+
               {/* Jobs Display */}
               <div className="flex justify-center w-full">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -140,6 +141,7 @@ export const Unauthorized_jobs_results_page = () => {
             </div>
           </div>
         )}
+        <Footer />
       </div>
     </>
   );
