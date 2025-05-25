@@ -131,7 +131,7 @@ export default function ProfilePage() {
             reader.readAsDataURL(selectedFile);
         } else if (profileData?.files && profileData.files.length > 0) {
             // If no new file selected, but profileData has existing files, use the server URL
-            setImagePreviewUrl(`/uploads/${profileData.files[0].serverFilename}`);
+            setImagePreviewUrl(`https://cmsc128-deploy.onrender.com/uploads/${profileData.files[0].serverFilename}`);
         } else {
             // Default avatar if no picture exists
             setImagePreviewUrl("/src/assets/default_avatar.png");
