@@ -80,10 +80,17 @@ export default function ProfilePage() {
     const fetchProfileData = async () => {
         setLoading(true);
         setError(null);
+        
         try {
-            const response = await authAxios.get(`/alumni/find-alumni/${id}`);
-            console.log("Profile data fetched:", response.data); // Debugging
-
+            let response;
+            if(user._t === "Alumni"){
+                response = await authAxios.get(`/alumni/find-alumni/${id}`);
+            }
+            else{
+                response = await authAxios.get(`/admin/find-admin/${id}`);
+            }
+            
+            
             setProfileData(response.data);
             setUpcomingEvents(response.data.events_attended);
             setJobApplications(response.data.job_postings);
