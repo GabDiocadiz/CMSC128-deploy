@@ -8,7 +8,7 @@ import { TrashIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/solid';
 import {
   LineChart, BarChart, Bar, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer,
 } from 'recharts';
-import Loading from "../loading.jsx";
+
 export const Admin_main = () => {
   const navigate = useNavigate();
   const { authAxios } = useAuth();
@@ -65,7 +65,9 @@ export const Admin_main = () => {
         id: user._id,
         name: user.name,
         email: user.email,
-        skills: user.skills
+        num_don:0,
+        num_job_posted:0
+  
       }));
 
       setEvents(formattedEvents);
@@ -81,7 +83,7 @@ export const Admin_main = () => {
     } catch (err) {
       console.error("Failed to fetch data: ", err);
     } finally {
-      setLoading(false);
+      setLoading(true)
     }
   };
 
@@ -191,7 +193,6 @@ export const Admin_main = () => {
   const filteredData = getCategoryData();
 
     const renderChart = () => {
-      if (loading) return <Loading />;
       switch (activeTab) {
         case "Events":
           return (
@@ -325,8 +326,8 @@ export const Admin_main = () => {
                         <th className="px-4 py-3">ID</th>
                         <th className="px-4 py-3">Name</th>
                         <th className="px-4 py-3">Email</th>
-                        <th className="px-4 py-3">Skills</th>
-                        
+                        <th className="px-4 py-3">Number of Jobs Posted</th>
+                        <th className="px-4 py-3">Total Donation</th>
                       </>
                     )}
                   </tr>
@@ -419,7 +420,8 @@ export const Admin_main = () => {
                           <td className="px-4 py-4 font-medium text-gray-900">{item.id}</td>
                           <td className="px-4 py-4">{item.name}</td>
                           <td className="px-4 py-4">{item.email}</td>
-                          <td className="px-4 py-4">{item.skills}</td>
+                          <td className="px-4 py-4">{item.num_don}</td>
+                          <td className="px-4 py-4">{item.num_job_posted}</td>
                         </>
                       )}
 
