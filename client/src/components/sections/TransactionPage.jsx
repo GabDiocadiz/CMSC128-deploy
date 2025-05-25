@@ -95,42 +95,37 @@ export default function TransactionPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate required fields
-    if (!form.name.trim() || !form.cardNumber.trim() || !form.amount.trim() || !form.expiry.trim() || !form.cvc.trim()) {
-      alert("Please fill out all required fields.");
-      return;
+    // Use the validate function to check for errors
+    if (!validate()) {
+        alert("Please correct the errors in the form.");
+        return;
     }
 
     if (!user || !user._id) {
-      alert("User not found or not logged in.");
-      return;
-    }
-    if (!form.amount || isNaN(form.amount) || Number(form.amount) <= 0) {
-      alert("Please enter a valid donation amount.");
-      return;
+        alert("User not found or not logged in.");
+        return;
     }
 
     try {
-      const payload = {
-        event: id,
-        donor: user._id,
-        amount: Number(form.amount)
-      };
+        const payload = {
+            event: id,
+            donor: user._id,
+            amount: Number(form.amount)
+        };
 
-
-      const response = await authAxios.post(
-        `/events/donate/${id}`,
-        payload,
-        { headers: { "Content-Type": "application/json" } }
-      );
-      console.log("Transaction response:", response.data);
-      alert("Transaction successful!");
-      navigate(`/event-details/${id}`);
+        const response = await authAxios.post(
+            `/events/donate/${id}`,
+            payload,
+            { headers: { "Content-Type": "application/json" } }
+        );
+        console.log("Transaction response:", response.data);
+        alert("Transaction successful!");
+        navigate(`/event-details/${id}`);
     } catch (e) {
-      console.error("Transaction error:", e?.response?.data || e);
-      alert("Transaction failed. Please check your input and try again.");
+        console.error("Transaction error:", e?.response?.data || e);
+        alert("Transaction failed. Please check your input and try again.");
     }
-  };
+};
 
   return (
     <div className="w-screen min-h-screen flex flex-col overflow-x-hidden bg-white">
