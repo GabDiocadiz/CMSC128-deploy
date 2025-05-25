@@ -92,7 +92,7 @@ const Registration = () => {
         graduation_year: formData.graduation_year,
         files: uploadedFiles,
         };
-
+        console.log(import.meta.env.VITE_API_URL);
         const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/register`, userRegData);
         alert("Registration Successful. Redirecting to home page...");
         navigate(-1);
