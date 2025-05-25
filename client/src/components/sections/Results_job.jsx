@@ -6,7 +6,6 @@ import { CgWorkAlt } from "react-icons/cg";
 import { FaRegCreditCard } from "react-icons/fa";
 import { useAuth } from "../../auth/AuthContext";
 import job_placeholder from "../../assets/job_placeholder.png"
-import axios from "axios";
 import Navbar from "../header";
 import Footer from "../footer";
 import Loading from "../loading";

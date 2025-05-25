@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback,useRef } from "react";
+import { useState, useEffect, useCallback,useRef } from "react";
 import Notification_View from "./notification_view";
 import { HiOutlineTrash } from "react-icons/hi2";
 import { useAuth } from "../auth/AuthContext";

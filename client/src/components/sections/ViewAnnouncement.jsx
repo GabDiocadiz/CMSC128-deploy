@@ -1,5 +1,4 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import { CiCalendar } from "react-icons/ci";
 import { useEffect, useState } from "react";

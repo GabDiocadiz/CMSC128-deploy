@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import Navbar_landing from "../header_landing";
 import { useNavigate } from 'react-router-dom';
-import axios from "axios";
 import { useAuth } from "../../auth/AuthContext";
 import Loading from "../loading";
 

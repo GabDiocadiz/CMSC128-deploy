@@ -11,6 +11,7 @@ import Navbar from "../header";
 import Footer from "../footer";
 import Loading from "../loading";
 import Sidebar from "../Sidebar";
+
 export const Results_page_events = ( ) => {
     const navigate = useNavigate();
     const {authAxios, user} = useAuth();
@@ -22,13 +23,6 @@ export const Results_page_events = ( ) => {
     const [isLoading, setIsLoading] = useState(true);
     const [sidebarOpen, setSidebarOpen] = useState(false); // Sidebar toggle state
     const toggleSidebar = () => setSidebarOpen((prev) => !prev);
-    // const toggleBookmark = (id) => {
-    //     if (bookmarkedIds.includes(id)) {
-    //         setBookmarkedIds(bookmarkedIds.filter((bid) => bid !== id));
-    //     } else {
-    //         setBookmarkedIds([...bookmarkedIds, id]);
-    //     }
-    // };
 
       const toggleBookmark = async (eventId) => {
         try {

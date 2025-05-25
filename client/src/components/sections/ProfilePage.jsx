@@ -14,8 +14,6 @@ import { FaCamera } from "react-icons/fa6";
 import { HiMinusSm } from "react-icons/hi";
 import './ProfilePage.css'; // Make sure this CSS exists and is correctly styled
 import Sidebar from '../Sidebar';
-import axios from 'axios'; // Import axios for FormData (though authAxios should also work)
-import Loading from '../loading';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 

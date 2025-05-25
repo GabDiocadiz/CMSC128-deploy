@@ -9,7 +9,6 @@ import humanIcon from "../assets/Human Icon.png";
 import { CiFilter } from "react-icons/ci";
 import { MdFilterAlt } from "react-icons/md";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid"; // Search icon
-import { Range } from "react-range"; // Import react-range
 
 const GRADUATION_YEAR_MIN = 1900;
 const GRADUATION_YEAR_MAX = 2025;

@@ -1,13 +1,8 @@
 import Navbar_admin from "../header_admin";
 import Footer from "../footer";
-import { useState, useEffect, useRef } from "react";
-import { Datepicker, ThemeProvider } from "flowbite-react";
-import { ScrollToTop } from "../../utils/helper";
-import Speed_Dial_Admin from "../Speed_Dial_Admin";
-import axios from "axios";
-import objectId from 'bson-objectid';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Button } from "flowbite-react";
+import { useState, useRef } from "react";
+import { Datepicker} from "flowbite-react";
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../../auth/AuthContext";
 import { LuPencil } from "react-icons/lu";
 import { IoIosArrowBack } from "react-icons/io";

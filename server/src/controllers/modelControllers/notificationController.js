@@ -3,6 +3,19 @@ import { createCRUDController } from '../middlewareControllers/createCRUDControl
 
 export const notificationController = createCRUDController(Notification);
 
+export const getMyNotifications = async (req, res, next) => {
+  try {
+    const userId = req.user.userId;
+    const notifs = await Notification
+      .find({ user: userId })
+      .sort('-createdAt')
+      .populate('announcement');
+    return res.json(notifs);
+  } catch (err) {
+    return next(err);
+  }
+};
+
 export const getMyUnread = async (req, res, next) => {
   try {
     const userId = req.user.userId;
