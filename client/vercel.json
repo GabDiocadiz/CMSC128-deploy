@@ -1,8 +1,8 @@
 {
     "rewrites": [
         {
-            "source": "/api/(.*)",
-            "destination": "https://cmsc128-deploy.onrender.com/$1"
+            "source": "/api/:match*",
+            "destination": "https://cmsc128-deploy.onrender.com/:match*"
         },
         {
             "source": "/(.*)",
