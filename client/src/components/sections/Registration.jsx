@@ -58,49 +58,58 @@ const Registration = () => {
         setFormData ({ ...formData, [e.target.name]: e.target.value});
     };
 
-    const handleSubmit = async () => {
-    try {
-        let uploadedFiles = [];
-
-        if (actualFiles.length > 0) {
-        const fileFormData = new FormData();
-        actualFiles.forEach(file => fileFormData.append("files[]", file));
-
-        const file_res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/register/upload`, fileFormData, {
-            headers: { "Content-Type": "multipart/form-data" },
-        });
-
-        uploadedFiles = file_res.data.files.map(file => ({
-            originalFilename: file.originalname,
-            serverFilename: file.serverFilename,
-        }));
-        } else {
-        // Use a default image reference if none uploaded
-        uploadedFiles = [{
-            originalFilename: "default_avatar.png",
-            serverFilename: "default_avatar.png"
-        }];
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+    
+        // Check if any required field is empty
+        if (!formData.username.trim() || !formData.email.trim() || !formData.password.trim() || !formData.confirmPassword.trim() || !formData.degree.trim() || !formData.graduation_year.trim()) {
+            alert("Please fill out all required fields.");
+            return;
         }
-
-        const userRegData = {
-        name: formData.username,
-        email: formData.email,
-        password: formData.password,
-        confirmPassword: formData.confirmPassword,
-        user_type: "Alumni",
-        degree: formData.degree,
-        graduation_year: formData.graduation_year,
-        files: uploadedFiles,
-        };
-        console.log(import.meta.env.VITE_API_URL);
-        const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/register`, userRegData);
-        alert("Registration Successful. Redirecting to home page...");
-        navigate(-1);
-    } catch (err) {
-        console.error("Registration error:", err);
-        const errorMessage = err.response?.data?.message || "Registration failed. Please try again.";
-        alert(errorMessage);
-    }
+    
+        // Proceed with the existing submission logic
+        try {
+            let uploadedFiles = [];
+    
+            if (actualFiles.length > 0) {
+                const fileFormData = new FormData();
+                actualFiles.forEach(file => fileFormData.append("files[]", file));
+    
+                const file_res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/register/upload`, fileFormData, {
+                    headers: { "Content-Type": "multipart/form-data" },
+                });
+    
+                uploadedFiles = file_res.data.files.map(file => ({
+                    originalFilename: file.originalname,
+                    serverFilename: file.serverFilename,
+                }));
+            } else {
+                // Use a default image reference if none uploaded
+                uploadedFiles = [{
+                    originalFilename: "default_avatar.png",
+                    serverFilename: "default_avatar.png"
+                }];
+            }
+    
+            const userRegData = {
+                name: formData.username,
+                email: formData.email,
+                password: formData.password,
+                confirmPassword: formData.confirmPassword,
+                user_type: "Alumni",
+                degree: formData.degree,
+                graduation_year: formData.graduation_year,
+                files: uploadedFiles,
+            };
+    
+            // Submit the registration data
+            await axios.post(`${import.meta.env.VITE_API_URL}/auth/register`, userRegData);
+            alert("Registration successful!");
+            navigate("/login");
+        } catch (error) {
+            console.error("Error during registration:", error);
+            alert("Registration failed. Please try again.");
+        }
     };
     
     return (
