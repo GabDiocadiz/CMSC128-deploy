@@ -8,7 +8,7 @@ import { TrashIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/solid';
 import {
   LineChart, BarChart, Bar, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer,
 } from 'recharts';
-
+import Loading from "../loading.jsx";
 export const Admin_main = () => {
   const navigate = useNavigate();
   const { authAxios } = useAuth();
@@ -33,8 +33,9 @@ export const Admin_main = () => {
   const [req_modalOpen, setreq_modalOpen] = useState(false);
   const [message_modal, setmessage_modal] = useState(0);
   const [request_id, setrequestID] = useState(0);
-
+  const [loading, setLoading] = useState(true); // ✅ N
   const fetchData = async () => {
+    setLoading(true);
     try {
       const eventResponse = await authAxios.get(`events/admin-page-events`);
       const jobResponse = await authAxios.get(`jobs/admin-page-jobs`);
@@ -79,6 +80,8 @@ export const Admin_main = () => {
       setUserStats(groupBySkills(formattedUsers));
     } catch (err) {
       console.error("Failed to fetch data: ", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -188,6 +191,7 @@ export const Admin_main = () => {
   const filteredData = getCategoryData();
 
     const renderChart = () => {
+      if (loading) return <Loading />;
       switch (activeTab) {
         case "Events":
           return (
@@ -273,7 +277,6 @@ export const Admin_main = () => {
 
           {/* Analytics Chart */}
           <div className="mb-6">
-            <h3 className="text-lg font-bold mb-2">Analytics</h3>
             {renderChart()}
           </div>
 
