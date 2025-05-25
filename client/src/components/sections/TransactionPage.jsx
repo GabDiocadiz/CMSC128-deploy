@@ -213,7 +213,8 @@ export default function TransactionPage() {
                         onChange={handleChange}
                         className={`w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#891839] ${errors.expiry ? "border-red-500" : "border-gray-300"}`}
                         min={new Date().toISOString().slice(0, 7)}
-                        placeholder="MM/YYYY"
+                        max={`${new Date().getFullYear()}-12`}
+                        style={{ appearance: 'auto' }} 
                       />
                     ) : (
                       <input
