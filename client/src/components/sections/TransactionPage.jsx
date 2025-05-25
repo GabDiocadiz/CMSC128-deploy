@@ -102,14 +102,20 @@ export default function TransactionPage() {
     if (!form.expiry) {
       newErrors.expiry = "Expiry date is required.";
     } else {
-      const expiryDate = new Date(form.expiry);
-      const currentDate = new Date();
-      currentDate.setDate(1);
-      currentDate.setHours(0, 0, 0, 0);
-      if (expiryDate < currentDate) {
-        newErrors.expiry = "Card has expired. Please use a valid one.";
+      const [month, year] = form.expiry.split("/").map((x) => parseInt(x));
+      if (!month || !year || month < 1 || month > 12) {
+        newErrors.expiry = "Invalid expiry date.";
+      } else {
+        const expiryDate = new Date(year, month - 1); // JS months are 0-based
+        const currentDate = new Date();
+        currentDate.setDate(1);
+        currentDate.setHours(0, 0, 0, 0);
+
+        if (expiryDate < currentDate) {
+          newErrors.expiry = "Card has expired. Please use a valid one.";
+        }
       }
-    }
+}
     if (!/^\d{3,4}$/.test(form.cvc)) newErrors.cvc = "CVC must be 3 or 4 digits.";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
