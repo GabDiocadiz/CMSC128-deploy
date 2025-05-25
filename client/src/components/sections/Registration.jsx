@@ -92,7 +92,7 @@ const Registration = () => {
         files: uploadedFiles,
         };
 
-        const res = await axios.post("${import.meta.env.VITE_API_BASE_URL}/auth/register", userRegData);
+        const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/register`, userRegData);
         alert("Registration Successful. Redirecting to home page...");
         navigate(-1);
     } catch (err) {
@@ -234,9 +234,10 @@ const Registration = () => {
                                 >
                                     Register
                                 </button>
+                                {/* Login Button */}
                                 <hr className="border-t border-[#085740]" />
                                 <button
-                                    type="submit"
+                                    type="button"
                                     onClick={() => navigate('/login')}
                                     className="w-full bg-[#891839] text-white font-bold p-2 rounded-md hover:bg-red-700 transition focus:!outline-none cursor-pointer"
                                 >
