@@ -73,7 +73,7 @@ export const Results_page_jobs = ( ) => {
     useEffect(() => {
         const fetchBookmarkedJobs = async () => {
         try {
-            const res = await authAxios.get(`${import.meta.env.VITE_API_URL}/jobs/job-bookmarked?userId=${user._id}`);
+            const res = await authAxios.get(`/jobs/job-bookmarked?userId=${user._id}`);
             const ids = res.data.map(job => job._id);
             setBookmarkedIds(ids);
         } catch (err) {
