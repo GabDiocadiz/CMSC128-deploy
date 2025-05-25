@@ -1,5 +1,6 @@
 import express from 'express';
 import { alumniController } from '../controllers/modelControllers/alumniController.js';
+import { adminController } from '../controllers/modelControllers/adminController.js';
 import { createRSVP, editRSVP, viewRSVP } from '../controllers/RSVPController/rsvpController.js';
 import { validateToken } from '../middleware/validate-token.js';
 import { authorizeRoles } from '../middleware/authorize-roles.js';

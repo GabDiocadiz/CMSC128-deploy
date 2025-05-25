@@ -35,11 +35,12 @@ export const communicationController = {
 
     async getAnnouncementById(req, res) {
         // Extract the ID from the request parameters (e.g., from a route like /announcement/:id)
-        const { id } = req.params;
+        const { _id } = req.params;
+        console.log(_id);
 
         try {
-            const announcement = await Communication.findOne({ _id: id, type: "announcement" });
-
+            const announcement = await Communication.findById(_id);
+            console.log(announcement);
             // If no announcement is found with the given ID and type
             if (!announcement) {
                 // Send a 404 Not Found response
@@ -53,7 +54,7 @@ export const communicationController = {
             return res.status(200).json(announcement);
         } catch (error) {
             // Log the error for server-side debugging
-            console.error(`Error fetching announcement with ID ${id}:`, error);
+            console.error(`Error fetching announcement with ID ${_id}:`, error);
 
             // Handle Mongoose CastError specifically for invalid ID format
             if (error.name === 'CastError') {
