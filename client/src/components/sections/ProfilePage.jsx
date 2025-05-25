@@ -497,7 +497,7 @@ export default function ProfilePage() {
             </div>
         </section>
 
-                    <section className="bg-white rounded-3xl shadow-lg p-8 relative">
+                    {/* <section className="bg-white rounded-3xl shadow-lg p-8 relative">
                         <h3 className="text-3xl font-bold text-[#891839] mb-6">Upcoming Events</h3>
                         <div className="custom-calendar-wrapper">
                             <Calendar
@@ -564,7 +564,7 @@ export default function ProfilePage() {
                                 </div>
                             )}
                         </div>
-                    </section>
+                    </section> */}
 
                     <section className="bg-white rounded-3xl shadow-lg p-8">
                         <h3 className="text-3xl font-bold text-[#891839] mb-6 text-center">Bookmarked Jobs</h3>
