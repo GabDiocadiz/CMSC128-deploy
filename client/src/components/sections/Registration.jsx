@@ -46,7 +46,9 @@ const Registration = () => {
         });
 
         if (errors.length > 0) {
-          errors.forEach(err => toast.error(err));
+          errors.forEach(err => toast.error(err, {
+            style: { background: '#FF6961', color: 'white' }
+            },));
           if (fileInputRef.current) fileInputRef.current.value = "";
           return;
         }
@@ -72,6 +74,9 @@ const Registration = () => {
 
     if (!formData.password || formData.password.length < 8) {
         errors.push("Password must be at least 8 characters.");
+    }
+    else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])/.test(formData.password)) {
+        errors.push("Password must include at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.");
     }
 
     if (formData.password !== formData.confirmPassword) {
@@ -104,7 +109,10 @@ const Registration = () => {
                     ))}
                 </ul>
             </div>,
-            { autoClose: 7000 }
+            { autoClose: 7000 }, 
+            {
+            style: { background: '#FF6961', color: 'white' }
+            },
         );
         return;
     }
@@ -144,17 +152,23 @@ const Registration = () => {
             };
 
         const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/register`, userRegData);
-        toast.success("Registration Successful. Redirecting to home page...");
+        toast.success("Registration Successful. Redirecting to home page...", {
+            style: { background: '#77DD77', color: 'white' }
+            },);
         navigate(-1);
     } catch (err) {
         console.error("Registration error:", err);
         if (err.response?.data?.errors) 
         {
-            err.response.data.errors.forEach(msg => toast.error(msg));
+            err.response.data.errors.forEach(msg => toast.error(msg, {
+            style: { background: '#FF6961', color: 'white' }
+            },));
         } 
         else 
         {
-            toast.error(err.response?.data?.error || "Registration failed. Please try again.");
+            toast.error(err.response?.data?.error || "Registration failed. Please try again.", {
+            style: { background: '#FF6961', color: 'white' }
+            },);
         }
     }
     };

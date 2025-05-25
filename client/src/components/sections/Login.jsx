@@ -39,12 +39,16 @@ const Login = () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (!emailRegex.test(formData.email)) {
-            toast.error("Please enter a valid email address.");
+            toast.error("Please enter a valid email address.", {
+            style: { background: '#FF6961', color: 'white' }
+            },);
             return;
         }
 
         if (formData.password.length < 8) {
-            toast.error("Password must be at least 8 characters.");
+            toast.error("Password must be at least 8 characters.", {
+            style: { background: '#FF6961', color: 'white' }
+            },);
             return;
         }
 
@@ -52,7 +56,9 @@ const Login = () => {
             const result = await login(formData.email, formData.password);
             
             if (result.success) {
-                toast.success("Login Successful. Redirecting to home page...");
+                toast.success("Login Successful. Redirecting to home page...", {
+            style: { background: '#77DD77', color: 'white' }
+            },);
 
                 console.log("User type: ", result.user.user_type);
                 if (result.user.user_type === "Admin") {
@@ -61,11 +67,15 @@ const Login = () => {
                     navigate(`/home`);
                 }
             } else {
-                toast.error("Login failed. Please check your credentials.");
+                toast.error("Login failed. Please check your credentials.", {
+            style: { background: '#FF6961', color: 'white' }
+            },);
             }
         } catch (err) {
             console.error("Login error:", err);
-            toast.error("Login failed. Please try again.");
+            toast.error("Login failed. Please try again.", {
+            style: { background: '#FF6961', color: 'white' }
+            },);
         }
     };
 
