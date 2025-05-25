@@ -115,59 +115,8 @@ export default function Navbar_admin({toggleSidebar}) {
         </div>
       )}
         {/* Right - Make an Announcement, Notification & Profile Icons */}
-        <div className="absolute top-1 right-4 flex items-center space-x-5">
-          {/* <Link
-          to="/create_announcement"
-            >
-            <button
-             
-              className="flex items-center gap-2 bg-[#891839] text-white px-3 py-1.5 rounded-md hover:bg-[#a1284f] transition duration-200 shadow-md"
-            >
-              <div className="bg-white/20 p-1 rounded-md">
-                <MegaphoneIcon className="w-4 h-4 text-white" aria-hidden="true" />
-              </div>
-              <span className="text-xs font-medium">Make an Announcement</span>
-            </button>
-          </Link> */}
+        
 
-            {/* Notification Icon */}   
-            <div 
-                onClick={()=>{
-                  setnotification_modal(true);
-                }}
-                className="cursor-pointer"
-                >
-                  <img src={notifications} className="w-10 h-10" draggable="false" alt="Notifications" />
-              </div>
-
-            {/* Profile Icon inside Circle */}
-            <div className="relative">
-              <div
-                onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-                className="w-10 h-10 bg-none flex items-center justify-center rounded-full cursor-pointer"
-              >
-                <img src={humanIcon} className="w-10 h-10" draggable="false" alt="Profile" />
-              </div>
-
-              {profileMenuOpen && (
-                <div className="absolute right-0 mt-1 bg-white !shadow-lg rounded-sm w-35 z-50 text-center text-sm border border-gray-400">
-                  <Link
-                    to={`/profile/${user?._id}`}
-                    className="block w-full px-4 py-2 !text-gray-700 hover:bg-blue-100 focus:!outline-none"
-                    onClick={() => setProfileMenuOpen(false)}
-                  >
-                    View Profile
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="block w-full px-4 py-2 !text-gray-700 hover:bg-[#891839] hover:!text-white focus:!outline-none cursor-pointer"
-                  >
-                    Logout
-                  </button>
-                </div>
-              )}
-            </div>
-        </div>
       </div>
     </nav>
     </>

@@ -162,7 +162,7 @@ export const Admin_main = () => {
       const { company, count } = payload[0].payload; // get extra info from the data point
       return (
         <div className="bg-white border border-gray-300 shadow-md p-2 rounded text-sm">
-          <p className="font-semibold text-gray-800">Company: {company}</p>
+          <p className="font-semibold text-gray-800">Company: {label}</p>
           <p className="text-gray-600">Number of Posting: {count}</p>
         </div>
       );
