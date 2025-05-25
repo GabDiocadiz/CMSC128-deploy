@@ -5,7 +5,7 @@ import { LuPencil } from "react-icons/lu";
 import axios from "axios";
 import { useAuth } from "../../auth/AuthContext";
 import Sidebar from "../Sidebar";
-import Navbar from "../header";
+import Navbar_landing from "../header_landing";
 import Footer from "../footer";
 import Loading from "../loading";
 
@@ -71,7 +71,7 @@ export const Unauthorized_jobs_results_page = () => {
         <Sidebar />
       </div>
       <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
-        <Navbar />
+        <Navbar_landing />
         {isLoading ? (
           <Loading />
         ) : jobs.length === 0 ? (
