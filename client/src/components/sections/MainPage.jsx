@@ -55,9 +55,9 @@ export default function MainPage() {
                 const eventsResponse = await authAxios.get('/events/all');
                 console.log("Events data:", eventsResponse.data);
                 
-                // const announcementsResponse = await authAxios.get('/announcement/read-announcements');
-                // console.log("Announcements data:", announcementsResponse.data);
-                // setAnnouncements(announcementsResponse.data);
+                const announcementsResponse = await authAxios.get('/announcement/read-announcements');
+                console.log("Announcements data:", announcementsResponse.data);
+                setAnnouncements(announcementsResponse.data);
 
                 if (Array.isArray(eventsResponse.data) && eventsResponse.data.length > 0) {
                     setEvents(eventsResponse.data);
@@ -255,14 +255,14 @@ export default function MainPage() {
                             ${events.length === 0 ? 'items-start text-left' : 'items-end text-right'} 
                             px-8 sm:px-10 py-8 sm:py-10 w-full transition-all duration-1000`}
                             style={{
-                                backgroundImage: `url(${notice1})`,
+                                backgroundImage: `url(${announcements[0]?.image || notice1})`,
                                 height: events.length === 0 ? '400px' : '600px',
                             }}
                         >
                             <div>
                             <Link
                                 to={`/announcement-details/${announcements[0]._id}`}
-                                className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4 hover:!underline"
+                                className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4 hover:!underline line-clamp-3"
                             >
                                 {announcements[0].title}
                             </Link>
@@ -278,17 +278,19 @@ export default function MainPage() {
                                     className={`absolute inset-0 bg-cover bg-center !text-white flex flex-col justify-center 
                                         ${events.length === 0 ? 'items-start text-left' : 'items-end text-right'} 
                                         px-8 sm:px-10 py-8 sm:py-10 transition-all duration-1000`}
-                                    style={{ backgroundImage: `url(${notice1})` }}
+                                    style={{
+                                        backgroundImage: `url(${announcements[oddNoticeIndex]?.image || notice1})`
+                                    }}
                                 >
                                 <div>
                                     <Link
                                         to={`/announcement-details/${announcements[oddNoticeIndex]._id}`}
-                                        className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4 hover:!underline"
+                                        className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4 hover:!underline line-clamp-1 pr-5"
                                     >
                                     {announcements[oddNoticeIndex].title}
                                     </Link>
                                 </div>
-                                <p className="text-sm sm:text-base max-w-md line-clamp-2">
+                                <p className="text-sm sm:text-base max-w-md line-clamp-2 pr-5">
                                     {announcements[oddNoticeIndex].content}
                                 </p>
                                 </div>
@@ -302,17 +304,19 @@ export default function MainPage() {
                                     className={`absolute inset-0 bg-cover bg-center !text-white flex flex-col justify-center 
                                         ${events.length === 0 ? 'items-start text-left' : 'items-end text-right'} 
                                         px-8 sm:px-10 py-8 sm:py-10 transition-all duration-1000`}
-                                    style={{ backgroundImage: `url(${notice2})` }}
+                                    style={{
+                                        backgroundImage: `url(${announcements[evenNoticeIndex]?.image || notice2})`
+                                    }}
                                 >
                                 <div>
                                     <Link
                                         to={`/announcement-details/${announcements[evenNoticeIndex]._id}`}
-                                        className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4 hover:!underline"
+                                        className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4 hover:!underline line-clamp-2 pr-5"
                                     >
                                     {announcements[evenNoticeIndex].title}
                                     </Link>
                                 </div>
-                                <p className="text-sm sm:text-base max-w-md line-clamp-2">
+                                <p className="text-sm sm:text-base max-w-md line-clamp-2 pr-5">
                                     {announcements[evenNoticeIndex].content}
                                 </p>
                                 </div>
@@ -336,7 +340,7 @@ export default function MainPage() {
                     </div>
 
                     {/* Job Postings */}
-                    <div className="bg-white px-6 sm:px-12 py-15">
+                    <div className="bg-white px-10 pr-12 sm:pr-14 sm:px-12 lg:pr-17 py-20">
                         <div className={`flex ${jobs.length > 0 ? 'flex-col lg:flex-row gap-12' : 'flex-col items-center justify-center'}`}>
                             {jobs.length > 0 ? (
                                 <>
@@ -362,16 +366,16 @@ export default function MainPage() {
                                             >
                                                 <div className="bg-[#891839] p-3 rounded-3xl flex justify-center h-70 w-full shadow-lg hover:shadow-xl">
                                                     <div className="bg-[#891839] text-white px-10 rounded-3xl border-2 border-white w-full flex flex-col items-start justify-center text-left">
-                                                        <h3 className="text-4xl font-semibold mb-3 pb-5 line-clamp-2">{job.job_title}</h3>
+                                                        <h3 className="text-4xl font-semibold mb-7 line-clamp-2">{job.job_title}</h3>
                                                         <p>Company: {job.company}</p>
-                                                        <p>
+                                                        <p className="line-clamp-1">
                                                             Date Posted: {new Date(job.date_posted).toLocaleDateString('en-US', {
                                                                 year: 'numeric',
                                                                 month: 'long',
                                                                 day: 'numeric',
                                                             })}
                                                         </p>
-                                                        <p>Location: {job.location}</p>
+                                                        <p className="line-clamp-1">Location: {job.location}</p>
                                                     </div>
                                                 </div>
                                             </Link>
