@@ -6,6 +6,7 @@ import { useAuth } from "../auth/AuthContext";
 import uplbLogo from "../assets/uplblogo.png";
 import notifications from "../assets/notifications.png";
 import humanIcon from "../assets/Human Icon.png";
+import { toast } from "react-toastify";
 
 export default function Navbar({toggleSidebar,}) {
   const  [notification_modal, setnotification_modal] = useState(false)
@@ -14,6 +15,9 @@ export default function Navbar({toggleSidebar,}) {
   
   const handleLogout = async (e) => {
     await logout();
+    toast.success("Logged out successfully!", {
+            style: { background: '#77DD77', color: 'white' }
+            },);
   }
 
   return (
