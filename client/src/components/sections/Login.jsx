@@ -81,16 +81,16 @@ const Login = () => {
                                 <div className="text-7xl md:text-7xl lg:text-8xl font-extrabold text-white">
                                     ARTEMIS
                                 </div>
-                                <div className="text-xl md:text-2xl lg:text-3xl font-bold text-white">
+                                <div className="text-lg md:text-2xl lg:text-3xl font-bold text-white">
                                     Alumni Relations, Tracking, and <br />
                                     Engagement Management Integrated System
                                 </div>
-                                <div className="text-md md:text-lg lg:text-xl font-extralight text-white">
+                                <div className="text-sm md:text-lg lg:text-xl font-extralight text-white">
                                     "Guiding Alumni Connections, Every Step of the Way."
                                 </div>
                             </div>
             
-                            <div className="lg:col-span-2 w-full flex justify-center lg:justify-end px-15 lg:px-4 pt-12 md:pt-12 lg:pr-15 lg:pt-15">
+                            <div className="lg:col-span-2 w-full flex justify-center lg:justify-end px-5 sm:px-15 lg:px-4 pt-12 md:pt-12 lg:pr-15 lg:pt-15">
                                 <div className="bg-white/60 p-6 sm:p-8 rounded-3xl shadow-lg w-full max-w-md backdrop-blur-sm flex justify-center">
                                     <form onSubmit={handleSubmit} className="space-y-6 w-full">
                                         <input

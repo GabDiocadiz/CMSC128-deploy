@@ -61,21 +61,21 @@ export const Landing_page = () => {
       ) : (
         <>
           <div className="bg-[url('src/assets/Building.png')] bg-cover bg-center w-full min-h-screen h-175 flex flex-col justify-between">
-            <div className="flex justify-between items-center h-full text-white text-left pl-8 pt-15 sm:pl-20">
+            <div className="flex justify-between items-center h-full text-white text-left pr-5 pl-8 pt-15 sm:pl-20">
               <div className="flex flex-col">
-                <p className="text-5xl md:text-5xl lg:text-7xl font-bold pb-2">
+                <p className="text-6xl md:text-5xl lg:text-7xl font-bold pb-2">
                   Welcome to Artemis
                 </p>
-                <p className="text-xl md:text-2xl lg:text-4xl font-medium pb-3">
+                <p className="text-lg md:text-2xl lg:text-4xl font-medium pb-3">
                   Alumni Relations, Tracking, and <br />
                   Engagement Management Integrated System
                 </p>
-                <p className="text-md md:text-lg lg:text-xl font-light">
+                <p className="text-sm md:text-lg lg:text-xl font-light">
                   "Guiding Alumni Connections, Every Step of the Way"
                 </p>
               </div>
             </div>
-            <div className="flex justify-end pb-15 pr-25">
+            <div className="flex justify-center sm:justify-end pb-15 md:pr-25 lg:pr-25">
               <div className="flex gap-4">
                 <button className="text-base sm:text-lg lg:text-xl text-white h-[50px] sm:h-[60px] w-[140px] sm:w-[180px] font-bold px-4 py-2 border-2 border-white rounded-4xl hover:bg-white hover:text-[#085740] cursor-pointer"
                   onClick={()=> navigate('/login')}>
@@ -89,7 +89,7 @@ export const Landing_page = () => {
             </div>
           </div>
 
-          <div className="flex flex-col w-screen bg-gray-100 px-10 py-30 h-auto">
+          <div className="flex flex-col w-screen bg-gray-100 pl-10 py-30 h-auto">
             <div className="flex flex-col justify-center text-center">
             <h2 className="text-3xl md:text-4xl lg:text-5xl text-center text-[#891839] font-bold">
               Stay Connected, Stay Involved
