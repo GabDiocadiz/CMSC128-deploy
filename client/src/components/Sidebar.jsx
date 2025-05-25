@@ -17,7 +17,7 @@ export default function Sidebar(currentPage){
     }
     const handleNavigate = () => {
     if(user?.user_type == "Admin"){
-        navigate('/admin_search-alumni');
+        navigate('/search-alumni');
     } else {
         navigate('/search-alumni');
     }

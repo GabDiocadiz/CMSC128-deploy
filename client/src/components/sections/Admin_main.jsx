@@ -17,7 +17,8 @@ export const Admin_main = () => {
     const [search, setSearch] = useState("");
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const toggleSidebar = () => setSidebarOpen((prev) => !prev);
-    const categories = ["Events", "Jobs", "Job Requests"];
+    const categories = ["Events", "Jobs", "Job Requests", "Users"];
+    const [users, setUsers] = useState([]);
     const fetchData = async () => {
         
       try {
@@ -26,7 +27,8 @@ export const Admin_main = () => {
         const eventResponse = await authAxios.get(`events/admin-page-events`);
         const jobResponse = await authAxios.get(`jobs/admin-page-jobs`);
         const requestResponse = await authAxios.get(`jobs/admin-page-job-requests`);
-  
+        const userResponse = await authAxios.get("/alumni/search");
+
         const formattedEvents = eventResponse.data.map(event => ({
           id: event._id,
           name: event.event_name,
@@ -45,10 +47,16 @@ export const Admin_main = () => {
           name: req.job_title,
           from: req.posted_by?.email || "Unknown"
         }));
-  
+        const formattedUsers = userResponse.data.map(user => ({
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role
+        }));
         setEvents(formattedEvents);
         setJobs(formattedJobs);
         setRequests(formattedJobRequests);
+        setUsers(formattedUsers);
       } catch (err) {
         console.error("Failed to fetch data: ", err);
       }
@@ -82,6 +90,12 @@ export const Admin_main = () => {
       if (activeTab === "Job Requests") {
         return requests.filter(item => item.name.toLowerCase().includes(search.toLowerCase()));
       }
+      if (activeTab === "Users") {
+        return users.filter(item =>
+          item.name.toLowerCase().includes(search.toLowerCase()) ||
+          item.email.toLowerCase().includes(search.toLowerCase())
+        );
+}
       return [];
     };
     const handleDeleteEvent =({id})=>{
@@ -171,6 +185,14 @@ export const Admin_main = () => {
                         <th className="px-4 py-3">Action</th>
                       </>
                     )}
+                    {activeTab === "Users" && (
+                      <>
+                        <th className="px-4 py-3">ID</th>
+                        <th className="px-4 py-3">Name</th>
+                        <th className="px-4 py-3">Email</th>
+                        <th className="px-4 py-3">Role</th>
+                      </>
+                    )}
                   </tr>
                 </thead>
                 <tbody>
@@ -256,6 +278,15 @@ export const Admin_main = () => {
                           </td>
                         </>
                       )}
+                      {activeTab === "Users" && (
+                        <>
+                          <td className="px-4 py-4 font-medium text-gray-900">{item.id}</td>
+                          <td className="px-4 py-4">{item.name}</td>
+                          <td className="px-4 py-4">{item.email}</td>
+                          <td className="px-4 py-4">{item.role}</td>
+                        </>
+                      )}
+
                     </tr>
                   ))}
                   {filteredData.length === 0 && (
