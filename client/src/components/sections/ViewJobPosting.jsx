@@ -68,7 +68,7 @@ export default function ViewJobDetails() {
                         className="relative bg-cover bg-center text-white flex flex-col justify-center items-start px-8 sm:px-16 py-14 w-full h-[50vh]"
                         style={{
                             backgroundImage: `url(${job?.files?.[0]?.serverFilename
-                            ? `${import.meta.env.VITE_API_BASE_URL}/uploads/${job.files[0].serverFilename}`
+                            ? `${import.meta.env.VITE_API_URL}/uploads/${job.files[0].serverFilename}`
                             : job_placeholder})`,
                         }}
                     >
