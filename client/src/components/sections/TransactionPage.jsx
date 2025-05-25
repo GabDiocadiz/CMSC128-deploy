@@ -205,21 +205,30 @@ export default function TransactionPage() {
                         .replace("cvc", "CVC / CVV")
                         .replace("expiry", "Expiry Date")}
                     </label>
-                    <input
-                      name={field}
-                      type={
-                        field === "amount"
-                          ? "number"
-                          : field === "expiry"
-                            ? "month"
+                    {field === "expiry" ? (
+                      <input
+                        name="expiry"
+                        type="month"
+                        value={form.expiry}
+                        onChange={handleChange}
+                        className={`w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#891839] ${errors.expiry ? "border-red-500" : "border-gray-300"}`}
+                        min={new Date().toISOString().slice(0, 7)}
+                        placeholder="MM/YYYY"
+                      />
+                    ) : (
+                      <input
+                        name={field}
+                        type={
+                          field === "amount"
+                            ? "number"
                             : "text"
-                      }
-                      value={form[field]}
-                      onChange={handleChange}
-                      placeholder={field === "cardNumber" ? "XXXX-XXXX-XXXX-XXXX" : ""}
-                      className={`w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#891839] ${errors[field] ? "border-red-500" : "border-gray-300"
-                        }`}
-                    />
+                        }
+                        value={form[field]}
+                        onChange={handleChange}
+                        placeholder={field === "cardNumber" ? "XXXX-XXXX-XXXX-XXXX" : ""}
+                        className={`w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#891839] ${errors[field] ? "border-red-500" : "border-gray-300"}`}
+                      />
+                    )}
                     {errors[field] && (
                       <p className="text-red-500 text-sm">{errors[field]}</p>
                     )}
