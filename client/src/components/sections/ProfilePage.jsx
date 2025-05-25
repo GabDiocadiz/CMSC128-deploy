@@ -86,10 +86,10 @@ export default function ProfilePage() {
         
         try {
             let response;
-            if(user._t === "Alumni"){
+            if(user.__t === "Alumni"){
                 response = await authAxios.get(`/alumni/find-alumni/${id}`);
             }
-            else{
+            else if(user.__t === "Admin"){
                 response = await authAxios.get(`/admin/find-admin/${id}`);
             }
             
