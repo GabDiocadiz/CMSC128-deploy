@@ -19,7 +19,6 @@ export const Post_Job = () => {
     const fileInputRef = useRef(null);
     const navigate = useNavigate();
     const { authAxios, user } = useAuth();
-    const [requirementsOptions, setRequirementsOptions] = useState(jobRequiremets.map(req => ({ value: req, label: req })));
     const [selectedRequirements, setSelectedRequirements] = useState([]);
     
     const [formData, setFormData] = useState({
