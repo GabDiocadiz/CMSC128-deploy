@@ -79,10 +79,19 @@ export default function TransactionPage() {
   const validate = () => {
     const newErrors = {};
     if (!form.name.trim()) newErrors.name = "Name is required.";
-    if (!/^\d{4}-\d{4}-\d{4}-\d{4}$/.test(form.cardNumber)) newErrors.cardNumber = "Invalid card number format.";
+    if (!/^\\d{4}-\\d{4}-\\d{4}-\\d{4}$/.test(form.cardNumber)) newErrors.cardNumber = "Invalid card number format.";
     if (!form.amount || parseFloat(form.amount) <= 0) newErrors.amount = "Amount must be greater than 0.";
-    if (!form.expiry) newErrors.expiry = "Expiry date is required.";
-    if (!/^\d{3,4}$/.test(form.cvc)) newErrors.cvc = "CVC must be 3 or 4 digits.";
+    if (!form.expiry) {
+        newErrors.expiry = "Expiry date is required.";
+    } else {
+        const expiryDate = new Date(form.expiry);
+        const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0); // Normalize to midnight for comparison
+        if (expiryDate <= currentDate) {
+            newErrors.expiry = "Expiry date must be in the future.";
+        }
+    }
+    if (!/^\\d{3,4}$/.test(form.cvc)) newErrors.cvc = "CVC must be 3 or 4 digits.";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
