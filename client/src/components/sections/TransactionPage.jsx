@@ -95,6 +95,12 @@ export default function TransactionPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validate required fields
+    if (!form.name.trim() || !form.cardNumber.trim() || !form.amount.trim() || !form.expiry.trim() || !form.cvc.trim()) {
+      alert("Please fill out all required fields.");
+      return;
+    }
+
     if (!user || !user._id) {
       alert("User not found or not logged in.");
       return;
@@ -120,7 +126,6 @@ export default function TransactionPage() {
       console.log("Transaction response:", response.data);
       alert("Transaction successful!");
       navigate(`/event-details/${id}`);
-      navigate
     } catch (e) {
       console.error("Transaction error:", e?.response?.data || e);
       alert("Transaction failed. Please check your input and try again.");
