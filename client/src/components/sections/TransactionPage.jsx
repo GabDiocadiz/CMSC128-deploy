@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../header";
 import Footer from "../footer";
@@ -8,11 +8,14 @@ import Sidebar from "../Sidebar";
 import { useAuth } from "../../auth/AuthContext";
 import { ScrollToTop } from "../../utils/helper";
 import axios from "axios";
+import { Calendar } from "jsuites/react";
+import "jsuites/dist/jsuites.css";
 
 export default function TransactionPage() {
   const { id } = useParams();
   const { authAxios, user } = useAuth();
   const navigate = useNavigate();
+  const calendarRef = useRef(null);
   const [event, setEvent] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -81,9 +84,10 @@ export default function TransactionPage() {
     if (!form.expiry) {
       newErrors.expiry = "Expiry date is required.";
     } else {
-      const [year, month] = form.expiry.split('-').map(Number);
-      const expiryDate = new Date(year, month, 0, 23, 59, 59);
+      const expiryDate = new Date(form.expiry);
       const currentDate = new Date();
+      currentDate.setDate(1);
+      currentDate.setHours(0, 0, 0, 0);
       if (expiryDate < currentDate) {
         newErrors.expiry = "Card has expired. Please use a valid one.";
       }
@@ -117,6 +121,10 @@ export default function TransactionPage() {
         alert("Transaction failed. Please check your input and try again.");
       }
     }
+  };
+
+  const handleExpiryChange = (value) => {
+    setForm({ ...form, expiry: value });
   };
 
   return (
@@ -177,27 +185,15 @@ export default function TransactionPage() {
                 ))}
 
                 <div className="mb-4">
-                  <label className="block text-gray-700 mb-1">
-                    Expiry Date <span className="text-sm text-gray-500">(MM/YYYY)</span>
-                  </label>
-                  <div className="flex items-center">
-                    <input
-                      name="expiry"
-                      type="month"
-                      value={form.expiry}
-                      onChange={handleChange}
-                      min={new Date().toISOString().slice(0, 7)}
-                      className={`flex-grow p-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-[#891839] ${errors.expiry ? "border-red-500" : "border-gray-300"}`}
-                      style={{
-                        appearance: 'auto',
-                        pointerEvents: 'auto',
-                        backgroundColor: 'white',
-                        color: 'black',
-                        WebkitAppearance: 'menulist-button'
-                      }}
-                    />
-                    <span className="bg-gray-200 px-3 py-[10px] rounded-r-lg text-gray-600">📅</span>
-                  </div>
+                  <label className="block text-gray-700 mb-1">Expiry Date (MM/YYYY)</label>
+                  <Calendar
+                    ref={calendarRef}
+                    type={'year-month-picker'}
+                    value={form.expiry}
+                    onChange={handleExpiryChange}
+                    format={'YYYY-MM'}
+                    validRange={['2024-01-01', '2025-12-31']}
+                  />
                   {errors.expiry && <p className="text-red-500 text-sm">{errors.expiry}</p>}
                 </div>
 
