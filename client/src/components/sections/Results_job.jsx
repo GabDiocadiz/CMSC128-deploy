@@ -43,7 +43,7 @@ export const Results_page_jobs = ( ) => {
         const fetchJobs = async () => {
         setIsLoading(true);
         try {
-            const response = await authAxios.get(`jobs/job-results`);
+            const response = await authAxios.get(`${import.meta.env.VITE_API_URL}/jobs/job-results`);
             let sortedJobs = [...response.data];
 
             // Frontend-side sorting

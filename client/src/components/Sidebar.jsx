@@ -22,7 +22,7 @@ export default function Sidebar(currentPage){
     }
     const fetchNotifications = useCallback(async () => {
         try {
-          const response = await authAxios.get('/notifications/unread');
+          const response = await authAxios.get(`${import.meta.env.VITE_API_URL}/notifications/unread`);
           setNotifications(response.data || []);
         } catch (err) {
           console.error("Error fetching notifications:", err);

@@ -25,7 +25,7 @@ export default function ViewJobDetails() {
        const fetchedJob = async () => {
             try {
                 setIsLoading(true);
-                const response = await authAxios.get(`/jobs/find-job/${id}`);
+                const response = await authAxios.get(`${import.meta.env.VITE_API_URL}/jobs/find-job/${id}`);
                 setJob(response.data);
                 console.log("Fetched Job:", response.data);
                 setIsLoading(false);

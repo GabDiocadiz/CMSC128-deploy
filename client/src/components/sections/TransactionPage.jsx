@@ -32,7 +32,7 @@ export default function TransactionPage() {
     const fetchEvent = async () => {
       try {
         setIsLoading(true);
-        const response = await authAxios.get(`/events/find-event/${id}`);
+        const response = await authAxios.get(`${import.meta.env.VITE_API_URL}/events/find-event/${id}`);
 
         setEvent(response.data);
         console.log("Fetched Event:", response.data);
