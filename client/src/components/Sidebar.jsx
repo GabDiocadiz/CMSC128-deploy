@@ -7,13 +7,19 @@ import { IoPersonCircle } from "react-icons/io5";
 import { PiCalendarDotsFill } from "react-icons/pi";
 import { LuSearch } from "react-icons/lu";
 import { useState } from "react";
+import { toast } from "react-toastify";
+
+
 
 export default function Sidebar(currentPage){
     const navigate = useNavigate()
     const { authAxios, user, logout } = useAuth();
      const [ notifications, setNotifications ] = useState([]);
      const handleLogout=()=>{
-        logout()
+        logout();
+        toast.success("Logged out successfully!", {
+            style: { background: '#77DD77', color: 'white' }
+            }, );
     }
     const handleNavigate = () => {
     if(user?.user_type == "Admin"){
