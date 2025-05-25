@@ -260,3 +260,29 @@ button:focus {
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
+
+.loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh; /* Adjust as needed for vertical centering */
+    background-color: #fdf0d5; /* Your background color */
+}
+
+.spinner {
+    border: 8px solid rgba(0, 0, 0, 0.1); /* Light gray border */
+    border-top: 8px solid #891839; /* Your primary color for the spinning part */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite; /* Animation definition */
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

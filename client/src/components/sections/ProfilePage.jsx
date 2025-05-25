@@ -52,30 +52,8 @@ export default function ProfilePage() {
     const [isHoveringPopup, setIsHoveringPopup] = useState(false);
     const [newProfilePic, setNewProfilePic] = useState(null);
     const [profilePicPreview, setProfilePicPreview] = useState(null);
-    // Initial data fetch on component mount or user change
-    useEffect(() => {
-        document.documentElement.classList.remove('dark');
-        ScrollToTop();
-        fetchProfileData();
-    }, [authAxios, user?._id]); // Re-fetch if authAxios (token) or user ID changes
 
-    // Effect to handle image preview updates
-    useEffect(() => {
-        if (selectedFile) {
-            // Create a local URL for immediate preview of the newly selected file
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImagePreviewUrl(reader.result);
-            };
-            reader.readAsDataURL(selectedFile);
-        } else if (profileData?.files && profileData.files.length > 0) {
-            // If no new file selected, but profileData has existing files, use the server URL
-            setImagePreviewUrl(`http://localhost:5050/uploads/${profileData.files[0].serverFilename}`);
-        } else {
-            // Default avatar if no picture exists
-            setImagePreviewUrl("/src/assets/default_avatar.png");
-        }
-    }, [selectedFile, profileData]); // Dependency on selectedFile and profileData
+
 
     const fetchProfileData = async () => {
         setLoading(true);
@@ -140,7 +118,56 @@ export default function ProfilePage() {
     }
   };
 
+  
+
+                                        // Effect to handle image preview updates
+    useEffect(() => {
+        if (selectedFile) {
+            // Create a local URL for immediate preview of the newly selected file
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreviewUrl(reader.result);
+            };
+            reader.readAsDataURL(selectedFile);
+        } else if (profileData?.files && profileData.files.length > 0) {
+            // If no new file selected, but profileData has existing files, use the server URL
+            setImagePreviewUrl(`http://localhost:5050/uploads/${profileData.files[0].serverFilename}`);
+        } else {
+            // Default avatar if no picture exists
+            setImagePreviewUrl("/src/assets/default_avatar.png");
+        }
+    }, [selectedFile, profileData, id]); // Dependency on selectedFile and profileData
     const handleEditToggle = () => setIsEditing(!isEditing);
+
+    
+  useEffect(() => {
+        // Any setup that needs to happen on component mount or 'id' change
+        document.documentElement.classList.remove('dark');
+        ScrollToTop();
+
+        // Call the data fetching function
+        fetchProfileData();
+
+        // Cleanup function: This runs when the component unmounts
+        // OR when any dependency in the array changes (before the new effect runs).
+        return () => {
+            // Reset all relevant states to their initial values
+            setProfileData(null);
+            setUpcomingEvents([]);
+            setJobApplications([]);
+            setBookmarkedJobs([]);
+            setBookmarkedEvents([]);
+            setEditableData({});
+            setSelectedFile(null);
+            setLoading(true); // Set loading to true for the next potential fetch
+            setError(null); // Clear any errors
+            setIsEditing(false); // Exit editing mode
+            setActiveTab('pending'); // Reset job applications tab
+        };
+    }, [authAxios, id, user?.__t]); // <<-- 'id' is the crucial dependency here
+                                    // 'authAxios' and 'user?.__t' are also good to keep
+                                    // if their changes should also trigger a re-fetch.
+
 
     // Handler for text/number inputs (NOT for file input)
     const handleChange = (e) => {
@@ -263,13 +290,14 @@ export default function ProfilePage() {
     const filteredJobs = jobApplications.filter(job => job.status?.toLowerCase() === activeTab);
 
     if (loading) {
-        return (
-            <div className="flex items-center justify-center min-h-screen bg-[#FDF0D5]">
-                <p className="text-2xl text-[#891839]">Loading profile...</p>
+    return (
+            <div className="min-w-screen min-h-screen bg-gray-200 flex justify-center items-center">
+                <div className="w-16 h-16 border-4 border-[#145C44] border-t-transparent rounded-full animate-spin"></div>
             </div>
-        );
+    );
     }
 
+    // --- ERROR RENDERING (Keep this) ---
     if (error) {
         return (
             <div className="flex items-center justify-center min-h-screen bg-[#FDF0D5]">
@@ -487,75 +515,6 @@ export default function ProfilePage() {
                             
                         </div>
                     </section>
-
-                    {/* <section className="bg-white rounded-3xl shadow-lg p-8 relative">
-                        <h3 className="text-3xl font-bold text-[#891839] mb-6">Upcoming Events</h3>
-                        <div className="custom-calendar-wrapper">
-                            <Calendar
-                                tileContent={({ date }) => {
-                                    const eventsToday = upcomingEvents.filter(e => new Date(e.event_date).toDateString() === date.toDateString());
-                                    return (
-                                        <div
-                                            className={`relative w-full h-full flex flex-col items-center justify-center rounded-md ${
-                                                eventsToday.length > 0 ? 'bg-[#0E4221] text-white' : ''
-                                            }`}
-                                            onMouseEnter={(e) => {
-                                                if (eventsToday.length > 0) {
-                                                    setHoveredEvent(eventsToday);
-                                                    setHoverPosition({ x: e.clientX, y: e.clientY });
-                                                    setIsHoveringTile(true);
-                                                }
-                                            }}
-                                            onMouseLeave={() => setIsHoveringTile(false)}
-                                        >
-                                            {eventsToday.length > 0 && (
-                                                <div className="flex justify-center items-center gap-1 mt-1">
-                                                    {eventsToday.map((_, idx) => (
-                                                        <div key={idx} className="w-1.5 h-1.5 rounded-full bg-white"></div>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
-                                    );
-                                }}
-                                className="custom-calendar"
-                            />
-
-                            {(hoveredEvent && (isHoveringTile || isHoveringPopup)) && (
-                                <div
-                                    className="popup-events"
-                                    onMouseEnter={() => setIsHoveringPopup(true)}
-                                    onMouseLeave={() => {
-                                        setIsHoveringPopup(false);
-                                        setHoveredEvent(null);
-                                    }}
-                                    style={{
-                                        position: 'fixed',
-                                        top: hoverPosition.y + 10,
-                                        left: hoverPosition.x + 10,
-                                        background: 'white',
-                                        padding: '8px',
-                                        borderRadius: '8px',
-                                        boxShadow: '0px 2px 10px rgba(0,0,0,0.15)',
-                                        zIndex: 1000,
-                                    }}
-                                >
-                                    {hoveredEvent.map((event) => (
-                                        <div
-                                            key={event.event_id}
-                                            className="popup-event-item cursor-pointer"
-                                            onClick={() => {
-                                                navigate(`/events/${event.event_id}`);
-                                                setHoveredEvent(null);
-                                            }}
-                                        >
-                                            {event.event_name}
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    </section> */}
 
                     <section className="bg-white rounded-3xl shadow-lg p-8">
                         <h3 className="text-3xl font-bold text-[#891839] mb-6 text-center">Bookmarked Jobs</h3>
