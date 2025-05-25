@@ -30,7 +30,7 @@ export default function ViewAnnouncementDetails() {
                     // Assuming your backend sends files as an array of objects,
                     // and the first one is the main image.
                     const imageUrl = fetchedData.files && fetchedData.files.length > 0
-                        ? `http://localhost:5050/uploads/${fetchedData.files[0].serverFilename}`
+                        ? `/uploads/${fetchedData.files[0].serverFilename}`
                         : ''; // Fallback if no image
 
                     if (imageUrl) {

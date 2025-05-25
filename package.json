@@ -6,6 +6,7 @@
     "mongoose": "^8.12.1",
     "react-range": "^1.10.0",
     "react-router-dom": "^7.5.3",
+    "react-toastify": "^11.0.5",
     "recharts": "^2.15.3"
   },
   "scripts": {
