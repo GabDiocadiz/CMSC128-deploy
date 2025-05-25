@@ -1,12 +1,16 @@
 import Navbar_admin from "../header_admin";
 import Footer from "../footer";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Datepicker} from "flowbite-react";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../../auth/AuthContext";
-import { LuPencil } from "react-icons/lu";
+import { LuCalendar, LuMapPin } from "react-icons/lu";
+import { PiHandHeartBold  } from "react-icons/pi";
 import { IoIosArrowBack } from "react-icons/io";
+import { HiOutlineCloudUpload, HiOutlineX } from "react-icons/hi";
+import { BsFileText } from "react-icons/bs";
 import Sidebar from "../Sidebar";
+import Loading from "../loading";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
@@ -24,11 +28,10 @@ export const CreateEvent = () => {
         venue: "",
         created_by: `${user?._id}` || "",
         donatable: false,
-        link: "",
     });
 
-    const [actualFiles, setActualFiles] = useState([]);      // Store actual file objects
-    const [loading, setLoading] = useState(false);
+    const [actualFiles, setActualFiles] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     const handleInputChange = (e) => {
@@ -57,7 +60,7 @@ export const CreateEvent = () => {
         });
 
         if (errors.length > 0) {
-            alert(errors.join('\n'));    // Or use a toast/modal/etc.
+            alert(errors.join('\n'));
             if (fileInputRef.current) fileInputRef.current.value = "";
             return;
         }
@@ -96,16 +99,19 @@ export const CreateEvent = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
+        setLoading(true);
         console.log("Submitting...");
 
         if (!formData.event_name.trim()) {
             alert("Event Name is required.");
             setIsSubmitting(false);
+            setLoading(false);
             return;
         }
         if (!formData.venue.trim()) {
             alert("Venue is required.");
             setIsSubmitting(false);
+            setLoading(false);
             return;
         }
 
@@ -118,7 +124,6 @@ export const CreateEvent = () => {
             submissionFormData.append('venue', formData.venue.trim());
             submissionFormData.append('created_by', formData.created_by);
             submissionFormData.append('donatable', formData.donatable.toString());
-            submissionFormData.append('link', formData.link.trim());
 
             actualFiles.forEach(fileObject => {
                 submissionFormData.append("files[]", fileObject, fileObject.name);
@@ -133,8 +138,23 @@ export const CreateEvent = () => {
             alert("Event submission failed");
         } finally {
             setIsSubmitting(false);
+            setLoading(false);
         }
     };
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setLoading(false);
+        }, 200);
+
+        return () => clearTimeout(timer);
+    }, []);
+
+    if (loading) {
+        return (
+           <Loading/>
+        );
+    }
 
     return (
         <>  
@@ -151,144 +171,201 @@ export const CreateEvent = () => {
             </div>
 
             <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
-                <form className="bg-gray-100 px-4 sm:px-6 lg:px-10 py-12 flex flex-col items-center gap-8 min-h-screen pr-20 sm:pr-20 md:pr-20"
-                    onSubmit={handleSubmit}
-                >
-                    <div className="w-full">
-                        <div className="flex items-center gap-2 cursor-pointer text-[#145C44] mb-2 mt-20 ml-10 sm:mt-[5vh] lg:mt-[10vh] sm:pt-10 md:pt-10 lg:pt-0"
-                            onClick={() => navigate('/Admin_main')}
-                        >
-                            <IoIosArrowBack className="text-sm text-[#145C44]" />
-                            <span className="text-sm font-light">Back</span>
-                        </div>
-                        <div className="flex items-center text-3xl lg:text-4xl font-bold text-[#145C44] mt-2">
-                            <LuPencil className="mr-2 ml-10"/>
-                            Create an event
+                <div className="min-h-screen bg-gray-100">
+                    <div className="bg-gray-100">
+                        <div className="max-w-7xl mx-auto px-6 py-8 pt-30">
+                            <div
+                                className="flex items-center gap-3 cursor-pointer text-[#145C44] mb-4 hover:text-[#0d4a35] transition-colors duration-200"
+                                onClick={() => navigate('/Admin_main')}
+                            >
+                                <IoIosArrowBack className="text-lg" />
+                                <span className="text-sm font-medium">Back</span>
+                            </div>
+                            
+                            <div className="flex items-center gap-3 text-left">
+                                <div>
+                                    <div className="text-4xl md:text-5xl lg:text-5xl font-bold text-[#145C44] leading-tight flex items-center gap-3">
+                                        Create an event
+                                    </div>
+                                    <p className="text-gray-600 pl-1">
+                                        Fill in the details below to create a new event.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    {/* Event name, Venue */}
-                    <div className="w-full flex flex-col lg:flex-row gap-8 pl-15">
-                        <div className="w-full lg:w-1/2 flex flex-col gap-4 pt-5">
-                            {[
-                                { label: "Event Name", key: "event_name", type: "text" },
-                                { label: "Venue", key: "venue", type: "text" },
-                            ].map(({ label, key, type }) => (
-                            <div key={key} className="flex items-center gap-4">
-                                <label className="w-32 text-sm font-medium text-gray-700 text-left">
-                                    {label}
-                                </label>
-                                <input
-                                    type={type}
-                                    placeholder={`Enter ${label}`}
-                                    className="flex-1 border border-gray-300 rounded-md p-2 placeholder:text-sm text-sm"
-                                    value={formData[key]}
-                                    onChange={(e) => setFormData({ ...formData, [key]: e.target.value })}
-                                />
-                            </div>
-                            ))}
+                    <form onSubmit={handleSubmit} className="max-w-7xl mx-auto px-6 pt-5 pb-12">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            <div className="lg:col-span-2 space-y-8">
+                                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
+                                    <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                        <div className="w-2 h-8 bg-[#145C44] rounded-full"></div>
+                                        Basic Information
+                                    </h2>
+                                    
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <InputField
+                                            label="Event Name"
+                                            value={formData.event_name}
+                                            onChange={(e) => setFormData({ ...formData, event_name: e.target.value })}
+                                            icon={BsFileText}
+                                            placeholder="Enter event name"
+                                        />
+                                        
+                                        <InputField
+                                            label="Venue"
+                                            value={formData.venue}
+                                            onChange={(e) => setFormData({ ...formData, venue: e.target.value })}
+                                            icon={LuMapPin}
+                                            placeholder="Enter venue location"
+                                        />
+                                        
+                                        <div className="group">
+                                            <label className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                                            <LuCalendar className="w-4 h-4 text-gray-500" />
+                                                Event Date
+                                            </label>
+                                            <div className="relative">
+                                                <Datepicker
+                                                    value={formData.event_date}
+                                                    onChange={handleDateChange}
+                                                    icon={false}
+                                                    style={{
+                                                        backgroundColor: '#f3f4f6',
+                                                        border: '1px solid #d1d5db',
+                                                        borderRadius: '6px',
+                                                        color: '#374151',
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
 
-                        {/* Event Date and Charity Toggle */}
-                        <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 mt-2">
-                            <div className="flex items-center gap-4">
-                                <label className="w-32 text-sm font-medium text-gray-700 text-left">Event Date</label>
-                                <Datepicker
-                                    value={formData.event_date}
-                                    onChange={handleDateChange}
-                                    style={{
-                                        backgroundColor: '#f3f4f6',
-                                        border: '1px solid #d1d5db',
-                                        borderRadius: '6px',
-                                        color: '#374151',
-                                    }}
-                                />
-                            </div>
+                                        <div className="group">
+                                            <label className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                                                <PiHandHeartBold className="w-4 h-4 text-gray-500" />
+                                                Donate
+                                            </label>
+                                            <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                                                <label className="inline-flex items-center cursor-pointer">
+                                                    <input
+                                                        name="donatable"
+                                                        type="checkbox" 
+                                                        checked={formData.donatable}
+                                                        onChange={handleInputChange}
+                                                        className="sr-only peer"
+                                                    />
+                                                    <div className="relative w-14 h-7 peer-focus:outline-none rounded-full peer bg-[#891839] peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-green-500 dark:peer-checked:bg-green-600"></div>
+                                                    <span className="ms-3 text-base text-emerald-800 font-semibold">Charity Event?</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                            {/* Charity Event Toggle */}
-                            <div className="flex items-center gap-4 pl-37 sm:pl-0 md:pl-0 lg:pl-0">
-                                <label className="inline-flex items-center w-fit">
-                                    <input
-                                        name="donatable"
-                                        type="checkbox" 
-                                        value={formData.donatable}
+                                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
+                                    <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                        <div className="w-2 h-8 bg-[#145C44] rounded-full"></div>
+                                        Event Description
+                                    </h2>
+                                    
+                                    <textarea
+                                        name="event_description"
+                                        value={formData.event_description}
                                         onChange={handleInputChange}
-                                        className="sr-only peer"
+                                        placeholder="Describe the event, activities, what attendees can expect, and any important details..."
+                                        rows={8}
+                                        className="w-full text-gray-700 px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#145C44] focus:border-transparent transition-all duration-200 bg-white shadow-sm hover:shadow-md resize-none"
                                     />
-                                    <div class="relative w-14 h-7 peer-focus:outline-none rounded-full peer bg-[#891839] peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-green-500 dark:peer-checked:bg-green-600"></div>
-                                    <span class="ms-3 text-lg  text-emerald-800 font-semibold">Charity Event?</span>
-                                </label>
+                                </div>
+                            </div>
+
+                            <div className="lg:col-span-1">
+                                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 sticky top-8">
+                                    <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                        <div className="w-2 h-8 bg-[#145C44] rounded-full"></div>
+                                        Event Image
+                                    </h2>
+                                    
+                                    <div className="space-y-4">
+                                        <div className="relative w-full h-64 bg-gradient-to-br from-gray-100 to-gray-200 border-2 border-dashed border-gray-300 rounded-xl flex items-center justify-center overflow-hidden group">
+                                            {formData.image ? (
+                                                <>
+                                                    <img
+                                                        src={URL.createObjectURL(formData.image)}
+                                                        alt="Preview"
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setFormData({ ...formData, image: null });
+                                                            setActualFiles([]);
+                                                            if (fileInputRef.current) {
+                                                                fileInputRef.current.value = '';
+                                                            }
+                                                        }}
+                                                        className="absolute top-3 right-3 bg-red-500 hover:bg-red-600 text-white rounded-full w-8 h-8 flex items-center justify-center transition-colors duration-200 shadow-lg cursor-pointer"
+                                                    >
+                                                        <HiOutlineX className="w-4 h-4" />
+                                                    </button>
+                                                </>
+                                            ) : (
+                                                <div className="text-center">
+                                                    <HiOutlineCloudUpload className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                                                    <p className="text-gray-500 text-sm font-medium">No image uploaded</p>
+                                                    <p className="text-gray-400 text-xs mt-1">Click below to add an image</p>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <label className="block">
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                multiple
+                                                ref={fileInputRef}
+                                                onChange={handleFileChange}
+                                                className="hidden"
+                                            />
+                                            <div className="w-full px-4 py-3 bg-gradient-to-r from-[#145C44] to-[#0d4a35] text-white rounded-xl cursor-pointer hover:from-[#0d4a35] hover:to-[#145C44] transition-all duration-200 text-center font-medium shadow-lg hover:shadow-xl transform hover:scale-105">
+                                                Choose Image
+                                            </div>
+                                        </label>
+
+                                        <p className="text-xs text-gray-500 text-center">
+                                            Supported formats: JPEG, PNG, WebP<br />
+                                            Maximum size: 10MB
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                            {/* Description */}
-                            <div className="flex items-start gap-4 mt-4">
-                            <label className="w-32 text-sm font-medium text-gray-700 text-left pt-2">Event Description</label>
-                            <textarea
-                                name="event_description"
-                                placeholder="Enter Event Description"
-                                rows={6}
-                                className="flex-1 border border-gray-300 rounded-md p-2 placeholder:text-sm text-sm text-gray-800"
-                                value={formData.event_description}
-                                onChange={handleInputChange}
-                            />
-                            </div>
+
+                        <div className="flex flex-col sm:flex-row gap-4 justify-end mt-12 mb-15 pt-8 border-t border-gray-200">
+                            <button
+                                type="button"
+                                onClick={() => navigate('/Admin_main')}
+                                className="px-8 py-3 text-white bg-gradient-to-r from-[#891839] to-[#6d122d] hover:from-[#6d122d] hover:to-[#891839] font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl cursor-pointer"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                disabled={isSubmitting}
+                                className="px-8 py-3 bg-gradient-to-r from-[#145C44] to-[#0d4a35] hover:from-[#0d4a35] hover:to-[#145C44] text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                            >
+                                {isSubmitting ? 'Creating Event...' : 'Create Event'}
+                            </button>
                         </div>
 
-                        <div className="hidden lg:block border-l border-gray-300 ml-20"></div>
-
-                        {/* File upload */}
-                        <div className="w-full lg:w-1/2 flex flex-col items-center">
-                            <label className="text-sm font-medium text-gray-700 mb-2">Choose Background Image</label>
-                            <div className="relative mb-2 w-[380px] h-[260px] bg-gray-200 border border-gray-300 flex items-center justify-center">
-                                {formData.image ? (
-                                    <>
-                                        <img src={URL.createObjectURL(formData.image)} alt="Preview" className="w-full h-full object-cover" />
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                setFormData({ ...formData, image: null });
-                                                if (fileInputRef.current) fileInputRef.current.value = '';
-                                            }}
-                                            className="absolute top-1 right-1 bg-black bg-opacity-50 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-opacity-80 cursor-pointer"
-                                            title="Remove Image"
-                                        >
-                                            ✕
-                                        </button>
-                                    </>
-                                ) : (
-                                    <span className="text-gray-500 text-sm">No image uploaded</span>
-                                )}
+                        {error && (
+                            <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+                                <p className="text-red-600 text-sm font-medium">{error}</p>
                             </div>
-                            <input
-                                multiple
-                                ref={fileInputRef}
-                                accept="image/*"
-                                onChange={handleFileChange}
-                                className="block w-full max-w-xs text-sm text-gray-900 border border-gray-300 rounded-md file:bg-[#891839] file:text-white file:border-none file:px-4 file:py-2 cursor-pointer"
-                                id="file_input"
-                                type="file"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="flex flex-col sm:flex-row md:flex-row lg:flex-row justify-end w-full gap-4 mt-20 pl-25 md:pl-15 lg:pl-15 pr-7 md:pr-15 lg:pr-15 mb-8">
-                        <button
-                            type="button"
-                            onClick={() => navigate('/Admin_main')}
-                            className="bg-[#891839] text-white font-medium px-6 py-2 rounded-md cursor-pointer focus:!outline-none"
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            disabled={isSubmitting}
-                            className="bg-[#145C44] text-white font-medium px-6 py-2 rounded-md cursor-pointer focus:!outline-none"
-                        >
-                            Create Event
-                        </button>
-                    </div>
-
-                    {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-                </form>
+                        )}
+                    </form>
+                </div>
             </div>
 
             <div className="w-full z-50">
@@ -297,3 +374,19 @@ export const CreateEvent = () => {
         </>
     );
 };
+
+const InputField = ({ label, value, onChange, placeholder, icon: Icon, type = "text" }) => (
+    <div className="group">
+        <label className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+            {Icon && <Icon className="w-4 h-4 text-gray-500" />}
+            {label}
+        </label>
+        <input
+            type={type}
+            value={value}
+            onChange={onChange}
+            placeholder={placeholder}
+            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#145C44] focus:border-transparent transition-all duration-200 bg-white shadow-sm hover:shadow-md group-hover:border-gray-300"
+        />
+    </div>
+);
