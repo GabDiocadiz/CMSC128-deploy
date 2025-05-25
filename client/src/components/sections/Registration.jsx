@@ -59,30 +59,55 @@ const Registration = () => {
     };
 
     const handleSubmit = async () => {
-    if (
-        !formData.username ||
-        !formData.email ||
-        !formData.password ||
-        !formData.confirmPassword ||
-        !formData.degree ||
-        !formData.graduation_year
-    ) 
-    {
-        toast.error("Please fill in all fields.");
+    const errors = [];
+
+    if (!formData.username || formData.username.trim().length < 2) {
+        errors.push("Name is required and must be at least 2 characters.");
+    }
+
+    if (!formData.email || !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email)) {
+        errors.push("Please enter a valid email address.");
+    }
+
+    if (!formData.password || formData.password.length < 8) {
+        errors.push("Password must be at least 8 characters.");
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+        errors.push("Passwords do not match.");
+    }
+
+    if (!formData.degree) {
+        errors.push("Degree program is required.");
+    }
+
+    if (!formData.graduation_year) {
+        errors.push("Graduation year is required.");
+    } else if (!/^\d{4}$/.test(formData.graduation_year)) {
+        errors.push("Graduation year must be a 4-digit number.");
+    } else {
+        const year = parseInt(formData.graduation_year, 10);
+        const currentYear = new Date().getFullYear();
+        if (year < 1940 || year > currentYear) {
+            errors.push(`Graduation year must be between 1940 and ${currentYear}.`);
+        }
+    }
+
+    if (errors.length > 0) {
+        toast.error(
+            <div>
+                <strong>Fix the following issues:</strong>
+                <ul className="list-disc ml-5 mt-2">
+                    {errors.map((err, idx) => (
+                        <li key={idx}>{err}</li>
+                    ))}
+                </ul>
+            </div>,
+            { autoClose: 7000 }
+        );
         return;
     }
 
-    if (formData.password !== formData.confirmPassword) 
-    {
-        toast.error("Passwords do not match.");
-        return;
-    }
-
-    if (formData.password.length < 8) 
-    {
-        toast.error("Password must be at least 8 characters.");
-        return;
-    }
     try {
         let uploadedFiles = [];
 
