@@ -12,7 +12,7 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useAuth } from "../../auth/AuthContext";
 import default_eventbg from "../../assets/event_placeholder.png";
 import eventHeader from "../../assets/eventHeader.png";
-import axios from "axios";
+
 import Navbar from "../header";
 import Footer from "../footer";
 import Loading from "../loading";
