@@ -206,23 +206,25 @@ export default function TransactionPage() {
 
                 <div className="mb-4">
                 <label className="block text-gray-700 mb-1">Expiry Date (MM/YYYY)</label>
-                <input
+               <input
                   ref={calendarRef}
+                  name="expiry"
                   className="w-full p-2 border rounded-lg"
-                  defaultValue={form.expiry}
-                  maxLength={7}
+                  value={form.expiry}
                   placeholder="MM/YYYY"
                   pattern="^(0[1-9]|1[0-2])\/\d{4}$"
                   title="Enter a valid expiry date in MM/YYYY format"
+                  onChange={(e) => setForm((prev) => ({ ...prev, expiry: e.target.value }))}
                   onInput={(e) => {
                     let value = e.target.value.replace(/[^\d/]/g, '').slice(0, 7);
 
                     // Auto insert "/" after MM
                     if (value.length === 2 && !value.includes('/')) {
-                      value = value + '/';
+                      value += '/';
                     }
 
                     e.target.value = value;
+                    setForm((prev) => ({ ...prev, expiry: value }));
                   }}
                 />
                 {errors.expiry && <p className="text-red-500 text-sm">{errors.expiry}</p>}
