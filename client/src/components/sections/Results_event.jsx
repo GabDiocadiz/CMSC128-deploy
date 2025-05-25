@@ -41,7 +41,7 @@ export const Results_page_events = ( ) => {
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const response = await authAxios.get(`/events/read-sort?sortBy=${sortBy}`);
+                const response = await authAxios.get(`${import.meta.env.VITE_API_URL}/events/read-sort?sortBy=${sortBy}`);
 
                 setEvents(response.data);
                 setIsLoading(false);
