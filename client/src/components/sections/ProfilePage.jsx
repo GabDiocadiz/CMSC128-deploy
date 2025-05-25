@@ -70,7 +70,7 @@ export default function ProfilePage() {
             reader.readAsDataURL(selectedFile);
         } else if (profileData?.files && profileData.files.length > 0) {
             // If no new file selected, but profileData has existing files, use the server URL
-            setImagePreviewUrl(`${import.meta.env.VITE_API_URL}/uploads/${profileData.files[0].serverFilename}`);
+            setImagePreviewUrl(`/uploads/${profileData.files[0].serverFilename}`);
         } else {
             // Default avatar if no picture exists
             setImagePreviewUrl("/src/assets/default_avatar.png");
@@ -199,7 +199,7 @@ export default function ProfilePage() {
                 // IMPORTANT: This endpoint might need to be `/alumni/upload-profile-picture/${id}`
                 // or similar, not `/auth/register/upload`, which is usually for registration.
                 // Verify your backend API documentation.
-                const file_res = await authAxios.post(`${import.meta.env.VITE_API_URL}/auth/register/upload`, fileFormData, {
+                const file_res = await authAxios.post(`/auth/register/upload`, fileFormData, {
                     headers: { "Content-Type": "multipart/form-data" },
                 });
 

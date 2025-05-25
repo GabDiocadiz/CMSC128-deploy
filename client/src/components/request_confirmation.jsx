@@ -18,7 +18,7 @@ export default function Request_Confirmation({request_response, setVisible,id,re
   }
   const handleDeleteRequest=async ()=>{
       try{
-        const res = await axios.put(`${import.meta.env.VITE_API_URL}/jobs/${id}/reject`, {userId: user?._id, jobId:id});
+        const res = await axios.put(`/jobs/${id}/reject`, {userId: user?._id, jobId:id});
         console.log("Successfully rejected job posting");
       }
       catch(e){
@@ -33,7 +33,7 @@ export default function Request_Confirmation({request_response, setVisible,id,re
   }
   const handleApproveRequest=async()=>{
     try{
-      const res = await axios.put(`${import.meta.env.VITE_API_URL}/jobs/${id}/approve`, {userId: user?._id, jobId:id});
+      const res = await axios.put(`/jobs/${id}/approve`, {userId: user?._id, jobId:id});
       console.log("Successfully approve job posting");
     }
     catch(e){

@@ -25,7 +25,7 @@ export default function ViewEventDetails() {
         const fetchedEvent = async () => {
             try {
                 setIsLoading(true);
-                const response = await authAxios.get(`${import.meta.env.VITE_API_URL}/events/find-event/${id}`);
+                const response = await authAxios.get(`/events/find-event/${id}`);
 
                 setEvent(response.data);
                 console.log("Fetched Event:", response.data);
@@ -35,14 +35,14 @@ export default function ViewEventDetails() {
                     console.log("Token invalid/expired. Attempting refresh...");
 
                     try {
-                        const refreshResponse = await axios.get(`${import.meta.env.VITE_API_URL}/auth/refresh`, { withCredentials: true });
+                        const refreshResponse = await axios.get(`/auth/refresh`, { withCredentials: true });
 
                         if (refreshResponse.data.accessToken) {
                             const newToken = refreshResponse.data.accessToken;
                             localStorage.setItem("accessToken", newToken);
 
                             console.log("Retrying event fetch with new token...");
-                            const retryResponse = await axios.get(`${import.meta.env.VITE_API_URL}/events/find-event/${id}`, {
+                            const retryResponse = await axios.get(`/events/find-event/${id}`, {
                                 headers: { Authorization: `Bearer ${newToken}` },
                                 withCredentials: true
                             });
@@ -78,7 +78,7 @@ export default function ViewEventDetails() {
             status: "Attending",
         };
 
-        authAxios.post(`${import.meta.env.VITE_API_URL}/events/create-rsvp/${id}`, rsvpData, { withCredentials: true })
+        authAxios.post(`/events/create-rsvp/${id}`, rsvpData, { withCredentials: true })
             .then((response) => {
                 console.log("RSVP successful:", response.data);
                 alert("RSVP successful");
@@ -117,7 +117,7 @@ export default function ViewEventDetails() {
                         style={{
                             backgroundImage: `url(${
                             event?.files?.[0]?.serverFilename
-                                ? `${import.meta.env.VITE_API_URL}/uploads/${event.files[0].serverFilename}`
+                                ? `/uploads/${event.files[0].serverFilename}`
                                 : default_eventbg
                             })`,
                         }}

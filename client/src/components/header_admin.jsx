@@ -24,7 +24,7 @@ export default function Navbar_admin({toggleSidebar}) {
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const handleSend=async (e)=>{
     try{
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/announcement/create`, formData);
+      const res = await axios.post(`/announcement/create`, formData);
       console.log("Successfully sent to all users");
       setIsOpen(false);
     }

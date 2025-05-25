@@ -80,7 +80,7 @@ export const CreateAnnouncement = () => {
     const fileFormData = new FormData();
     actualFiles.forEach(file => fileFormData.append("files[]", file));
 
-    const file_res = await axios.post(`${import.meta.env.VITE_API_URL}/announcement/upload`, fileFormData, {
+    const file_res = await axios.post(`/announcement/upload`, fileFormData, {
         headers: { "Content-Type": "multipart/form-data" },
     });
 
@@ -100,7 +100,7 @@ export const CreateAnnouncement = () => {
 
     setIsSubmitting(true);
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/announcement/create`, announcementData);
+      await axios.post(`/announcement/create`, announcementData);
       console.log("Successfully sent to all users");
     } catch (err) {
       console.error("Error creating announcement", err);

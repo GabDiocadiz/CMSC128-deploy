@@ -25,7 +25,7 @@ export default function ViewJobDetails() {
        const fetchedJob = async () => {
             try {
                 setIsLoading(true);
-                const response = await authAxios.get(`${import.meta.env.VITE_API_URL}/jobs/find-job/${id}`);
+                const response = await authAxios.get(`/jobs/find-job/${id}`);
                 setJob(response.data);
                 console.log("Fetched Job:", response.data);
                 setIsLoading(false);
@@ -68,7 +68,7 @@ export default function ViewJobDetails() {
                         className="relative bg-cover bg-center text-white flex flex-col justify-center items-start px-8 sm:px-16 py-14 w-full h-[50vh]"
                         style={{
                             backgroundImage: `url(${job?.files?.[0]?.serverFilename
-                            ? `${import.meta.env.VITE_API_URL}/uploads/${job.files[0].serverFilename}`
+                            ? `/uploads/${job.files[0].serverFilename}`
                             : job_placeholder})`,
                         }}
                     >

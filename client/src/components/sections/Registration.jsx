@@ -75,7 +75,7 @@ const Registration = () => {
                 const fileFormData = new FormData();
                 actualFiles.forEach(file => fileFormData.append("files[]", file));
     
-                const file_res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/register/upload`, fileFormData, {
+                const file_res = await axios.post(`/auth/register/upload`, fileFormData, {
                     headers: { "Content-Type": "multipart/form-data" },
                 });
     
@@ -103,7 +103,7 @@ const Registration = () => {
             };
     
             // Submit the registration data
-            await axios.post(`${import.meta.env.VITE_API_URL}/auth/register`, userRegData);
+            await axios.post(`/auth/register`, userRegData);
             alert("Registration successful!");
             navigate("/login");
         } catch (error) {

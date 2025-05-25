@@ -32,7 +32,7 @@ export default function TransactionPage() {
     const fetchEvent = async () => {
       try {
         setIsLoading(true);
-        const response = await authAxios.get(`${import.meta.env.VITE_API_URL}/events/find-event/${id}`);
+        const response = await authAxios.get(`/events/find-event/${id}`);
 
         setEvent(response.data);
         console.log("Fetched Event:", response.data);
@@ -154,7 +154,7 @@ export default function TransactionPage() {
               className="w-full md:w-1/2 flex items-center justify-center text-white"
               style={{
                 backgroundImage: `linear-gradient(rgba(14, 66, 33, 0.85), rgba(14, 66, 33, 0.85)), url(${event && event.files && event.files[0] && event.files[0].serverFilename
-                  ? `${import.meta.env.VITE_API_URL}/uploads/${event.files[0].serverFilename}`
+                  ? `/uploads/${event.files[0].serverFilename}`
                   : "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1050&q=80"
                   })`,
                 backgroundSize: "cover",
