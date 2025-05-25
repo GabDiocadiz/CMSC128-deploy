@@ -657,7 +657,7 @@ function JobList({ jobs }) {
                 className="border-2 border-[#891839] rounded-2xl hover:bg-[#891839] transition"
                 >
                 <Link
-                    to={`/job-details/${job.job_id}`}
+                    to={`/job-details/${job._id}`}
                     className="block p-6 no-underline text-[#891839] hover:text-white "
                 >
                     <h4 className="font-bold text-2xl mb-1">{job.job_title}</h4>
