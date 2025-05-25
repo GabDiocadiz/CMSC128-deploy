@@ -4,6 +4,7 @@ import Navbar_landing from "../header_landing";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../../auth/AuthContext";
 import Loading from "../loading";
+import buildingImg from "../../assets/Building.png";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -75,7 +76,8 @@ const Login = () => {
                 <Loading />
             ) : (
                 <>
-                    <div className="bg-[url('src/assets/Building.png')] bg-cover bg-center min-h-screen w-full flex items-center justify-center">
+                    <div className="bg-cover bg-center min-h-screen w-full flex items-center justify-center"
+                        style={{ backgroundImage: `url(${buildingImg})` }}>
                         <div className="w-full min-x-screen px-4 sm:px-6 lg:px-25 py-10 grid grid-cols-1 lg:grid-cols-5 items-center">
                             <div className="lg:col-span-3 text-center lg:text-left px-4 space-y-2 lg:space-y-4 pt-12 md:pt-12 lg:pt-8">
                                 <div className="text-7xl md:text-7xl lg:text-8xl font-extrabold text-white">

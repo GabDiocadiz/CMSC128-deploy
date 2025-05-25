@@ -4,6 +4,7 @@ import axios from "axios";
 
 import Navbar_landing from "../header_landing";
 import { useNavigate } from 'react-router-dom'
+import buildingImg from "../../assets/Building.png";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB 
 
@@ -108,7 +109,8 @@ const Registration = () => {
                 <Navbar_landing></Navbar_landing>
             </div> 
             
-            <div className="bg-[url('src/assets/Building.png')] bg-cover bg-center w-full h-full flex flex-col justify-between pb-20 pt-10">
+            <div className="bg-cover bg-center w-full h-full flex flex-col justify-between pb-20 pt-10"
+                style={{ backgroundImage: `url(${buildingImg})` }}>
                 <div className="grid grid-cols-1 gap-y-5 pt-16">
                     <h1 className=" !text-7xl font-bold text-white ">ARTEMIS</h1>       
                     <div className="flex justify-center">

@@ -5,6 +5,7 @@ import Navbar_landing from "../header_landing";
 import Footer from "../footer";
 import Loading from "../loading";
 import { useAuth } from "../../auth/AuthContext";
+import buildingImg from "../../assets/Building.png";
 
 export const Landing_page = () => {
   const navigate = useNavigate();
@@ -67,7 +68,8 @@ export const Landing_page = () => {
         <Loading />
       ) : (
         <>
-          <div className="bg-[url('src/assets/Building.png')] bg-cover bg-center w-full min-h-screen h-175 flex flex-col justify-between">
+          <div className="bg-cover bg-center w-full min-h-screen h-175 flex flex-col justify-between"
+            style={{ backgroundImage: `url(${buildingImg})` }}>
             <div className="flex justify-between items-center h-full text-white text-left pl-8 pt-15 sm:pl-20">
               <div className="flex flex-col">
                 <p className="text-5xl md:text-5xl lg:text-7xl font-bold pb-2">
