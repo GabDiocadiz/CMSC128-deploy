@@ -131,7 +131,7 @@ export default function ViewEventDetails() {
                                 onClick={() => navigate(-1)}
                             >
                                 <IoIosArrowBack className="text-sm" />
-                                <span className="text-sm font-light">Back</span>
+                                <span className="text-md font-light">Back</span>
                             </div>
 
                             <div className="flex justify-between items-center mb-2">

@@ -117,7 +117,7 @@ export default function ViewAnnouncementDetails() {
                         onClick={() => navigate(-1)}
                     >
                         <IoIosArrowBack className="text-sm" />
-                        <span className="text-sm font-light">Back</span>
+                        <span className="text-md font-light">Back</span>
                     </div>
 
                     <h2 className="text-4xl sm:text-5xl font-bold text-left text-[#891839] mb-2">

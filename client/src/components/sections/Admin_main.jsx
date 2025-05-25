@@ -45,7 +45,7 @@ export const Admin_main = () => {
         id: event._id,
         name: event.event_name,
         date: new Date(event.event_date).toISOString().split('T')[0],
-        createdBy: event.created_by || "N/A"
+        
       }));
 
       const formattedJobs = jobResponse.data.map(job => ({
@@ -64,9 +64,7 @@ export const Admin_main = () => {
         id: user._id,
         name: user.name,
         email: user.email,
-        num_don:0,
-        num_job_posted:0
-  
+
         skills: user.skills,
         jobCount: user.jobCount,
         totalDonationAmount: user.totalDonationAmount,
@@ -305,8 +303,6 @@ export const Admin_main = () => {
                         <th className="px-4 py-3">ID</th>
                         <th className="px-4 py-3">Event Name</th>
                         <th className="px-4 py-3">Event Date</th>
-                        <th className="px-4 py-3">Created By</th>
-                        <th className="px-4 py-3 ">Action</th>
                       </>
                     )}
                     {activeTab === "Jobs" && (
@@ -314,7 +310,6 @@ export const Admin_main = () => {
                         <th className="px-4 py-3">ID</th>
                         <th className="px-4 py-3">Job Title</th>
                         <th className="px-4 py-3">Company</th>
-                        <th className="px-4 py-3 ">Action</th>
                       </>
                     )}
                     {activeTab === "Job Requests" && (
@@ -329,7 +324,8 @@ export const Admin_main = () => {
                         <th className="px-4 py-3">ID</th>
                         <th className="px-4 py-3">Name</th>
                         <th className="px-4 py-3">Email</th>
-                        <th className="px-4 py-3">Skills</th>
+                        <th className="px-4 py-3">Total Donations</th>
+                        <th className="px-4 py-3">Number of Jobs Posted</th>
                         
                       </>
                     )}
@@ -354,18 +350,6 @@ export const Admin_main = () => {
                           <td className="px-4 py-4 font-medium text-gray-900">{item.id}</td>
                             <td className="px-4 py-4 font-medium text-gray-900">{item.name}</td>
                             <td className="px-4 py-4">{item.date}</td>
-                            <td className="px-4 py-4">{item.createdBy}</td>
-                            <td className="px-4 py-4 pl-6">
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleDeleteEvent(item.id);}}
-                                className="bg-[#891839] hover:bg-red-600 text-white p-2 rounded-lg transition duration-200 flex items-center justify-center"
-                                aria-label="Delete"
-                              >
-                                <TrashIcon className="h-5 w-5" />
-                              </button>
-                            </td>
                           </>
                       )}
                       {activeTab === "Jobs" && (
@@ -373,17 +357,7 @@ export const Admin_main = () => {
                           <td className="px-4 py-4 font-medium text-gray-900">{item.id}</td>
                           <td className="px-4 py-4 font-medium text-gray-900">{item.name}</td>
                           <td className="px-4 py-4">{item.company}</td>
-                          <td className="px-4 py-4 pl-6">
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleDeleteEvent(item.id);}}
-                                className="bg-[#891839] hover:bg-red-600 text-white p-2 rounded-lg transition duration-200 flex items-center justify-center"
-                                aria-label="Delete"
-                              >
-                                <TrashIcon className="h-5 w-5" />
-                              </button>
-                            </td>
+                          
                         </>
                       )}
                       {activeTab === "Job Requests" && (
@@ -423,9 +397,9 @@ export const Admin_main = () => {
                           <td className="px-4 py-4 font-medium text-gray-900">{item.id}</td>
                           <td className="px-4 py-4">{item.name}</td>
                           <td className="px-4 py-4">{item.email}</td>
-                          <td className="px-4 py-4">{item.skills}</td>
-                          <td className="px-4 py-4">{item.jobCount}</td>
-                          <td className="px-4 py-4">{item.totalDonationAmount}</td>
+                          <td className="px-4 py-4 font-bold"> ₱ {item.totalDonationAmount}</td>
+                          <td className="px-4 py-4 font-bold">{item.jobCount}</td>
+                          
 
                         </>
                       )}

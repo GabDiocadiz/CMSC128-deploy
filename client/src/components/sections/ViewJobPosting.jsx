@@ -81,7 +81,7 @@ export default function ViewJobDetails() {
                                 onClick={() => navigate(-1)}
                             >
                                 <IoIosArrowBack className="text-sm" />
-                                <span className="text-sm font-light">Back</span>
+                                <span className="text-md font-light">Back</span>
                             </div>
                             <h1 className="text-5xl sm:text-8xl font-extrabold mb-2 text-left">{job.company}</h1>
                             <p className="text-2xl sm:text-3xl font-bold flex items-center gap-3">
