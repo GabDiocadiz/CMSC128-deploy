@@ -3,7 +3,8 @@ import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import axios from "axios";
 
 import Navbar_landing from "../header_landing";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+import { toast } from "react-toastify";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB 
 
@@ -44,7 +45,7 @@ const Registration = () => {
         });
       
         if (errors.length > 0) {
-          alert(errors.join('\n')); // Or use a toast/modal/etc.
+          errors.forEach(err => toast.error(err));
           if (fileInputRef.current) fileInputRef.current.value = "";
           return;
         }
@@ -58,6 +59,55 @@ const Registration = () => {
     };
 
     const handleSubmit = async () => {
+    const errors = [];
+
+    if (!formData.username || formData.username.trim().length < 2) {
+        errors.push("Name is required and must be at least 2 characters.");
+    }
+
+    if (!formData.email || !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email)) {
+        errors.push("Please enter a valid email address.");
+    }
+
+    if (!formData.password || formData.password.length < 8) {
+        errors.push("Password must be at least 8 characters.");
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+        errors.push("Passwords do not match.");
+    }
+
+    if (!formData.degree) {
+        errors.push("Degree program is required.");
+    }
+
+    if (!formData.graduation_year) {
+        errors.push("Graduation year is required.");
+    } else if (!/^\d{4}$/.test(formData.graduation_year)) {
+        errors.push("Graduation year must be a 4-digit number.");
+    } else {
+        const year = parseInt(formData.graduation_year, 10);
+        const currentYear = new Date().getFullYear();
+        if (year < 1940 || year > currentYear) {
+            errors.push(`Graduation year must be between 1940 and ${currentYear}.`);
+        }
+    }
+
+    if (errors.length > 0) {
+        toast.error(
+            <div>
+                <strong>Fix the following issues:</strong>
+                <ul className="list-disc ml-5 mt-2">
+                    {errors.map((err, idx) => (
+                        <li key={idx}>{err}</li>
+                    ))}
+                </ul>
+            </div>,
+            { autoClose: 7000 }
+        );
+        return;
+    }
+
     try {
         let uploadedFiles = [];
 
@@ -93,12 +143,18 @@ const Registration = () => {
         };
 
         const res = await axios.post("http://localhost:5050/auth/register", userRegData);
-        alert("Registration Successful. Redirecting to home page...");
+        toast.success("Registration Successful. Redirecting to home page...");
         navigate(-1);
     } catch (err) {
         console.error("Registration error:", err);
-        const errorMessage = err.response?.data?.message || "Registration failed. Please try again.";
-        alert(errorMessage);
+        if (err.response?.data?.errors) 
+        {
+            err.response.data.errors.forEach(msg => toast.error(msg));
+        } 
+        else 
+        {
+            toast.error(err.response?.data?.error || "Registration failed. Please try again.");
+        }
     }
     };
     
