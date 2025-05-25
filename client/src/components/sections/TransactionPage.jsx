@@ -96,35 +96,32 @@ export default function TransactionPage() {
     e.preventDefault();
 
     // Use the validate function to check for errors
-    if (!validate()) {
-        alert("Please correct the errors in the form.");
-        return;
+    if (validate()) {
+      try {
+          const payload = {
+              event: id,
+              donor: user._id,
+              amount: Number(form.amount)
+          };
+
+          const response = await authAxios.post(
+              `/events/donate/${id}`,
+              payload,
+              { headers: { "Content-Type": "application/json" } }
+          );
+          console.log("Transaction response:", response.data);
+          alert("Transaction successful!");
+          navigate(`/event-details/${id}`);
+      } catch (e) {
+          console.error("Transaction error:", e?.response?.data || e);
+          alert("Transaction failed. Please check your input and try again.");
+      }
+
     }
 
-    if (!user || !user._id) {
-        alert("User not found or not logged in.");
-        return;
-    }
+  
 
-    try {
-        const payload = {
-            event: id,
-            donor: user._id,
-            amount: Number(form.amount)
-        };
-
-        const response = await authAxios.post(
-            `/events/donate/${id}`,
-            payload,
-            { headers: { "Content-Type": "application/json" } }
-        );
-        console.log("Transaction response:", response.data);
-        alert("Transaction successful!");
-        navigate(`/event-details/${id}`);
-    } catch (e) {
-        console.error("Transaction error:", e?.response?.data || e);
-        alert("Transaction failed. Please check your input and try again.");
-    }
+    
 };
 
   return (
