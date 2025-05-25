@@ -60,14 +60,19 @@ export default function ProfilePage() {
         setError(null);
         try {
             let response, jobresponse;
-            if(user.__t === "Alumni"){
+
+            // if admin default to find admin, then find alumni, else just find alumni
+            if (user.__t === "Admin") {
+                try {
+                    response = await authAxios.get(`/admin/find-admin/${id}`);
+                } catch (error) {
+                    response = await authAxios.get(`/alumni/find-alumni/${id}`);
+                    jobresponse = await authAxios.get(`/jobs/job-results/posted_by/${id}`);
+                }
+            } else {
                 response = await authAxios.get(`/alumni/find-alumni/${id}`);
                 jobresponse = await authAxios.get(`/jobs/job-results/posted_by/${id}`);
             }
-            else if(user.__t === "Admin"){
-                response = await authAxios.get(`/admin/find-admin/${id}`);
-            }
-            
             
             setProfileData(response.data);
             setUpcomingEvents(response.data.events_attended);

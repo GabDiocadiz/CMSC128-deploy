@@ -23,7 +23,6 @@ export const Admin_main = () => {
   const [jobs, setJobs] = useState([]);
   const [requests, setRequests] = useState([]);
   const [users, setUsers] = useState([]);
-
   // Stats for charts
   const [eventStats, setEventStats] = useState([]);
   const [jobStats, setJobStats] = useState([]);
@@ -41,7 +40,7 @@ export const Admin_main = () => {
       const jobResponse = await authAxios.get(`jobs/admin-page-jobs`);
       const requestResponse = await authAxios.get(`jobs/admin-page-job-requests`);
       const userResponse = await authAxios.get("/alumni/search");
-
+      console.log(userResponse.data);
       const formattedEvents = eventResponse.data.map(event => ({
         id: event._id,
         name: event.event_name,
@@ -68,13 +67,16 @@ export const Admin_main = () => {
         num_don:0,
         num_job_posted:0
   
+        skills: user.skills,
+        jobCount: user.jobCount,
+        totalDonationAmount: user.totalDonationAmount,
       }));
 
       setEvents(formattedEvents);
       setJobs(formattedJobs);
       setRequests(formattedJobRequests);
       setUsers(formattedUsers);
-
+      
       // Set analytics
       setEventStats(groupByDate(formattedEvents, 'date'));
       setJobStats(groupByKey(formattedJobs, 'company'));
@@ -145,6 +147,7 @@ export const Admin_main = () => {
     if (activeTab === "Users") return users.filter(item =>
       item.name.toLowerCase().includes(search.toLowerCase()) ||
       item.email.toLowerCase().includes(search.toLowerCase())
+
 
     );
     return [];
@@ -326,8 +329,8 @@ export const Admin_main = () => {
                         <th className="px-4 py-3">ID</th>
                         <th className="px-4 py-3">Name</th>
                         <th className="px-4 py-3">Email</th>
-                        <th className="px-4 py-3">Number of Jobs Posted</th>
-                        <th className="px-4 py-3">Total Donation</th>
+                        <th className="px-4 py-3">Skills</th>
+                        
                       </>
                     )}
                   </tr>
@@ -420,8 +423,10 @@ export const Admin_main = () => {
                           <td className="px-4 py-4 font-medium text-gray-900">{item.id}</td>
                           <td className="px-4 py-4">{item.name}</td>
                           <td className="px-4 py-4">{item.email}</td>
-                          <td className="px-4 py-4">{item.num_don}</td>
-                          <td className="px-4 py-4">{item.num_job_posted}</td>
+                          <td className="px-4 py-4">{item.skills}</td>
+                          <td className="px-4 py-4">{item.jobCount}</td>
+                          <td className="px-4 py-4">{item.totalDonationAmount}</td>
+
                         </>
                       )}
 
