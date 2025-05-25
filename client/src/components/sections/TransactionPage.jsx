@@ -2,11 +2,12 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../header";
 import Footer from "../footer";
-import gcash_icon from "../../assets/GCash-Logo.png"
-import paymaya_icon from "../../assets/1200px-PayMaya_Logo.png"
+import gcash_icon from "../../assets/GCash-Logo.png";
+import paymaya_icon from "../../assets/1200px-PayMaya_Logo.png";
 import Sidebar from "../Sidebar";
 import { useAuth } from "../../auth/AuthContext";
 import { ScrollToTop } from "../../utils/helper";
+import axios from "axios";
 
 export default function TransactionPage() {
   const { id } = useParams();
@@ -26,16 +27,12 @@ export default function TransactionPage() {
 
   const [errors, setErrors] = useState({});
 
-
   useEffect(() => {
-
     const fetchEvent = async () => {
       try {
         setIsLoading(true);
         const response = await authAxios.get(`/events/find-event/${id}`);
-
         setEvent(response.data);
-        console.log("Fetched Event:", response.data);
         setIsLoading(false);
       } catch (error) {
         if (error.response?.status === 401 || error.response?.status === 403) {
@@ -70,9 +67,9 @@ export default function TransactionPage() {
           setIsLoading(false);
         }
       }
-    }
+    };
 
-    fetchEvent(); // <-- Correct way to fetch event data
+    fetchEvent();
     ScrollToTop();
   }, [id]);
 
@@ -82,16 +79,14 @@ export default function TransactionPage() {
     if (!/^\d{4}-\d{4}-\d{4}-\d{4}$/.test(form.cardNumber)) newErrors.cardNumber = "Invalid card number format.";
     if (!form.amount || parseFloat(form.amount) <= 0) newErrors.amount = "Amount must be greater than 0.";
     if (!form.expiry) {
-        newErrors.expiry = "Expiry date is required.";
+      newErrors.expiry = "Expiry date is required.";
     } else {
-        const [year, month] = form.expiry.split('-').map(Number);
-        const expiryDate = new Date(year, month - 1); // Month is 0-indexed
-        const currentDate = new Date();
-        currentDate.setDate(1); // Set to the first day of the current month
-        currentDate.setHours(0, 0, 0, 0); // Normalize to midnight for comparison
-        if (expiryDate <= currentDate) {
-            newErrors.expiry = "Expiry date must be in the future.";
-        }
+      const [year, month] = form.expiry.split('-').map(Number);
+      const expiryDate = new Date(year, month, 0, 23, 59, 59);
+      const currentDate = new Date();
+      if (expiryDate < currentDate) {
+        newErrors.expiry = "Card has expired. Please use a valid one.";
+      }
     }
     if (!/^\d{3,4}$/.test(form.cvc)) newErrors.cvc = "CVC must be 3 or 4 digits.";
     setErrors(newErrors);
@@ -105,73 +100,49 @@ export default function TransactionPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Use the validate function to check for errors
     if (validate()) {
       try {
-          const payload = {
-              event: id,
-              donor: user._id,
-              amount: Number(form.amount)
-          };
-
-          const response = await authAxios.post(
-              `/events/donate/${id}`,
-              payload,
-              { headers: { "Content-Type": "application/json" } }
-          );
-          console.log("Transaction response:", response.data);
-          alert("Transaction successful!");
-          navigate(`/event-details/${id}`);
+        const payload = {
+          event: id,
+          donor: user._id,
+          amount: Number(form.amount)
+        };
+        const response = await authAxios.post(`/events/donate/${id}`, payload, {
+          headers: { "Content-Type": "application/json" }
+        });
+        alert("Transaction successful!");
+        navigate(`/event-details/${id}`);
       } catch (e) {
-          console.error("Transaction error:", e?.response?.data || e);
-          alert("Transaction failed. Please check your input and try again.");
+        console.error("Transaction error:", e?.response?.data || e);
+        alert("Transaction failed. Please check your input and try again.");
       }
-
     }
-
-  
-
-    
-};
+  };
 
   return (
     <div className="w-screen min-h-screen flex flex-col overflow-x-hidden bg-white">
-      {/* Navbar */}
       <div className="z-50">
         <Navbar toggleSidebar={toggleSidebar} />
       </div>
-      <div
-        className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
-      >
+      <div className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
         <Sidebar />
       </div>
       <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
         <div className="w-full h-[4px] bg-[#891839]"></div>
-
-        {/* Main Content */}
         {isLoading ? (
           <div className="flex flex-1 justify-center items-center min-h-[calc(100vh-88px)]">
             <span className="text-[#891839] text-xl font-bold">Loading event...</span>
           </div>
         ) : (
           <div className="flex flex-col md:flex-row flex-grow w-full">
-            {/* Left: Event Details */}
-            <div
-              className="w-full md:w-1/2 flex items-center justify-center text-white"
-              style={{
-                backgroundImage: `linear-gradient(rgba(14, 66, 33, 0.85), rgba(14, 66, 33, 0.85)), url(${event && event.files && event.files[0] && event.files[0].serverFilename
-                  ? `/uploads/${event.files[0].serverFilename}`
-                  : "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1050&q=80"
-                  })`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-                backgroundAttachment: "fixed",
-                minHeight: "calc(100vh - 88px)"
-              }}
-            >
+            <div className="w-full md:w-1/2 flex items-center justify-center text-white" style={{
+              backgroundImage: `linear-gradient(rgba(14, 66, 33, 0.85), rgba(14, 66, 33, 0.85)), url(${event && event.files && event.files[0] && event.files[0].serverFilename ? `/uploads/${event.files[0].serverFilename}` : "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1050&q=80"})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              backgroundAttachment: "fixed",
+              minHeight: "calc(100vh - 88px)"
+            }}>
               <div className="p-8 max-w-md text-center">
                 <h1 className="text-4xl font-bold mb-4">{event.event_name}</h1>
                 <p className="text-xl mb-2">{new Date(event.event_date).toLocaleDateString('en-US', {
@@ -184,62 +155,53 @@ export default function TransactionPage() {
               </div>
             </div>
 
-            {/* Right: Transaction Form */}
-            <div
-              className="w-full md:w-1/2 flex justify-center items-center bg-[#891839] py-10"
-              style={{ minHeight: "calc(100vh - 88px)" }}
-            >
-              <form
-                onSubmit={handleSubmit}
-                className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md mx-4"
-              >
-                <h2 className="text-2xl font-bold text-center text-[#891839] mb-6">
-                  Transaction Details
-                </h2>
+            <div className="w-full md:w-1/2 flex justify-center items-center bg-[#891839] py-10" style={{ minHeight: "calc(100vh - 88px)" }}>
+              <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md mx-4">
+                <h2 className="text-2xl font-bold text-center text-[#891839] mb-6">Transaction Details</h2>
 
-                {["name", "cardNumber", "amount", "expiry", "cvc"].map((field, i) => (
+                {["name", "cardNumber", "amount", "cvc"].map((field, i) => (
                   <div key={i} className="mb-4">
                     <label className="block text-gray-700 capitalize mb-1">
-                      {field
-                        .replace("cardNumber", "Credit Card Number")
-                        .replace("cvc", "CVC / CVV")
-                        .replace("expiry", "Expiry Date")}
+                      {field.replace("cardNumber", "Credit Card Number").replace("cvc", "CVC / CVV")}
                     </label>
-                    {field === "expiry" ? (
-                      <input
-                        name="expiry"
-                        type="month"
-                        value={form.expiry}
-                        onChange={handleChange}
-                        className={`w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#891839] ${errors.expiry ? "border-red-500" : "border-gray-300"}`}
-                        min={new Date().toISOString().slice(0, 7)}
-                        style={{ appearance: 'auto', pointerEvents: 'auto' }}
-                        onKeyDown={(e) => e.preventDefault()} // Prevents text input
-                      />
-                    ) : (
-                      <input
-                        name={field}
-                        type={
-                          field === "amount"
-                            ? "number"
-                            : "text"
-                        }
-                        value={form[field]}
-                        onChange={handleChange}
-                        placeholder={field === "cardNumber" ? "XXXX-XXXX-XXXX-XXXX" : ""}
-                        className={`w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#891839] ${errors[field] ? "border-red-500" : "border-gray-300"}`}
-                      />
-                    )}
-                    {errors[field] && (
-                      <p className="text-red-500 text-sm">{errors[field]}</p>
-                    )}
+                    <input
+                      name={field}
+                      type={field === "amount" ? "number" : "text"}
+                      value={form[field]}
+                      onChange={handleChange}
+                      placeholder={field === "cardNumber" ? "XXXX-XXXX-XXXX-XXXX" : ""}
+                      className={`w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#891839] ${errors[field] ? "border-red-500" : "border-gray-300"}`}
+                    />
+                    {errors[field] && <p className="text-red-500 text-sm">{errors[field]}</p>}
                   </div>
                 ))}
 
-                <button
-                  type="submit"
-                  className="bg-[#891839] hover:bg-[#a43249] transition-colors text-white w-full py-2 rounded-lg font-bold"
-                >
+                <div className="mb-4">
+                  <label className="block text-gray-700 mb-1">
+                    Expiry Date <span className="text-sm text-gray-500">(MM/YYYY)</span>
+                  </label>
+                  <div className="flex items-center">
+                    <input
+                      name="expiry"
+                      type="month"
+                      value={form.expiry}
+                      onChange={handleChange}
+                      min={new Date().toISOString().slice(0, 7)}
+                      className={`flex-grow p-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-[#891839] ${errors.expiry ? "border-red-500" : "border-gray-300"}`}
+                      style={{
+                        appearance: 'auto',
+                        pointerEvents: 'auto',
+                        backgroundColor: 'white',
+                        color: 'black',
+                        WebkitAppearance: 'menulist-button'
+                      }}
+                    />
+                    <span className="bg-gray-200 px-3 py-[10px] rounded-r-lg text-gray-600">📅</span>
+                  </div>
+                  {errors.expiry && <p className="text-red-500 text-sm">{errors.expiry}</p>}
+                </div>
+
+                <button type="submit" className="bg-[#891839] hover:bg-[#a43249] transition-colors text-white w-full py-2 rounded-lg font-bold">
                   Submit
                 </button>
 
@@ -257,7 +219,6 @@ export default function TransactionPage() {
           </div>
         )}
       </div>
-      {/* Footer */}
       <Footer />
     </div>
   );
