@@ -322,9 +322,9 @@ export const jobPostingController = {
             const jobs = await JobPosting.find({ posted_by: _id })
                                          .sort({ date_posted: -1 }); // Sort by newest first, for example
 
-            if (jobs.length === 0) {
-                return res.status(404).json({ message: "No job postings found for this user." });
-            }
+            // if (jobs.length === 0) {
+            //     return res.status(404).json({ message: "No job postings found for this user." });
+            // }
 
             res.status(200).json(jobs);
         } catch (error) {
