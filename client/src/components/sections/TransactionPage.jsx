@@ -8,8 +8,7 @@ import Sidebar from "../Sidebar";
 import { useAuth } from "../../auth/AuthContext";
 import { ScrollToTop } from "../../utils/helper";
 import axios from "axios";
-import "jsuites/dist/jsuites.css";
-import "jsuites/jsuites.js";
+
 
 export default function TransactionPage() {
   const { id } = useParams();
@@ -84,10 +83,11 @@ export default function TransactionPage() {
         validRange: ["2024-01-01", "2025-12-31"],
         onchange: (el, val) => {
           setForm((prev) => ({ ...prev, expiry: val }));
-        },
+        }
       });
     }
   }, []);
+
 
   const validate = () => {
     const newErrors = {};
