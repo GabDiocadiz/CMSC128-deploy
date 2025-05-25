@@ -280,7 +280,7 @@ export default function ProfilePage() {
     };
 
     const handleCancel = () => {
-        setEditableData(originalData);
+        setEditableData({});
         setSelectedFile(null);
         if (fileInputRef.current) fileInputRef.current.value = "";
         setIsEditing(false);
@@ -504,7 +504,10 @@ export default function ProfilePage() {
                             {user._id === id ? (
                                 <>
                                     {isEditing ? (
+                                        <>
                                         <button className="save-button" onClick={handleSave}>Save</button>
+                                         <button className="cancel-button" onClick={handleCancel}>Cancel</button>
+                                        </>
                                     ) : (
                                         <button className="force-button" onClick={handleEditToggle}>Edit Profile</button>
                                     )}
