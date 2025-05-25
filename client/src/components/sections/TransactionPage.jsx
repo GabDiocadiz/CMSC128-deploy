@@ -77,15 +77,20 @@ export default function TransactionPage() {
 
   useEffect(() => {
     if (calendarRef.current) {
-      window.jSuites.calendar(calendarRef.current, {
-        type: "year-month-picker",
-        format: "YYYY-MM",
-        validRange: ["2024-01-01", "2025-12-31"],
-        onchange: (el, val) => {
-          setForm((prev) => ({ ...prev, expiry: val }));
-        }
-      });
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const minDate = `${year}-${month}-01`; // e.g. "2025-05-01"
+
+  window.jSuites.calendar(calendarRef.current, {
+    type: "year-month-picker",
+    format: "MM-YYYY", // <--- use MM-YYYY instead of YYYY-MM
+    validRange: [minDate],
+    onchange: (el, val) => {
+      setForm((prev) => ({ ...prev, expiry: val }));
     }
+  });
+}
   }, []);
 
 
@@ -194,14 +199,28 @@ export default function TransactionPage() {
                 ))}
 
                 <div className="mb-4">
-                  <label className="block text-gray-700 mb-1">Expiry Date (MM/YYYY)</label>
-                  <input
-                    ref={calendarRef}
-                    className="w-full p-2 border rounded-lg"
-                    defaultValue={form.expiry}
-                  />
-                  {errors.expiry && <p className="text-red-500 text-sm">{errors.expiry}</p>}
-                </div>
+                <label className="block text-gray-700 mb-1">Expiry Date (MM/YYYY)</label>
+                <input
+                  ref={calendarRef}
+                  className="w-full p-2 border rounded-lg"
+                  defaultValue={form.expiry}
+                  maxLength={7}
+                  placeholder="MM/YYYY"
+                  pattern="^(0[1-9]|1[0-2])\/\d{4}$"
+                  title="Enter a valid expiry date in MM/YYYY format"
+                  onInput={(e) => {
+                    let value = e.target.value.replace(/[^\d/]/g, '').slice(0, 7);
+
+                    // Auto insert "/" after MM
+                    if (value.length === 2 && !value.includes('/')) {
+                      value = value + '/';
+                    }
+
+                    e.target.value = value;
+                  }}
+                />
+                {errors.expiry && <p className="text-red-500 text-sm">{errors.expiry}</p>}
+              </div>
 
                 <button type="submit" className="bg-[#891839] hover:bg-[#a43249] transition-colors text-white w-full py-2 rounded-lg font-bold">
                   Submit
