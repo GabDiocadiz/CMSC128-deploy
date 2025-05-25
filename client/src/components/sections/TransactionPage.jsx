@@ -77,15 +77,20 @@ export default function TransactionPage() {
 
   useEffect(() => {
     if (calendarRef.current) {
-      window.jSuites.calendar(calendarRef.current, {
-        type: "year-month-picker",
-        format: "YYYY-MM",
-        validRange: ["2024-01-01", "2025-12-31"],
-        onchange: (el, val) => {
-          setForm((prev) => ({ ...prev, expiry: val }));
-        }
-      });
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const minDate = `${year}-${month}-01`; // e.g. "2025-05-01"
+
+  window.jSuites.calendar(calendarRef.current, {
+    type: "year-month-picker",
+    format: "MM-YYYY", // <--- use MM-YYYY instead of YYYY-MM
+    validRange: [minDate],
+    onchange: (el, val) => {
+      setForm((prev) => ({ ...prev, expiry: val }));
     }
+  });
+}
   }, []);
 
 
@@ -97,14 +102,20 @@ export default function TransactionPage() {
     if (!form.expiry) {
       newErrors.expiry = "Expiry date is required.";
     } else {
-      const expiryDate = new Date(form.expiry);
-      const currentDate = new Date();
-      currentDate.setDate(1);
-      currentDate.setHours(0, 0, 0, 0);
-      if (expiryDate < currentDate) {
-        newErrors.expiry = "Card has expired. Please use a valid one.";
+      const [month, year] = form.expiry.split("/").map((x) => parseInt(x));
+      if (!month || !year || month < 1 || month > 12) {
+        newErrors.expiry = "Invalid expiry date.";
+      } else {
+        const expiryDate = new Date(year, month - 1); // JS months are 0-based
+        const currentDate = new Date();
+        currentDate.setDate(1);
+        currentDate.setHours(0, 0, 0, 0);
+
+        if (expiryDate < currentDate) {
+          newErrors.expiry = "Card has expired. Please use a valid one.";
+        }
       }
-    }
+}
     if (!/^\d{3,4}$/.test(form.cvc)) newErrors.cvc = "CVC must be 3 or 4 digits.";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -197,21 +208,35 @@ export default function TransactionPage() {
                   </div>
                 ))}
 
-                <div className="flex space-x-4">
-                  <button
-                    type="button"
-                    onClick={handleCancel}
-                    className="bg-[#145C44] transition-colors text-white flex-1 py-2 rounded-lg font-bold cursor-pointer"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="bg-[#891839] transition-colors text-white flex-1 py-2 rounded-lg font-bold cursor-pointer"
-                  >
-                    Submit
-                  </button>
-                </div>
+                <div className="mb-4">
+                <label className="block text-gray-700 mb-1">Expiry Date (MM/YYYY)</label>
+               <input
+                  ref={calendarRef}
+                  name="expiry"
+                  className="w-full p-2 border rounded-lg"
+                  value={form.expiry}
+                  placeholder="MM/YYYY"
+                  pattern="^(0[1-9]|1[0-2])\/\d{4}$"
+                  title="Enter a valid expiry date in MM/YYYY format"
+                  onChange={(e) => setForm((prev) => ({ ...prev, expiry: e.target.value }))}
+                  onInput={(e) => {
+                    let value = e.target.value.replace(/[^\d/]/g, '').slice(0, 7);
+
+                    // Auto insert "/" after MM
+                    if (value.length === 2 && !value.includes('/')) {
+                      value += '/';
+                    }
+
+                    e.target.value = value;
+                    setForm((prev) => ({ ...prev, expiry: value }));
+                  }}
+                />
+                {errors.expiry && <p className="text-red-500 text-sm">{errors.expiry}</p>}
+              </div>
+
+                <button type="submit" className="bg-[#891839] hover:bg-[#a43249] transition-colors text-white w-full py-2 rounded-lg font-bold">
+                  Submit
+                </button>
 
                 <div className="text-center mt-4 text-gray-600">or pay with</div>
                 <div className="flex justify-center space-x-4 mt-4">
