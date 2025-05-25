@@ -485,7 +485,7 @@ export const Unauthorized_jobs_results_page = () => {
                             >
                               <img
                                 src={job?.files?.[0]?.serverFilename
-                                  ? `http://localhost:5050/uploads/${job.files[0].serverFilename}`
+                                  ? `/uploads/${job.files[0].serverFilename}`
                                   : job_placeholder}
                                 alt={job.job_title}
                                 className="w-full h-48 object-cover" />
