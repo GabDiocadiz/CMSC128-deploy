@@ -11,7 +11,7 @@ export default function Navbar({toggleSidebar,}) {
   const  [notification_modal, setnotification_modal] = useState(false)
   const  [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const { user, logout } = useAuth();
-
+  
   const handleLogout = async (e) => {
     await logout();
   }
@@ -44,7 +44,7 @@ export default function Navbar({toggleSidebar,}) {
           </div>
 
           {/* Right - Notification & Profile Icons */}
-          <div className="absolute top-2 right-4 flex items-center space-x-4">
+          {user?.user_type==="Admin" ? (<div/>):(<div className="absolute top-2 right-4 flex items-center space-x-4">
             {/* Notification Icon */}
             <div 
             onClick={()=>{
@@ -85,7 +85,7 @@ export default function Navbar({toggleSidebar,}) {
                 </div>
               )}
             </div>
-          </div>
+          </div>)}
         </div>
       </nav>
    </div>
