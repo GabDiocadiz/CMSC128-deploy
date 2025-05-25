@@ -8,8 +8,8 @@ import Sidebar from "../Sidebar";
 import { useAuth } from "../../auth/AuthContext";
 import { ScrollToTop } from "../../utils/helper";
 import axios from "axios";
-import { Calendar } from "jsuites/react";
 import "jsuites/dist/jsuites.css";
+import "jsuites/jsuites.js";
 
 export default function TransactionPage() {
   const { id } = useParams();
@@ -76,6 +76,19 @@ export default function TransactionPage() {
     ScrollToTop();
   }, [id]);
 
+  useEffect(() => {
+    if (calendarRef.current) {
+      window.jSuites.calendar(calendarRef.current, {
+        type: "year-month-picker",
+        format: "YYYY-MM",
+        validRange: ["2024-01-01", "2025-12-31"],
+        onchange: (el, val) => {
+          setForm((prev) => ({ ...prev, expiry: val }));
+        },
+      });
+    }
+  }, []);
+
   const validate = () => {
     const newErrors = {};
     if (!form.name.trim()) newErrors.name = "Name is required.";
@@ -121,10 +134,6 @@ export default function TransactionPage() {
         alert("Transaction failed. Please check your input and try again.");
       }
     }
-  };
-
-  const handleExpiryChange = (value) => {
-    setForm({ ...form, expiry: value });
   };
 
   return (
@@ -186,13 +195,10 @@ export default function TransactionPage() {
 
                 <div className="mb-4">
                   <label className="block text-gray-700 mb-1">Expiry Date (MM/YYYY)</label>
-                  <Calendar
+                  <input
                     ref={calendarRef}
-                    type={'year-month-picker'}
-                    value={form.expiry}
-                    onChange={handleExpiryChange}
-                    format={'YYYY-MM'}
-                    validRange={['2024-01-01', '2025-12-31']}
+                    className="w-full p-2 border rounded-lg"
+                    defaultValue={form.expiry}
                   />
                   {errors.expiry && <p className="text-red-500 text-sm">{errors.expiry}</p>}
                 </div>
