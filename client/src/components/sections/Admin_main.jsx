@@ -319,7 +319,7 @@ export const Admin_main = () => {
                     <>
                       <th className="px-4 py-3">Job Title</th>
                       <th className="px-4 py-3">Requested By</th>
-
+                      <th className="px-4 py-3">Actions</th>
                     </>
                   )}
                   {activeTab === "Users" && (
