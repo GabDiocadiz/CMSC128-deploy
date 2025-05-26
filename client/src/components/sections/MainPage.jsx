@@ -181,8 +181,8 @@ export default function MainPage() {
                     <div className="w-full min-w-screen min-h-screen pt-14">
                         <div
                             className={`w-full grid gap-0 ${events.length === 0 && announcements.length === 1
-                                    ? 'min-h-[400px] grid-cols-1'
-                                    : 'min-h-[600px] grid-cols-1 sm:grid-cols-3'
+                                ? 'min-h-[400px] grid-cols-1'
+                                : 'min-h-[600px] grid-cols-1 sm:grid-cols-3'
                                 }`}
                         >
                             {/* Events */}
@@ -191,8 +191,8 @@ export default function MainPage() {
                         bg-cover bg-center text-white flex flex-col justify-center items-start px-8 py-16 sm:px-16 sm:py-32 w-full transition-all duration-1000 relative group`}
                                     style={{
                                         backgroundImage: `url(${events[currentEventIndex]?.files?.[0]?.serverFilename
-                                                ? `https://cmsc128-deploy.onrender.com/uploads/${events[currentEventIndex].files[0].serverFilename}`
-                                                : event_placeholder
+                                            ? `https://cmsc128-deploy.onrender.com/uploads/${events[currentEventIndex].files[0].serverFilename}`
+                                            : event_placeholder
                                             })`,
                                     }}
                                 >
@@ -250,8 +250,8 @@ export default function MainPage() {
                             px-8 sm:px-10 py-8 sm:py-10 w-full transition-all duration-1000`}
                                             style={{
                                                 backgroundImage: `url(${announcements[0]?.files?.[0]?.serverFilename
-                                                        ? `http://localhost:5050/uploads/${announcements[0].files[0].serverFilename}`
-                                                        : notice1
+                                                    ? `https://cmsc128-deploy.onrender.com/uploads/${announcements[0].files[0].serverFilename}`
+                                                    : notice1
                                                     })`,
                                                 height: events.length === 0 ? '400px' : '600px',
                                             }}
@@ -280,8 +280,8 @@ export default function MainPage() {
                                         px-8 sm:px-10 py-8 sm:py-10 transition-all duration-1000`}
                                                         style={{
                                                             backgroundImage: `url(${announcements[oddNoticeIndex]?.files?.[0]?.serverFilename
-                                                                    ? `http://localhost:5050/uploads/${announcements[oddNoticeIndex].files[0].serverFilename}`
-                                                                    : notice1
+                                                                ? `https://cmsc128-deploy.onrender.com/uploads/${announcements[oddNoticeIndex].files[0].serverFilename}`
+                                                                : notice1
                                                                 })`
                                                         }}
                                                     >
@@ -312,8 +312,8 @@ export default function MainPage() {
                                         px-8 sm:px-10 py-8 sm:py-10 transition-all duration-1000`}
                                                         style={{
                                                             backgroundImage: `url(${announcements[evenNoticeIndex]?.files?.[0]?.serverFilename
-                                                                    ? `http://localhost:5050/uploads/${announcements[evenNoticeIndex].files[0].serverFilename}`
-                                                                    : notice2
+                                                                ? `https://cmsc128-deploy.onrender.com/uploads/${announcements[evenNoticeIndex].files[0].serverFilename}`
+                                                                : notice2
                                                                 })`
                                                         }}
                                                     >
