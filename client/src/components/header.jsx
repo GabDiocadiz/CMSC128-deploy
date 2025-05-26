@@ -67,7 +67,7 @@ export default function Navbar({toggleSidebar,}) {
                 className="w-10 h-10 bg-none flex items-center justify-center rounded-full cursor-pointer"
               >
                 {/* In case you may want to display the profile picture on the header */}
-                {/* <img src={`http://localhost:5050/uploads/${user.files[0].serverFilename}` || humanIcon} className="w-10 h-10" draggable="false" alt="Profile" /> */}
+                {/* <img src={`https://cmsc128-deploy.onrender.com/uploads/${user.files[0].serverFilename}` || humanIcon} className="w-10 h-10" draggable="false" alt="Profile" /> */}
                  <img src={humanIcon} className="w-10 h-10" draggable="false" alt="Profile" />
               </div>
 

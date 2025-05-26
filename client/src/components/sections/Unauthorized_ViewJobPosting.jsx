@@ -56,7 +56,7 @@ export default function GuestViewJobDetails() {
                     className="relative bg-cover bg-center text-white flex flex-col justify-center items-start px-8 sm:px-16 py-14 w-full h-[50vh]"
                     style={{
                         backgroundImage: `url(${job?.files?.[0]?.serverFilename
-                        ? `/uploads/${job.files[0].serverFilename}`
+                        ? `https://cmsc128-deploy.onrender.com/uploads/${job.files[0].serverFilename}`
                         : job_placeholder})`,
                     }}
                 >

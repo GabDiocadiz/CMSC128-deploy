@@ -117,7 +117,7 @@ export default function ViewEventDetails() {
                             style={{
                                 backgroundImage: `url(${
                                 event?.files?.[0]?.serverFilename
-                                    ? `/uploads/${event.files[0].serverFilename}`
+                                    ? `https://cmsc128-deploy.onrender.com/uploads/${event.files[0].serverFilename}`
                                     : default_eventbg
                                 })`,
                             }}
