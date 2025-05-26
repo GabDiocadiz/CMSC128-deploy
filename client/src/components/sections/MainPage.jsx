@@ -194,7 +194,7 @@ export default function MainPage() {
                         style={{
                             backgroundImage: `url(${
                             events[currentEventIndex]?.files?.[0]?.serverFilename
-                                ? `/uploads/${events[currentEventIndex].files[0].serverFilename}`
+                                ? `https://cmsc128-deploy.onrender.com/uploads/${events[currentEventIndex].files[0].serverFilename}`
                                 : event_placeholder
                             })`,
                         }}
