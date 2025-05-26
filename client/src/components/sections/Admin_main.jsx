@@ -303,7 +303,6 @@ export const Admin_main = () => {
                       <th className="px-4 py-3">ID</th>
                       <th className="px-4 py-3">Event Name</th>
                       <th className="px-4 py-3">Event Date</th>
-                      <th className="px-4 py-3">Created By</th>
 
                     </>
                   )}
