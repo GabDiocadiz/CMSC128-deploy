@@ -303,7 +303,6 @@ export const Admin_main = () => {
                       <th className="px-4 py-3">ID</th>
                       <th className="px-4 py-3">Event Name</th>
                       <th className="px-4 py-3">Event Date</th>
-                      <th className="px-4 py-3">Created By</th>
 
                     </>
                   )}
@@ -319,7 +318,7 @@ export const Admin_main = () => {
                     <>
                       <th className="px-4 py-3">Job Title</th>
                       <th className="px-4 py-3">Requested By</th>
-
+                      <th className="px-4 py-3">Actions</th>
                     </>
                   )}
                   {activeTab === "Users" && (
@@ -353,7 +352,7 @@ export const Admin_main = () => {
                         <td className="px-4 py-4 font-medium text-gray-900">{item.id}</td>
                         <td className="px-4 py-4 font-medium text-gray-900">{item.name}</td>
                         <td className="px-4 py-4">{item.date}</td>
-                        <td className="px-4 py-4">{item.createdBy}</td>
+       
 
                       </>
                     )}

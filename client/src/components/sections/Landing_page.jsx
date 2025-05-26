@@ -182,7 +182,7 @@ export const Landing_page = () => {
                         <img
                           src={
                             latestAnnouncements[0]?.files?.[0]?.serverFilename
-                              ? `http://localhost:5050/uploads/${latestAnnouncements[0].files[0].serverFilename}`
+                              ? `https://cmsc128-deploy.onrender.com/uploads/${latestAnnouncements[0].files[0].serverFilename}`
                               : announcementBg
                           }
                           alt={latestAnnouncements[0].title}
@@ -221,7 +221,7 @@ export const Landing_page = () => {
                             <img
                               src={
                                 a?.files[0]?.serverFilename
-                                  ? `http://localhost:5050/uploads/${a?.files[0]?.serverFilename}`
+                                  ? `https://cmsc128-deploy.onrender.com/uploads/${a?.files[0]?.serverFilename}`
                                   : announcementBg
                               }
                               alt={a.title}
@@ -261,7 +261,7 @@ export const Landing_page = () => {
                               <img
                                 src={
                                   a?.files[0]?.serverFilename
-                                    ? `http://localhost:5050/uploads/${a?.files[0]?.serverFilename}`
+                                    ? `https://cmsc128-deploy.onrender.com/uploads/${a?.files[0]?.serverFilename}`
                                     : announcementBg
                                 }
                                 alt={a.title}
@@ -296,7 +296,7 @@ export const Landing_page = () => {
                             <img
                               src={
                                 latestAnnouncements[0]?.files?.[0]?.serverFilename
-                                  ? `http://localhost:5050/uploads/${latestAnnouncements[0].files[0].serverFilename}`
+                                  ? `https://cmsc128-deploy.onrender.com/uploads/${latestAnnouncements[0].files[0].serverFilename}`
                                   : announcementBg
                               }
                               alt={latestAnnouncements[0].title}
@@ -330,7 +330,7 @@ export const Landing_page = () => {
                                 <img
                                   src={
                                     a?.files[0]?.serverFilename
-                                      ? `http://localhost:5050/uploads/${a?.files[0]?.serverFilename}`
+                                      ? `https://cmsc128-deploy.onrender.com/uploads/${a?.files[0]?.serverFilename}`
                                       : announcementBg
                                   }
                                   alt={a.title}
