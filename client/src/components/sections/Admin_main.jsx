@@ -352,7 +352,7 @@ export const Admin_main = () => {
                         <td className="px-4 py-4 font-medium text-gray-900">{item.id}</td>
                         <td className="px-4 py-4 font-medium text-gray-900">{item.name}</td>
                         <td className="px-4 py-4">{item.date}</td>
-                        <td className="px-4 py-4">{item.createdBy}</td>
+       
 
                       </>
                     )}
