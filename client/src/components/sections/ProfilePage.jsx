@@ -62,7 +62,7 @@ export default function ProfilePage() {
             let response, jobresponse;
             if (user.__t === 'Admin') {
                 try {
-                    response = await authAxios.get(`/admin/find-alumni/${id}`);
+                    response = await authAxios.get(`/admin/find-admin/${id}`);
 
                 } catch (error) {
                     response = await authAxios.get(`/alumni/find-alumni/${id}`);
