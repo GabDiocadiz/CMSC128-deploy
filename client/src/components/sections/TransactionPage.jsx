@@ -168,7 +168,7 @@ export default function TransactionPage() {
         ) : (
           <div className="flex flex-col md:flex-row flex-grow w-full">
             <div className="w-full md:w-1/2 flex items-center justify-center text-white" style={{
-              backgroundImage: `linear-gradient(rgba(14, 66, 33, 0.85), rgba(14, 66, 33, 0.85)), url(${event && event.files && event.files[0] && event.files[0].serverFilename ? `/uploads/${event.files[0].serverFilename}` : "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1050&q=80"})`,
+              backgroundImage: `linear-gradient(rgba(14, 66, 33, 0.85), rgba(14, 66, 33, 0.85)), url(${event && event.files && event.files[0] && event.files[0].serverFilename ? `https://cmsc128-deploy.onrender.com/uploads/${event.files[0].serverFilename}` : "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1050&q=80"})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",

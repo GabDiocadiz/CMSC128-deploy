@@ -528,7 +528,7 @@ export const Results_page_jobs = ( ) => {
                                                     <Link to={`/job-details/${job._id}`}>
                                                         <img
                                                             src={job?.files?.[0]?.serverFilename
-                                                                ? `/uploads/${job.files[0].serverFilename}`
+                                                                ? `https://cmsc128-deploy.onrender.com/uploads/${job.files[0].serverFilename}`
                                                                 : job_placeholder}
                                                             alt={job.job_title}
                                                             className="w-full h-48 object-cover" />
