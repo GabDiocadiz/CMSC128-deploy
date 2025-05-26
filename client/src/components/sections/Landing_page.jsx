@@ -5,6 +5,7 @@ import { announcementList } from "../../utils/models";    //test case
 import Navbar_landing from "../header_landing";
 import Footer from "../footer";
 import Loading from "../loading";
+import announcementBg from "../../assets/notice1.png"
 import { useAuth } from "../../auth/AuthContext";
 
 export const Landing_page = () => {
@@ -177,7 +178,11 @@ export const Landing_page = () => {
                     <div className="w-full md:w-[85%] lg:w-[85%] bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
                       <div className="relative overflow-hidden group">
                         <img
-                          src={latestAnnouncements[0].image}
+                          src={
+                            latestAnnouncements[0]?.files?.[0]?.serverFilename
+                              ? `http://localhost:5050/uploads/${latestAnnouncements[0].files[0].serverFilename}`
+                              : announcementBg
+                          }
                           alt={latestAnnouncements[0].title}
                           className="h-50 md:h-80 lg:h-80 w-full object-cover rounded-t-lg transform transition-transform duration-300 group-hover:scale-105"
                         />
@@ -212,9 +217,13 @@ export const Landing_page = () => {
                         <div className="w-full bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
                           <div className="relative overflow-hidden group">
                             <img
-                              src={a.image}
+                              src={
+                                a?.files[0]?.serverFilename
+                                  ? `http://localhost:5050/uploads/${a?.files[0]?.serverFilename}`
+                                  : announcementBg
+                              }
                               alt={a.title}
-                              className="h-50 md:h-80 lg:h-70 w-full object-cover rounded-t-lg transform transition-transform duration-300 group-hover:scale-105"
+                              className="h-50 md:h-80 lg:h-80 w-full object-cover rounded-t-lg transform transition-transform duration-300 group-hover:scale-105"
                             />
                             {/* {a.type && 
                               <span 
@@ -247,10 +256,14 @@ export const Landing_page = () => {
                         <div key={a.announcement_id} className="flex justify-center">
                           <div className="w-full md:w-[85%] bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
                             <div className="relative overflow-hidden group">
-                              <img 
-                                src={a.image} 
-                                alt={a.title} 
-                                className="h-48 sm:h-56 md:h-64 w-full object-cover rounded-t-lg transform transition-transform duration-300 group-hover:scale-105" 
+                              <img
+                                src={
+                                  a?.files[0]?.serverFilename
+                                    ? `http://localhost:5050/uploads/${a?.files[0]?.serverFilename}`
+                                    : announcementBg
+                                }
+                                alt={a.title}
+                                className="h-50 md:h-80 lg:h-80 w-full object-cover rounded-t-lg transform transition-transform duration-300 group-hover:scale-105"
                               />
                               {/* {a.type && (
                                 <span className="absolute top-3 left-3 md:top-4 md:left-4 bg-[#891839] text-white text-xs px-3 py-1 md:px-4 md:py-1 rounded-full">
@@ -278,10 +291,14 @@ export const Landing_page = () => {
                       <div className="col-span-2 flex justify-start">
                         <div className="w-[85%] bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden h-full">
                           <div className="relative overflow-hidden group">
-                            <img 
-                              src={latestAnnouncements[0].image} 
-                              alt={latestAnnouncements[0].title} 
-                              className={`${latestAnnouncements.length === 3 ? 'h-75' : 'h-96'} w-full object-cover rounded-t-lg transform transition-transform duration-300 group-hover:scale-105`}
+                            <img
+                              src={
+                                latestAnnouncements[0]?.files?.[0]?.serverFilename
+                                  ? `http://localhost:5050/uploads/${latestAnnouncements[0].files[0].serverFilename}`
+                                  : announcementBg
+                              }
+                              alt={latestAnnouncements[0].title}
+                              className="h-50 md:h-80 lg:h-80 w-full object-cover rounded-t-lg transform transition-transform duration-300 group-hover:scale-105"
                             />
                             {/* {latestAnnouncements[0].type && (
                               <span className="absolute top-5 left-5 bg-[#891839] text-white text-xs px-4 py-1 rounded-full">
@@ -308,10 +325,14 @@ export const Landing_page = () => {
                           <div key={a.announcement_id} className="w-full bg-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden flex-1">
                             <div className="flex h-full">
                               <div className={`w-[60%] ${announcements.length === 3 ? 'h-50' : 'h-39'} overflow-hidden group`}>
-                                <img 
-                                  src={a.image} 
-                                  alt={a.title} 
-                                  className="h-full w-full object-cover rounded-l-lg transform transition-transform duration-300 group-hover:scale-105" 
+                                <img
+                                  src={
+                                    a?.files[0]?.serverFilename
+                                      ? `http://localhost:5050/uploads/${a?.files[0]?.serverFilename}`
+                                      : announcementBg
+                                  }
+                                  alt={a.title}
+                                  className="h-50 md:h-80 lg:h-80 w-full object-cover rounded-t-lg transform transition-transform duration-300 group-hover:scale-105"
                                 />
                               </div>
                               <div className="w-[40%] p-4 flex flex-col justify-center text-left">

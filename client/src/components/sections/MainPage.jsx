@@ -255,7 +255,11 @@ export default function MainPage() {
                             ${events.length === 0 ? 'items-start text-left' : 'items-end text-right'} 
                             px-8 sm:px-10 py-8 sm:py-10 w-full transition-all duration-1000`}
                             style={{
-                                backgroundImage: `url(${announcements[0]?.image || notice1})`,
+                                backgroundImage: `url(${
+                                    announcements[0]?.files?.[0]?.serverFilename
+                                    ? `http://localhost:5050/uploads/${announcements[0].files[0].serverFilename}`
+                                    : notice1
+                                })`,
                                 height: events.length === 0 ? '400px' : '600px',
                             }}
                         >
@@ -279,7 +283,11 @@ export default function MainPage() {
                                         ${events.length === 0 ? 'items-start text-left' : 'items-end text-right'} 
                                         px-8 sm:px-10 py-8 sm:py-10 transition-all duration-1000`}
                                     style={{
-                                        backgroundImage: `url(${announcements[oddNoticeIndex]?.image || notice1})`
+                                        backgroundImage: `url(${
+                                            announcements[oddNoticeIndex]?.files?.[0]?.serverFilename
+                                            ? `http://localhost:5050/uploads/${announcements[oddNoticeIndex].files[0].serverFilename}`
+                                            : notice1
+                                        })`
                                     }}
                                 >
                                 <div>
@@ -305,7 +313,11 @@ export default function MainPage() {
                                         ${events.length === 0 ? 'items-start text-left' : 'items-end text-right'} 
                                         px-8 sm:px-10 py-8 sm:py-10 transition-all duration-1000`}
                                     style={{
-                                        backgroundImage: `url(${announcements[evenNoticeIndex]?.image || notice2})`
+                                        backgroundImage: `url(${
+                                            announcements[evenNoticeIndex]?.files?.[0]?.serverFilename
+                                            ? `http://localhost:5050/uploads/${announcements[evenNoticeIndex].files[0].serverFilename}`
+                                            : notice2
+                                        })`
                                     }}
                                 >
                                 <div>
