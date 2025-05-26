@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import uplbLogo from "../assets/uplblogo.png";
 import notifications from "../assets/notifications.png";
 import humanIcon from "../assets/Human Icon.png";
+import artemis from "../../ARTEMIS.png"
 import { useAuth } from "../auth/AuthContext";
 import axios from "axios";
 
@@ -49,7 +50,7 @@ export default function Navbar_admin({toggleSidebar}) {
               <Notification setVisible={setnotification_modal}></Notification>
             </div>
           )}
-    <nav className="bg-white w-full py-1 fixed top-0 left-0 z-60">
+    <nav className="bg-white w-full py-2 fixed top-0 left-0 z-60 shadow-md">
       {/* Flexbox for proper alignment */}
       <div className="container flex justify-between items-center py-1 px-4">
         {/* Left - Logo */}
@@ -64,8 +65,14 @@ export default function Navbar_admin({toggleSidebar}) {
               
           </a>
             {/* Left - Logo */}
-          <Link to="/admin_main">
-            <img src={uplbLogo} className="bg-none w-40 h-auto" alt="UPLB Logo" />
+          <Link to={`/admin_main`} className="flex items-center space-x-2">
+            <img 
+              src={artemis} 
+              alt="ARTEMIS Logo" 
+              className="w-10 h-10 rounded-full object-cover" 
+              draggable="false"
+            />
+            <h2 className="text-2xl font-bold text-[#891839]">ARTEMIS</h2>
           </Link>
         </div>
         {/* Modal for Sending An Announcement */}

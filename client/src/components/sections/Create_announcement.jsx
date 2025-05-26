@@ -129,7 +129,7 @@ export const CreateAnnouncement = () => {
           onSubmit={handleSubmit}
           className="bg-gray-100 px-6 sm:px-10 lg:px-14 py-12 flex flex-col items-center gap-8 min-h-screen pr-20 mt-10"
         >
-          <div className="w-full max-w-3xl">
+          <div className="w-full max-w-3xl mt-10 mb-15">
             <div
               className="flex items-center gap-2 cursor-pointer text-[#145C44] mb-6"
               onClick={() => navigate("/admin_main")}
@@ -251,14 +251,14 @@ export const CreateAnnouncement = () => {
                 <button
                   type="button"
                   onClick={() => navigate("/admin_main")}
-                  className="bg-[#891839] text-white px-6 py-2 rounded-md font-medium hover:bg-[#a1284f] transition"
+                  className="bg-[#891839] text-white px-6 py-2 rounded-md font-medium hover:bg-[#a1284f] transition cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-[#145C44] text-white px-6 py-2 rounded-md font-medium hover:bg-[#1e7c56] transition disabled:opacity-50"
+                  className="bg-[#145C44] text-white px-6 py-2 rounded-md font-medium hover:bg-[#1e7c56] transition disabled:opacity-50 cursor-pointer"
                 >
                   {isSubmitting ? "Submitting..." : "Submit"}
                 </button>

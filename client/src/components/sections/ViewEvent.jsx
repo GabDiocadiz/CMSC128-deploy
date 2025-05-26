@@ -139,12 +139,13 @@ export default function ViewEventDetails() {
                                     {event.event_name}
                                 </h2>
                                <div className="flex items-center gap-4 lg:pr-25">
-                                    <LuHandHeart 
-                                        className="text-4xl text-[#891839] cursor-pointer hover:scale-110 transition-transform duration-300"
-                                        onClick={handleDonate}
-                                        title="Donate"
-                                    />
-
+                                    {event.donatable && (
+                                        <LuHandHeart 
+                                            className="text-4xl text-[#891839] cursor-pointer hover:scale-110 transition-transform duration-300"
+                                            onClick={handleDonate}
+                                            title="Donate"
+                                        />
+                                    )}
                                     {isAttending ? (
                                         <FaUserCheck 
                                             className="text-4xl text-[#891839] cursor-default"

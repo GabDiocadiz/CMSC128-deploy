@@ -261,7 +261,7 @@ export const Admin_main = () => {
         <Sidebar />
       </div>
       <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
-        <div className="p-6 bg-white min-h-screen">
+        <div className="p-6 bg-white min-h-screen pt-8">
           <div className="text-2xl font-semibold mb-4">List of {activeTab}</div>
 
           {/* Tabs */}

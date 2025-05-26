@@ -6,6 +6,7 @@ import { useAuth } from "../auth/AuthContext";
 import uplbLogo from "../assets/uplblogo.png";
 import notifications from "../assets/notifications.png";
 import humanIcon from "../assets/Human Icon.png";
+import artemis from "../../ARTEMIS.png"
 import { toast } from "react-toastify";
 
 export default function Navbar({toggleSidebar,}) {
@@ -29,7 +30,7 @@ export default function Navbar({toggleSidebar,}) {
       )}
        <nav className="bg-white w-full py-1 fixed top-0 left-0 z-60 shadow-md">
         {/* Flexbox for proper alignment */}
-        <div className="container flex justify-between items-center py-1 px-4">
+        <div className="container flex justify-between items-center py-2 px-4">
           {/* Left - Logo */}
           <div className="flex">
             <a
@@ -41,14 +42,20 @@ export default function Navbar({toggleSidebar,}) {
               </svg>
               
             </a>
-              {/* Left - Logo */}
-            <Link to={`/home`}>
-              <img src={uplbLogo} className="bg-none w-40 h-auto" alt="UPLB Logo" draggable="false" />
+            {/* Left - Logo */}
+            <Link to={`/home`} className="flex items-center space-x-2">
+              <img 
+                src={artemis} 
+                alt="ARTEMIS Logo" 
+                className="w-10 h-10 rounded-full object-cover" 
+                draggable="false"
+              />
+              <h2 className="text-2xl font-bold text-[#891839]">ARTEMIS</h2>
             </Link>
           </div>
 
           {/* Right - Notification & Profile Icons */}
-          {user?.user_type==="Admin" ? (<div/>):(<div className="absolute top-2 right-4 flex items-center space-x-4">
+          {user?.user_type==="Admin" ? (<div/>):(<div className="absolute inset-y-0 right-4 flex items-center space-x-4">
             {/* Notification Icon */}
             <div 
             onClick={()=>{

@@ -179,7 +179,7 @@ export default function MainPage() {
                     <div className="w-16 h-16 border-4 border-[#145C44] border-t-transparent rounded-full animate-spin"></div>
                 </div>
             ) : (
-                <div className="w-full min-w-screen min-h-screen pt-12">
+                <div className="w-full min-w-screen min-h-screen pt-14">
                     <div
                         className={`w-full grid gap-0 ${
                             events.length === 0 && announcements.length === 1
@@ -199,7 +199,7 @@ export default function MainPage() {
                             })`,
                         }}
                     >
-                        <div className="absolute inset-0 bg-black opacity-50 z-0"></div>
+                        <div className="absolute inset-0 bg-black opacity-40 z-0"></div>
                 
                         <div className="relative z-10 group/title">
                             <Link
@@ -255,19 +255,26 @@ export default function MainPage() {
                             ${events.length === 0 ? 'items-start text-left' : 'items-end text-right'} 
                             px-8 sm:px-10 py-8 sm:py-10 w-full transition-all duration-1000`}
                             style={{
-                                backgroundImage: `url(${announcements[0]?.image || notice1})`,
+                                backgroundImage: `url(${
+                                    announcements[0]?.files?.[0]?.serverFilename
+                                    ? `http://localhost:5050/uploads/${announcements[0].files[0].serverFilename}`
+                                    : notice1
+                                })`,
                                 height: events.length === 0 ? '400px' : '600px',
                             }}
                         >
-                            <div>
-                            <Link
-                                to={`/announcement-details/${announcements[0]._id}`}
-                                className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4 hover:!underline line-clamp-3"
-                            >
-                                {announcements[0].title}
-                            </Link>
+                            <div className="absolute inset-0 bg-black opacity-40 z-0"></div>
+                            <div className="relative z-10 group/title">
+                                <div>
+                                <Link
+                                    to={`/announcement-details/${announcements[0]._id}`}
+                                    className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4 hover:!underline line-clamp-3"
+                                >
+                                    {announcements[0].title}
+                                </Link>
+                                </div>
+                                <p className="text-sm sm:text-base max-w-md line-clamp-2">{announcements[0].content}</p>
                             </div>
-                            <p className="text-sm sm:text-base max-w-md line-clamp-2">{announcements[0].content}</p>
                         </div>
                         ) : (
                         <>
@@ -279,20 +286,27 @@ export default function MainPage() {
                                         ${events.length === 0 ? 'items-start text-left' : 'items-end text-right'} 
                                         px-8 sm:px-10 py-8 sm:py-10 transition-all duration-1000`}
                                     style={{
-                                        backgroundImage: `url(${announcements[oddNoticeIndex]?.image || notice1})`
+                                        backgroundImage: `url(${
+                                            announcements[oddNoticeIndex]?.files?.[0]?.serverFilename
+                                            ? `http://localhost:5050/uploads/${announcements[oddNoticeIndex].files[0].serverFilename}`
+                                            : notice1
+                                        })`
                                     }}
                                 >
-                                <div>
-                                    <Link
-                                        to={`/announcement-details/${announcements[oddNoticeIndex]._id}`}
-                                        className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4 hover:!underline line-clamp-1 pr-5"
-                                    >
-                                    {announcements[oddNoticeIndex].title}
-                                    </Link>
-                                </div>
-                                <p className="text-sm sm:text-base max-w-md line-clamp-2 pr-5">
-                                    {announcements[oddNoticeIndex].content}
-                                </p>
+                                    <div className="absolute inset-0 bg-black opacity-40 z-0"></div>
+                                    <div className="relative z-10 group/title">
+                                        <div>
+                                            <Link
+                                                to={`/announcement-details/${announcements[oddNoticeIndex]._id}`}
+                                                className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4 hover:!underline line-clamp-1 pr-5"
+                                            >
+                                            {announcements[oddNoticeIndex].title}
+                                            </Link>
+                                        </div>
+                                        <p className="text-sm sm:text-base max-w-md line-clamp-2 pr-5">
+                                            {announcements[oddNoticeIndex].content}
+                                        </p>
+                                    </div>
                                 </div>
                             )}
                             </div>
@@ -305,20 +319,27 @@ export default function MainPage() {
                                         ${events.length === 0 ? 'items-start text-left' : 'items-end text-right'} 
                                         px-8 sm:px-10 py-8 sm:py-10 transition-all duration-1000`}
                                     style={{
-                                        backgroundImage: `url(${announcements[evenNoticeIndex]?.image || notice2})`
+                                        backgroundImage: `url(${
+                                            announcements[evenNoticeIndex]?.files?.[0]?.serverFilename
+                                            ? `http://localhost:5050/uploads/${announcements[evenNoticeIndex].files[0].serverFilename}`
+                                            : notice2
+                                        })`
                                     }}
                                 >
                                 <div>
-                                    <Link
-                                        to={`/announcement-details/${announcements[evenNoticeIndex]._id}`}
-                                        className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4 hover:!underline line-clamp-2 pr-5"
-                                    >
-                                    {announcements[evenNoticeIndex].title}
-                                    </Link>
-                                </div>
-                                <p className="text-sm sm:text-base max-w-md line-clamp-2 pr-5">
-                                    {announcements[evenNoticeIndex].content}
-                                </p>
+                                    <div className="absolute inset-0 bg-black opacity-30 z-0"></div>
+                                    <div className="relative z-10 group/title">
+                                        <Link
+                                            to={`/announcement-details/${announcements[evenNoticeIndex]._id}`}
+                                            className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4 hover:!underline line-clamp-2 pr-5"
+                                        >
+                                        {announcements[evenNoticeIndex].title}
+                                        </Link>
+                                        <p className="text-sm sm:text-base max-w-md text-white line-clamp-2 pr-5">
+                                            {announcements[evenNoticeIndex].content}
+                                        </p>
+                                    </div>
+                                    </div>
                                 </div>
                             )}
                             </div>

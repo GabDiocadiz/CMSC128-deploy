@@ -125,7 +125,7 @@ export default function ProfilePage() {
 
   
 
-                                        // Effect to handle image preview updates
+    // Effect to handle image preview updates
     useEffect(() => {
         if (selectedFile) {
             // Create a local URL for immediate preview of the newly selected file
@@ -312,7 +312,7 @@ export default function ProfilePage() {
     }
 
     return (
-        <div className="fixed inset-0 overflow-y-auto bg-[#891839]">
+        <div className="fixed inset-0 overflow-y-auto bg-[#891839] mt-3">
             <div className="fixed top-0 w-full z-50">
                 <Navbar toggleSidebar={toggleSidebar} />
             </div>
@@ -427,7 +427,7 @@ export default function ProfilePage() {
                       }))
                     }
                     value={(editableData.skills || []).map(skill => ({ label: skill, value: skill }))}
-                    className="mb-4"
+                    className="mb-4 custom-scrollbar"
                     classNamePrefix="select"
                     onCreateOption={() => {}}
                     styles={{
