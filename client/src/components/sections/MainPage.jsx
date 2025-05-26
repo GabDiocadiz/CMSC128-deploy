@@ -199,7 +199,7 @@ export default function MainPage() {
                             })`,
                         }}
                     >
-                        <div className="absolute inset-0 bg-black opacity-50 z-0"></div>
+                        <div className="absolute inset-0 bg-black opacity-40 z-0"></div>
                 
                         <div className="relative z-10 group/title">
                             <Link
@@ -263,15 +263,18 @@ export default function MainPage() {
                                 height: events.length === 0 ? '400px' : '600px',
                             }}
                         >
-                            <div>
-                            <Link
-                                to={`/announcement-details/${announcements[0]._id}`}
-                                className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4 hover:!underline line-clamp-3"
-                            >
-                                {announcements[0].title}
-                            </Link>
+                            <div className="absolute inset-0 bg-black opacity-40 z-0"></div>
+                            <div className="relative z-10 group/title">
+                                <div>
+                                <Link
+                                    to={`/announcement-details/${announcements[0]._id}`}
+                                    className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4 hover:!underline line-clamp-3"
+                                >
+                                    {announcements[0].title}
+                                </Link>
+                                </div>
+                                <p className="text-sm sm:text-base max-w-md line-clamp-2">{announcements[0].content}</p>
                             </div>
-                            <p className="text-sm sm:text-base max-w-md line-clamp-2">{announcements[0].content}</p>
                         </div>
                         ) : (
                         <>
@@ -290,17 +293,20 @@ export default function MainPage() {
                                         })`
                                     }}
                                 >
-                                <div>
-                                    <Link
-                                        to={`/announcement-details/${announcements[oddNoticeIndex]._id}`}
-                                        className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4 hover:!underline line-clamp-1 pr-5"
-                                    >
-                                    {announcements[oddNoticeIndex].title}
-                                    </Link>
-                                </div>
-                                <p className="text-sm sm:text-base max-w-md line-clamp-2 pr-5">
-                                    {announcements[oddNoticeIndex].content}
-                                </p>
+                                    <div className="absolute inset-0 bg-black opacity-40 z-0"></div>
+                                    <div className="relative z-10 group/title">
+                                        <div>
+                                            <Link
+                                                to={`/announcement-details/${announcements[oddNoticeIndex]._id}`}
+                                                className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4 hover:!underline line-clamp-1 pr-5"
+                                            >
+                                            {announcements[oddNoticeIndex].title}
+                                            </Link>
+                                        </div>
+                                        <p className="text-sm sm:text-base max-w-md line-clamp-2 pr-5">
+                                            {announcements[oddNoticeIndex].content}
+                                        </p>
+                                    </div>
                                 </div>
                             )}
                             </div>
@@ -321,16 +327,19 @@ export default function MainPage() {
                                     }}
                                 >
                                 <div>
-                                    <Link
-                                        to={`/announcement-details/${announcements[evenNoticeIndex]._id}`}
-                                        className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4 hover:!underline line-clamp-2 pr-5"
-                                    >
-                                    {announcements[evenNoticeIndex].title}
-                                    </Link>
-                                </div>
-                                <p className="text-sm sm:text-base max-w-md line-clamp-2 pr-5">
-                                    {announcements[evenNoticeIndex].content}
-                                </p>
+                                    <div className="absolute inset-0 bg-black opacity-30 z-0"></div>
+                                    <div className="relative z-10 group/title">
+                                        <Link
+                                            to={`/announcement-details/${announcements[evenNoticeIndex]._id}`}
+                                            className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4 hover:!underline line-clamp-2 pr-5"
+                                        >
+                                        {announcements[evenNoticeIndex].title}
+                                        </Link>
+                                        <p className="text-sm sm:text-base max-w-md text-white line-clamp-2 pr-5">
+                                            {announcements[evenNoticeIndex].content}
+                                        </p>
+                                    </div>
+                                    </div>
                                 </div>
                             )}
                             </div>
