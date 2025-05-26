@@ -191,7 +191,7 @@ export default function MainPage() {
                         bg-cover bg-center text-white flex flex-col justify-center items-start px-8 py-16 sm:px-16 sm:py-32 w-full transition-all duration-1000 relative group`}
                                     style={{
                                         backgroundImage: `url(${events[currentEventIndex]?.files?.[0]?.serverFilename
-                                                ? `https://cmsc128-deploy.onrender.com/uploads/${events[currentEventIndex].files[0].serverFilename}`
+                                                ? `http://localhost:5050/uploads/${events[currentEventIndex].files[0].serverFilename}`
                                                 : event_placeholder
                                             })`,
                                     }}
