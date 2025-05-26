@@ -97,12 +97,11 @@ export default function ViewEventDetails() {
     return (
         <>
             <div className="fixed top-0 w-full z-50">
-                <Navbar toggleSidebar={toggleSidebar}/>
+                <Navbar toggleSidebar={toggleSidebar} />
             </div>
             <div
-                className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${
-                sidebarOpen ? "translate-x-0" : "-translate-x-full"
-                }`}
+                className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
+                    }`}
             >
                 <Sidebar />
             </div>
@@ -115,14 +114,13 @@ export default function ViewEventDetails() {
                         <div
                             className="bg-cover bg-center text-white flex flex-col justify-center items-start px-8 sm:px-16 py-14 w-full h-[25vh]"
                             style={{
-                                backgroundImage: `url(${
-                                event?.files?.[0]?.serverFilename
-                                    ? `https://cmsc128-deploy.onrender.com/uploads/${event.files[0].serverFilename}`
-                                    : default_eventbg
-                                })`,
+                                backgroundImage: `url(${event?.files?.[0]?.serverFilename
+                                        ? `https://cmsc128-deploy.onrender.com/uploads/${event.files[0].serverFilename}`
+                                        : default_eventbg
+                                    })`,
                             }}
                         >
-                        
+
                         </div>
 
                         <main className="flex-grow bg-gray-100 px-20 py-15">
@@ -131,27 +129,28 @@ export default function ViewEventDetails() {
                                 onClick={() => navigate(-1)}
                             >
                                 <IoIosArrowBack className="text-sm" />
-                                <span className="text-sm font-light">Back</span>
+                                <span className="text-md font-light">Back</span>
                             </div>
 
                             <div className="flex justify-between items-center mb-2">
                                 <h2 className="text-4xl sm:text-5xl font-bold text-left text-[#891839] lg:pl-18">
                                     {event.event_name}
                                 </h2>
-                               <div className="flex items-center gap-4 lg:pr-25">
-                                    <LuHandHeart 
-                                        className="text-4xl text-[#891839] cursor-pointer hover:scale-110 transition-transform duration-300"
-                                        onClick={handleDonate}
-                                        title="Donate"
-                                    />
-
+                                <div className="flex items-center gap-4 lg:pr-25">
+                                    {event.donatable && (
+                                        <LuHandHeart
+                                            className="text-4xl text-[#891839] cursor-pointer hover:scale-110 transition-transform duration-300"
+                                            onClick={handleDonate}
+                                            title="Donate"
+                                        />
+                                    )}
                                     {isAttending ? (
-                                        <FaUserCheck 
+                                        <FaUserCheck
                                             className="text-4xl text-[#891839] cursor-default"
                                             title="You are already attending this event"
                                         />
                                     ) : (
-                                        <FaUserPlus  
+                                        <FaUserPlus
                                             className="text-4xl text-[#891839] cursor-pointer hover:scale-110 transition-transform duration-300"
                                             onClick={handleRSVP}
                                             title="Click to RSVP"
@@ -159,7 +158,7 @@ export default function ViewEventDetails() {
                                     )}
                                 </div>
                             </div>
-                            
+
                             <div className="px-1 lg:pr-30 lg:pl-18">
                                 <div className="flex items-center gap-2 text-md sm:text-md text-gray-900 text-left py-2">
                                     <CiLocationOn className="text-xl sm:text-2xl" />

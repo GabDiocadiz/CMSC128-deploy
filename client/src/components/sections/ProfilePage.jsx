@@ -125,6 +125,7 @@ export default function ProfilePage() {
 
 
     // Effect to handle image preview updates
+    // Effect to handle image preview updates
     useEffect(() => {
         if (selectedFile) {
             // Create a local URL for immediate preview of the newly selected file
@@ -311,7 +312,7 @@ export default function ProfilePage() {
     }
 
     return (
-        <div className="fixed inset-0 overflow-y-auto bg-[#891839]">
+        <div className="fixed inset-0 overflow-y-auto bg-[#891839] mt-3">
             <div className="fixed top-0 w-full z-50">
                 <Navbar toggleSidebar={toggleSidebar} />
             </div>
@@ -650,10 +651,20 @@ function JobList({ jobs }) {
     return (
         <ul className="space-y-4">
             {jobs.map((job) => (
-                <li key={job.job_id} className="border-2 border-[#891839] rounded-2xl p-6 hover:bg-[#891839] hover:text-white transition">
-                    <h4 className="font-bold text-2xl mb-1">{job.job_title}</h4>
-                    <p className="text-md">{job.company} - {job.location}</p>
-                    <p className="text-sm text-gray-400">Posted on {new Date(job.date_posted).toLocaleDateString()}</p>
+                <li
+                    key={job.job_id}
+                    className="border-2 border-[#891839] rounded-2xl hover:bg-[#891839] transition"
+                >
+                    <Link
+                        to={`/job-details/${job._id}`}
+                        className="block p-6 no-underline text-[#891839] hover:text-white "
+                    >
+                        <h4 className="font-bold text-2xl mb-1">{job.job_title}</h4>
+                        <p className="text-md">{job.company} - {job.location}</p>
+                        <p className="text-sm text-gray-400">
+                            Posted on {new Date(job.date_posted).toLocaleDateString()}
+                        </p>
+                    </Link>
                 </li>
             ))}
         </ul>

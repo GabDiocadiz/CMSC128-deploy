@@ -6,7 +6,6 @@ const DonationSchema = new Schema({
     donor: { type: Schema.Types.ObjectId, ref: 'Alumni', required: true },
     amount: { type: Number, min: 0, required: true },
     donation_date: { type: Date, default: Date.now },
-    purpose: { type: String }
 });
 
 const Donation = mongoose.model('Donation', DonationSchema);

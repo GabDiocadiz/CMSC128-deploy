@@ -7,6 +7,7 @@ import Navbar from "../header";
 import Footer from "../footer";
 import Loading from "../loading";
 import axios from "axios";
+import announcementDefault from "../../assets/notice1.png"
 import { useAuth } from "../../auth/AuthContext";
 
 export default function ViewAnnouncementDetails() {
@@ -25,13 +26,13 @@ export default function ViewAnnouncementDetails() {
                 console.log(id)
                 const response = await authAxios.get(`/announcement/read-announcements/${id}`);
                 const fetchedData = response.data;
-                
+
                 if (fetchedData) {
                     // Assuming your backend sends files as an array of objects,
                     // and the first one is the main image.
-                    const imageUrl = fetchedData.files && fetchedData.files.length > 0
+                    const imageUrl = fetchedData?.files && fetchedData.files.length > 0
                         ? `https://cmsc128-deploy.onrender.com/uploads/${fetchedData.files[0].serverFilename}`
-                        : ''; // Fallback if no image
+                        : announcementDefault; // Fallback if no image
 
                     if (imageUrl) {
                         const image = new Image();
@@ -111,13 +112,13 @@ export default function ViewAnnouncementDetails() {
                 >
                 </div>
 
-                <main className="flex-grow bg-gray-100 px-20 py-15">
+                <main className="flex-grow bg-gray-100 px-20 py-15 pb-40">
                     <div
                         className="flex items-center gap-2 cursor-pointer text-gray-900 hover:text-gray-800 mb-8"
                         onClick={() => navigate(-1)}
                     >
                         <IoIosArrowBack className="text-sm" />
-                        <span className="text-sm font-light">Back</span>
+                        <span className="text-md font-light">Back</span>
                     </div>
 
                     <h2 className="text-4xl sm:text-5xl font-bold text-left text-[#891839] mb-2">

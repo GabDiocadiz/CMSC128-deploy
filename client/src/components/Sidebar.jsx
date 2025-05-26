@@ -47,7 +47,7 @@ export default function Sidebar(currentPage){
             <div class="p-4 mb-2">
                 
         </div>
-            <nav class="flex min-w-[240px] flex-col p-2 pt-3 pr-5 font-sans text-base font-normal text-blue-gray-700 cursor-pointer">
+            <nav class="flex min-w-[240px] flex-col p-2 pt-6 pr-5 font-sans text-base font-normal text-blue-gray-700 cursor-pointer">
                 <div 
                 onClick={()=>{
                     navigate('/home')

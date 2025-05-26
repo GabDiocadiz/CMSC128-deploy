@@ -336,4 +336,28 @@ export const jobPostingController = {
             res.status(500).json({ message: "Internal server error while fetching jobs by user." });
         }
     },
+
+    async getJobCountPostedBy(req, res) {
+        try {
+            const { _id } = req.params; 
+            
+            if (!_id) {
+                return res.status(400).json({ message: "User ID is required." });
+            }
+
+            const jobs = await JobPosting.find({ posted_by: _id })
+                                         .sort({ date_posted: -1 }); // Sort by newest first, for example
+
+            // Count the number of job postings
+            const jobCount = jobs.length;
+            return res.status(200).json({ job_count: jobCount });
+        } catch (error) {
+            console.error("Error fetching jobs by posted_by user:", error);
+            // Handle CastError if the userId is an invalid ObjectId format
+            if (error.name === 'CastError' && error.kind === 'ObjectId') {
+                return res.status(400).json({ message: "Invalid User ID format." });
+            }
+            res.status(500).json({ message: "Internal server error while fetching jobs by user." });
+        }
+    },
 }

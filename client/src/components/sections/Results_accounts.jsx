@@ -296,7 +296,7 @@ export const Results_page_accounts = () => {
             No accounts found.
           </div> 
         ) : (
-          <div className="pt-1">
+          <div className="pt-3">
             <div
               className="relative bg-cover bg-center text-white flex flex-col justify-center items-start px-8 sm:px-16 py-14 pt-15 w-full h-[35vh]"
               style={{

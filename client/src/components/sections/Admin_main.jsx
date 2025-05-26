@@ -8,7 +8,7 @@ import { TrashIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/solid';
 import {
   LineChart, BarChart, Bar, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer,
 } from 'recharts';
-import Loading from "../loading.jsx";
+
 export const Admin_main = () => {
   const navigate = useNavigate();
   const { authAxios } = useAuth();
@@ -23,7 +23,6 @@ export const Admin_main = () => {
   const [jobs, setJobs] = useState([]);
   const [requests, setRequests] = useState([]);
   const [users, setUsers] = useState([]);
-
   // Stats for charts
   const [eventStats, setEventStats] = useState([]);
   const [jobStats, setJobStats] = useState([]);
@@ -41,12 +40,12 @@ export const Admin_main = () => {
       const jobResponse = await authAxios.get(`jobs/admin-page-jobs`);
       const requestResponse = await authAxios.get(`jobs/admin-page-job-requests`);
       const userResponse = await authAxios.get("/alumni/search");
-
+      console.log(userResponse.data);
       const formattedEvents = eventResponse.data.map(event => ({
         id: event._id,
         name: event.event_name,
         date: new Date(event.event_date).toISOString().split('T')[0],
-        createdBy: event.created_by || "N/A"
+
       }));
 
       const formattedJobs = jobResponse.data.map(job => ({
@@ -65,7 +64,10 @@ export const Admin_main = () => {
         id: user._id,
         name: user.name,
         email: user.email,
-        skills: user.skills
+
+        skills: user.skills,
+        jobCount: user.jobCount,
+        totalDonationAmount: user.totalDonationAmount,
       }));
 
       setEvents(formattedEvents);
@@ -81,7 +83,7 @@ export const Admin_main = () => {
     } catch (err) {
       console.error("Failed to fetch data: ", err);
     } finally {
-      setLoading(false);
+      setLoading(true)
     }
   };
 
@@ -107,15 +109,15 @@ export const Admin_main = () => {
     return Object.entries(map).map(([name, count]) => ({ name, count }));
   };
   const groupBySkills = (users) => {
-  const map = {};
+    const map = {};
 
-  users.forEach(user => {
-    if (Array.isArray(user.skills)) {
-      user.skills.forEach(skill => {
-        map[skill] = (map[skill] || 0) + 1;
-      });
-    }
-  });
+    users.forEach(user => {
+      if (Array.isArray(user.skills)) {
+        user.skills.forEach(skill => {
+          map[skill] = (map[skill] || 0) + 1;
+        });
+      }
+    });
     return Object.entries(map).map(([skill, count]) => ({ skill, count }));
   };
   const groupByEmailDomain = (users) => {
@@ -144,6 +146,7 @@ export const Admin_main = () => {
       item.name.toLowerCase().includes(search.toLowerCase()) ||
       item.email.toLowerCase().includes(search.toLowerCase())
 
+
     );
     return [];
   };
@@ -157,7 +160,7 @@ export const Admin_main = () => {
         </div>
       );
     }
-  
+
     return null;
   };
   const CustomTooltip_job = ({ active, payload, label }) => {
@@ -190,65 +193,64 @@ export const Admin_main = () => {
 
   const filteredData = getCategoryData();
 
-    const renderChart = () => {
-      if (loading) return <Loading />;
-      switch (activeTab) {
-        case "Events":
-          return (
-            <>
-              <h2 className="text-2xl font-semibold text-emerald-800 mb-4">Event Activity Graph</h2>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={eventStats}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
-                  <YAxis allowDecimals={false} />
-                  <Tooltip content={<CustomTooltip_event />} />
-                  <Line type="monotone" dataKey="count" stroke="#10B981" strokeWidth={3} />
-                </LineChart>
-              </ResponsiveContainer>
-            </>
-          );
-        case "Jobs":
-          return (
-            <>
+  const renderChart = () => {
+    switch (activeTab) {
+      case "Events":
+        return (
+          <>
+            <h2 className="text-2xl font-semibold text-emerald-800 mb-4">Event Activity Graph</h2>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={eventStats}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis allowDecimals={false} />
+                <Tooltip content={<CustomTooltip_event />} />
+                <Line type="monotone" dataKey="count" stroke="#10B981" strokeWidth={3} />
+              </LineChart>
+            </ResponsiveContainer>
+          </>
+        );
+      case "Jobs":
+        return (
+          <>
             <h2 className="text-2xl font-semibold text-emerald-800 mb-4">Job Posts By Company</h2>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={jobStats}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis 
-                dataKey="name" />
+                <XAxis
+                  dataKey="name" />
                 <YAxis allowDecimals={false} />
-                <Tooltip content={<CustomTooltip_job/>}/>
+                <Tooltip content={<CustomTooltip_job />} />
                 <Bar dataKey="count" fill="#0284c7" />
               </BarChart>
             </ResponsiveContainer>
-            </>
-          );
-        case "Job Requests":
-          return (
-            <></>
-          );
-        case "Users":
-        const sortedUserStats = [...userStats].sort((a, b) => b.count - a.count);  
+          </>
+        );
+      case "Job Requests":
         return (
-            <>
+          <></>
+        );
+      case "Users":
+        const sortedUserStats = [...userStats].sort((a, b) => b.count - a.count);
+        return (
+          <>
             <h2 className="text-2xl font-semibold text-emerald-800 mb-4">Alumni Skill Diversity Chart</h2>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={sortedUserStats}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="skill" />
                 <YAxis allowDecimals={false} />
-                <Tooltip content={<CustomTooltip_user/>}/>
+                <Tooltip content={<CustomTooltip_user />} />
                 <Bar dataKey="count" fill="#891839" />
               </BarChart>
             </ResponsiveContainer>
-            </>
-            
-          );
-        default:
-          return null;
-      }
-    };
+          </>
+
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <>
@@ -259,7 +261,7 @@ export const Admin_main = () => {
         <Sidebar />
       </div>
       <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
-        <div className="p-6 bg-white min-h-screen">
+        <div className="p-6 bg-white min-h-screen pt-8">
           <div className="text-2xl font-semibold mb-4">List of {activeTab}</div>
 
           {/* Tabs */}
@@ -293,128 +295,134 @@ export const Admin_main = () => {
 
           {/* Table */}
           <div className="overflow-x-auto">
-              <table className="w-full text-sm text-left text-gray-500">
-                <thead className="text-sm uppercase bg-emerald-800 rounded-t-lg text-white">
-                  <tr>
+            <table className="w-full text-sm text-left text-gray-500">
+              <thead className="text-sm uppercase bg-emerald-800 rounded-t-lg text-white">
+                <tr>
+                  {activeTab === "Events" && (
+                    <>
+                      <th className="px-4 py-3">ID</th>
+                      <th className="px-4 py-3">Event Name</th>
+                      <th className="px-4 py-3">Event Date</th>
+                      <th className="px-4 py-3">Created By</th>
+
+                    </>
+                  )}
+                  {activeTab === "Jobs" && (
+                    <>
+                      <th className="px-4 py-3">ID</th>
+                      <th className="px-4 py-3">Job Title</th>
+                      <th className="px-4 py-3">Company</th>
+
+                    </>
+                  )}
+                  {activeTab === "Job Requests" && (
+                    <>
+                      <th className="px-4 py-3">Job Title</th>
+                      <th className="px-4 py-3">Requested By</th>
+
+                    </>
+                  )}
+                  {activeTab === "Users" && (
+                    <>
+                      <th className="px-4 py-3">ID</th>
+                      <th className="px-4 py-3">Name</th>
+                      <th className="px-4 py-3">Email</th>
+                      <th className="px-4 py-3">Total Donations</th>
+                      <th className="px-4 py-3">Number of Jobs Posted</th>
+
+                    </>
+                  )}
+                </tr>
+              </thead>
+              <tbody>
+                {filteredData.map((item, idx) => (
+                  <tr key={idx} className="bg-white hover:bg-gray-200 transition-colors duration-200 "
+                    onClick={() => {
+                      if (activeTab === "Events") {
+                        navigate(`/event-details/${item.id}`);
+                      } else if (activeTab === "Jobs") {
+                        navigate(`/job-details/${item.id}`);
+                      } else if (activeTab === "Job Requests") {
+                        navigate(`/job-details/${item.id}`);
+                      }
+                    }}
+
+                  >
                     {activeTab === "Events" && (
                       <>
-                        <th className="px-4 py-3">ID</th>
-                        <th className="px-4 py-3">Event Name</th>
-                        <th className="px-4 py-3">Event Date</th>
-                        <th className="px-4 py-3">Created By</th>
-                        
+                        <td className="px-4 py-4 font-medium text-gray-900">{item.id}</td>
+                        <td className="px-4 py-4 font-medium text-gray-900">{item.name}</td>
+                        <td className="px-4 py-4">{item.date}</td>
+                        <td className="px-4 py-4">{item.createdBy}</td>
+
                       </>
                     )}
                     {activeTab === "Jobs" && (
                       <>
-                        <th className="px-4 py-3">ID</th>
-                        <th className="px-4 py-3">Job Title</th>
-                        <th className="px-4 py-3">Company</th>
-                    
+                        <td className="px-4 py-4 font-medium text-gray-900">{item.id}</td>
+                        <td className="px-4 py-4 font-medium text-gray-900">{item.name}</td>
+                        <td className="px-4 py-4">{item.company}</td>
+
                       </>
                     )}
                     {activeTab === "Job Requests" && (
                       <>
-                        <th className="px-4 py-3">Job Title</th>
-                        <th className="px-4 py-3">Requested By</th>
-                 
+                        <td className="px-4 py-4 font-medium text-gray-900">{item.name}</td>
+                        <td className="px-4 py-4">{item.from}</td>
+                        <td className="px-4 py-4 flex items-center gap-2">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setrequestID(item.id);
+                              setmessage_modal(1);
+                              handleAcceptReq(item.id);
+                            }}
+
+                            className="bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg transition duration-200"
+                            aria-label="Approve"
+                          >
+                            <CheckIcon className="h-5 w-5" />
+                          </button>
+
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setrequestID(item.id);
+                              setmessage_modal(0);
+                              handleRejectReq(item.id);
+                            }}
+                            className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition duration-200"
+                            aria-label="Reject"
+                          >
+                            <XMarkIcon className="h-5 w-5" />
+                          </button>
+                        </td>
                       </>
                     )}
                     {activeTab === "Users" && (
                       <>
-                        <th className="px-4 py-3">ID</th>
-                        <th className="px-4 py-3">Name</th>
-                        <th className="px-4 py-3">Email</th>
-                        <th className="px-4 py-3">Skills</th>
-                        
+                        <td className="px-4 py-4 font-medium text-gray-900">{item.id}</td>
+                        <td className="px-4 py-4">{item.name}</td>
+                        <td className="px-4 py-4">{item.email}</td>
+                        <td className="px-4 py-4 font-bold"> ₱ {item.totalDonationAmount}</td>
+                        <td className="px-4 py-4 font-bold">{item.jobCount}</td>
+
+
                       </>
                     )}
+
                   </tr>
-                </thead>
-                <tbody>
-                  {filteredData.map((item, idx) => (
-                    <tr key={idx} className="bg-white hover:bg-gray-200 transition-colors duration-200 "
-                        onClick={() => {
-                        if (activeTab === "Events") {
-                          navigate(`/event-details/${item.id}`);
-                        } else if (activeTab === "Jobs") {
-                          navigate(`/job-details/${item.id}`);
-                        } else if (activeTab === "Job Requests") {
-                          navigate(`/job-details/${item.id}`);
-                        }
-                      }}
-                    
-                    >
-                      {activeTab === "Events" && (
-                          <>
-                          <td className="px-4 py-4 font-medium text-gray-900">{item.id}</td>
-                            <td className="px-4 py-4 font-medium text-gray-900">{item.name}</td>
-                            <td className="px-4 py-4">{item.date}</td>
-                            <td className="px-4 py-4">{item.createdBy}</td>
-                            
-                          </>
-                      )}
-                      {activeTab === "Jobs" && (
-                        <>
-                          <td className="px-4 py-4 font-medium text-gray-900">{item.id}</td>
-                          <td className="px-4 py-4 font-medium text-gray-900">{item.name}</td>
-                          <td className="px-4 py-4">{item.company}</td>
-                        
-                        </>
-                      )}
-                      {activeTab === "Job Requests" && (
-                        <>
-                          <td className="px-4 py-4 font-medium text-gray-900">{item.name}</td>
-                          <td className="px-4 py-4">{item.from}</td>
-                          <td className="px-4 py-4 flex items-center gap-2">
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setrequestID(item.id);
-                                setmessage_modal(1);
-                                handleAcceptReq(item.id);}}
-
-                              className="bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg transition duration-200"
-                              aria-label="Approve"
-                            >
-                              <CheckIcon className="h-5 w-5" />
-                            </button>
-
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setrequestID(item.id);
-                                setmessage_modal(0);
-                                handleRejectReq(item.id);}}
-                              className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition duration-200"
-                              aria-label="Reject"
-                            >
-                              <XMarkIcon className="h-5 w-5" />
-                            </button>
-                          </td>
-                        </>
-                      )}
-                      {activeTab === "Users" && (
-                        <>
-                          <td className="px-4 py-4 font-medium text-gray-900">{item.id}</td>
-                          <td className="px-4 py-4">{item.name}</td>
-                          <td className="px-4 py-4">{item.email}</td>
-                          <td className="px-4 py-4">{item.skills}</td>
-                        </>
-                      )}
-
-                    </tr>
-                  ))}
-                  {filteredData.length === 0 && (
-                    <tr>
-                      <td colSpan={3} className="text-center py-4 text-gray-500">
-                        No data found in {activeTab}.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+                ))}
+                {filteredData.length === 0 && (
+                  <tr>
+                    <td colSpan={3} className="text-center py-4 text-gray-500">
+                      No data found in {activeTab}.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
       {req_modalOpen && (

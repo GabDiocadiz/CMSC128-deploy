@@ -81,15 +81,15 @@ export const CreateAnnouncement = () => {
     actualFiles.forEach(file => fileFormData.append("files[]", file));
 
     const file_res = await axios.post(`/announcement/upload`, fileFormData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      headers: { "Content-Type": "multipart/form-data" },
     });
 
     uploadedFiles = file_res.data.files.map(file => ({
-        originalFilename: file.originalname,
-        serverFilename: file.serverFilename,
+      originalFilename: file.originalname,
+      serverFilename: file.serverFilename,
     }));
 
-    
+
     const announcementData = {
       title: formData.title,
       content: formData.content,
@@ -117,9 +117,8 @@ export const CreateAnnouncement = () => {
       </div>
 
       <div
-        className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         <Sidebar />
       </div>
@@ -129,7 +128,7 @@ export const CreateAnnouncement = () => {
           onSubmit={handleSubmit}
           className="bg-gray-100 px-6 sm:px-10 lg:px-14 py-12 flex flex-col items-center gap-8 min-h-screen pr-20 mt-10"
         >
-          <div className="w-full max-w-3xl">
+          <div className="w-full max-w-3xl mt-10 mb-15">
             <div
               className="flex items-center gap-2 cursor-pointer text-[#145C44] mb-6"
               onClick={() => navigate("/admin_main")}
@@ -196,15 +195,15 @@ export const CreateAnnouncement = () => {
 
                 {/* Add More Button */}
                 <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium text-white
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium text-white
                           bg-[#891839]
                           transition-shadow shadow-md hover:shadow-lg"
-              >
-                <span className="text-lg font-bold">+</span>
-                Add Images
-              </button>
+                >
+                  <span className="text-lg font-bold">+</span>
+                  Add Images
+                </button>
 
 
 
@@ -251,14 +250,14 @@ export const CreateAnnouncement = () => {
                 <button
                   type="button"
                   onClick={() => navigate("/admin_main")}
-                  className="bg-[#891839] text-white px-6 py-2 rounded-md font-medium hover:bg-[#a1284f] transition"
+                  className="bg-[#891839] text-white px-6 py-2 rounded-md font-medium hover:bg-[#a1284f] transition cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-[#145C44] text-white px-6 py-2 rounded-md font-medium hover:bg-[#1e7c56] transition disabled:opacity-50"
+                  className="bg-[#145C44] text-white px-6 py-2 rounded-md font-medium hover:bg-[#1e7c56] transition disabled:opacity-50 cursor-pointer"
                 >
                   {isSubmitting ? "Submitting..." : "Submit"}
                 </button>
