@@ -179,7 +179,7 @@ export default function MainPage() {
                     <div className="w-16 h-16 border-4 border-[#145C44] border-t-transparent rounded-full animate-spin"></div>
                 </div>
             ) : (
-                <div className="w-full min-w-screen min-h-screen pt-12">
+                <div className="w-full min-w-screen min-h-screen pt-14">
                     <div
                         className={`w-full grid gap-0 ${
                             events.length === 0 && announcements.length === 1
